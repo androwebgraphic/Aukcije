@@ -16,7 +16,8 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Dobo došli na AUKCIJE 🙂 BRAVO,vRacam se odmah Godot</h1>
+          <h1>Dobo došli na AUKCIJE 🙂 BRAVO,</h1>
+          <h3>vracam se odmah Godot</h3>
           <p>
          Pažljivo pročitajte Uvjete korištenja kako ne bi došlo do neželjenih komplikacija!!!
           </p>

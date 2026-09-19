@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'BerkshireSwash-Regular';
+  src: url('./fonts/BerkshireSwash-Regular.ttf') format('truetype');
+}
 .container {
   position: relative;
   width: 100%;
@@ -7,9 +11,6 @@
   isolation: isolate; /* Replaces z-index hacks to ensure child layering */
   overflow: hidden;
   /* color: white; */
-
-
-
 
 
 }
@@ -34,7 +35,7 @@ background-color: rgba(232, 229, 229, 0.5); /* 50% transparent black background 
 border-radius: .8rem;
 }
 h1 {
-
+font-family:"BerkshireSwash-Regular", sans-serif;
   color: darkslateblue;
 }
 

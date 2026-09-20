@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Header from "./components/Header.jsx"
+import  Footer from "./components/Footer.jsx"
 
 
 import './App.css'
@@ -32,7 +33,7 @@ function App() {
 
      
 </Container>
-      
+      <Footer></Footer>
     </>
   )
 }

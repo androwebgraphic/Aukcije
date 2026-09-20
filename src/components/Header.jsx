@@ -3,8 +3,9 @@ function Header() {
   return(
   <>
       <header>
+          <img className="logo" src="src/img/aukcijelogo.png" />
         <h1>Aukcije</h1>
-        <img className="logo" src="src/img/aukcijelogo.png" />
+      
         <Nav></Nav>
 
        

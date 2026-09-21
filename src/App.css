@@ -27,7 +27,7 @@
   /* Test with this URL first */
   background-size: cover;
   background-position: center;
-  filter: blur(.2rem);
+  filter: blur(.4rem);
   transform: scale(1.1);
   z-index: -1;
 

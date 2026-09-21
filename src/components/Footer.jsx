@@ -6,7 +6,7 @@ function Footer() {
     
     
     <footer>
-      <p className="copy">&copy;androwebgraphic</p>
+      <p className="copy">&copy; Andreas Sklizović</p>
     </footer>
     
     </>

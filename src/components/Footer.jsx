@@ -1,3 +1,5 @@
+import { APP_NAME } from "../constants"
+
 function Footer() {
   
   return (
@@ -6,7 +8,7 @@ function Footer() {
     
     
     <footer>
-      <p className="copy">&copy; Andreas Sklizović</p>
+      <p className="copy">&copy;{APP_NAME} 2026.</p>
     </footer>
     
     </>

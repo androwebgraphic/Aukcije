@@ -1,3 +1,4 @@
+import NavMain from "./NavMain";
 import Nav from "./NavMain"; 
 function Header() {
   return(
@@ -6,7 +7,7 @@ function Header() {
           <img className="logo" src="src/img/aukcijelogo.png" />
         <h1>Aukcije</h1>
       
-        <Nav></Nav>
+       <NavMain></NavMain>
 
        
 

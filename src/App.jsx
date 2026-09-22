@@ -32,7 +32,7 @@ function App() {
           <p>Sretno svima 😀</p>
           <Routes>
             <Route path={RouteNames.HOME} element={<Home />} />
-            <Route path={RouteNames.KATEGORIJE} element={<CategoriesList/> } />
+            <Route path={RouteNames.KATEGORIJE} element={<CategoriesList /> } />
   
 
           </Routes>

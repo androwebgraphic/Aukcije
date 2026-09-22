@@ -23,13 +23,13 @@
   position: absolute;
   inset: 0;
   /* Shorthand for top:0, left:0, right:0, bottom:0 */
-  background-image: url('./img/auctionBg.jpg');
+  /* background-image: url('./img/auctionBg.jpg'); */
   /* Test with this URL first */
-  background-size: cover;
+  /* background-size: cover;
   background-position: center;
-  filter: blur(.4rem);
+  filter: blur(.4rem);url(http://localhost:5173/)
   transform: scale(1.1);
-  z-index: -1;
+  z-index: -1; */
 
   /* background: linear-gradient(90deg, #07aeea 0.000%, #2bf598 100.000%); */
 }

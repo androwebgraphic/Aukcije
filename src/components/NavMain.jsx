@@ -1,23 +1,34 @@
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { APP_NAME } from '../constants';
+import { APP_NAME,RouteNames } from '../constants';
+import { useNavigate } from 'react-router-dom';
+
 
 function NavMain() {
   
+
+  const navigate = useNavigate()
+  
   return (
-    
+   
+   
     <>
     <Navbar expand="lg" className="bg-body-tertiary">
      
-        <Navbar.Brand href="#home">{APP_NAME}</Navbar.Brand>
+        <Navbar.Brand>
+          {APP_NAME}</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Početna</Nav.Link>
+              <Nav.Link 
+                        onClick={()=>{navigate(RouteNames.HOME)}}
+                        >Početna</Nav.Link>
            
-            <NavDropdown title="Kategorije" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+            <NavDropdown title="Programi" id="basic-nav-dropdown">
+              <NavDropdown.Item
+                 onClick={()=>{navigate(RouteNames.KATEGORIJE)}}
+              >Kategorije</NavDropdown.Item>
              
             </NavDropdown>
           </Nav>

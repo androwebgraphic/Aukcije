@@ -42,7 +42,7 @@
   border-radius: .8rem;
 }
 
-header h1 {
+header h1, .navbar-brand {
   /* margin-left: auto; */
   /* width: 20%; */
   font-family: "BerkshireSwash-Regular", sans-serif;

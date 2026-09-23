@@ -1,4 +1,4 @@
-export const APP_NAME = 'AUKCIJE'
+export const APP_NAME = 'Aukcije |'
 
 export const RouteNames = {
 

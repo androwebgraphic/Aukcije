@@ -7,7 +7,7 @@ import { Container } from 'react-bootstrap';
 import { RouteNames } from './constants.js';
 import {Route, Routes } from 'react-router-dom';
 import Home from './pages/Home.jsx';
-import CategoriesList from './pages/categories/CategoriesList.jsx';
+import CategoriesList from './pages/CategoriesList.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
 import AddItem from './pages/AddItem.jsx';

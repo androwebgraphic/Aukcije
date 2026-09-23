@@ -3,5 +3,8 @@ export const APP_NAME = 'AUKCIJE'
 export const RouteNames = {
 
   HOME: '/',
-  KATEGORIJE: '/kategorije'
+  KATEGORIJE: '/kategorije',
+  REGISTRACIJA: '/registracija',
+  LOGIRANJE: '/logiramje',
+  ADDITEM: 'dodajpredmet'
 }

@@ -5,7 +5,7 @@ function Header() {
   return(
   <>
       <header>
-          <img className="logo" src="src/img/aukcijelogo.png" />
+          <img className="logo" src="src/img/aukcijelogo.svg" />
         {/* <h1>Aukcije</h1> */}
       
        <NavMain></NavMain>

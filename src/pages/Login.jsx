@@ -9,24 +9,26 @@ export default function Login() {
     <>
 
    
-        <h1>Logiranje</h1>
-        
-         <Form>
-               <Form.Group className="mb-3" controlId="formBasicName">
-          <Form.Label>Ime / korisničko ime</Form.Label>
-          <Form.Control type="text" placeholder="Ime / korisničko ime" />
+        <Container>
+          <h1>Logiranje</h1>
+          
+           <Form>
+                 <Form.Group className="mb-3" controlId="formBasicName">
+            <Form.Label>Ime / korisničko ime</Form.Label>
+            <Form.Control type="text" placeholder="Ime / korisničko ime" />
+            </Form.Group>
+               <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Zaporka</Form.Label>
+            <Form.Control type="password" placeholder="Zaporka" />
+            </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicCheckbox">
+            <Form.Check type="checkbox" label="Zapamti me" />
           </Form.Group>
-             <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Zaporka</Form.Label>
-          <Form.Control type="password" placeholder="Zaporka" />
-          </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Zapamti me" />
-        </Form.Group>
-          <Button variant="primary" type="submit">
-        Logiraj se
-        </Button>
-          </Form>
+            <Button variant="primary" type="submit">
+          Logiraj se
+          </Button>
+            </Form>
+        </Container>
      
   
     </>

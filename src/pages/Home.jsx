@@ -1,10 +1,12 @@
+import { Container } from "react-bootstrap";
 import { APP_NAME } from "../constants";
 
 
 
 export default function Home() {
   return (
-  <>
+    <>
+      <Container>
       <h1>Dobro došli na {APP_NAME}</h1>
       <h2>O nama </h2>
                 <p>Ova aplikacija "{APP_NAME}" je namijenjena kolekcionarima  koji nešto žele kupiti ili prodati</p>
@@ -15,7 +17,7 @@ export default function Home() {
             Svatko tko se ne bude pridžavao "Uvjeta korištenja" bit će mu blokiran a potom i uklonjen račun s Aukcija.
           </p>
           <p>Sretno svima 😀</p>
-  
+  </Container>
   </>
 )
 }

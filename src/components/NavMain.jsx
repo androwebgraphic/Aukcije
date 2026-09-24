@@ -21,6 +21,29 @@ function NavMain() {
             </Nav.Link>
            
             <NavDropdown title="Kategorije" id="basic-nav-dropdown" onClick={() => { navigate(RouteNames.KATEGORIJE) }}>
+         
+
+                <option>Odaberi kategoriju</option>
+                <option>Računala</option>
+                <option>AutiOldtimers</option>
+                <option>Alati</option>
+                <option>Satovi</option>
+                <option>Numizmatika</option>
+                <option>Nakit</option>
+                <option>Filatelija</option>
+                <option>Umjetnine</option>
+                <option>LP Ploče</option>
+                <option>Beletristika</option>
+
+
+
+
+
+
+
+
+
+           
            
             </NavDropdown>
 

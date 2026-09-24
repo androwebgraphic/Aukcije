@@ -1,14 +1,15 @@
 import { APP_NAME } from "../constants"
 
 function Footer() {
-  
+   const currentYear= new Date().getFullYear()
   return (
     
     <>
     
     
-    <footer>
-      <p className="copy">&copy;{APP_NAME} 2026.</p>
+      <footer>
+       
+      <p className="copy">&copy;{APP_NAME} Sva prava pridržana {currentYear}.</p>
     </footer>
     
     </>

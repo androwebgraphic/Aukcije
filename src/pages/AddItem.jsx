@@ -45,7 +45,7 @@ export default function AddItem() {
                      <Col sm={12} md={6}>
                        <Form.Group className="mb-3" controlId="formBasicCost" >
                                      <Form.Label>Cijena</Form.Label>
-                                     <Form.Control type= "number" />
+                                     <Form.Control type= "number" placeholder="cijena"/>
                                    
                                    </Form.Group>
                      </Col>
@@ -53,7 +53,7 @@ export default function AddItem() {
         </Row>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
           <Form.Label>Opis predmeta</Form.Label>
-          <Form.Control as="textarea" rows={3} />
+          <Form.Control as="textarea" rows={3} placeholder='Opis predmeta'/>
         </Form.Group>
         <Button variant="primary" type="submit">
         Dodaj predmet

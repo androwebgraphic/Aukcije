@@ -113,6 +113,17 @@ a.dropdown-item{
 .mb-3 input::placeholder{
   color: #cecaca;
 }
+ span.On{
+
+  color: rgb(7, 118, 17);
+  font-size: .6rem;
+
+}
+span.Off{
+
+    color: rgb(224, 195, 34);
+  font-size: .6rem;
+}
 label{
 
   color: azure;

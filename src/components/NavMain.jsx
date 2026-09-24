@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function NavMain() {
   
-  const loggedInn = true // This can be replaced with your actual auth state
+  const loggedInn = false // This can be replaced with your actual auth state
   const navigate = useNavigate();
   
   return (
@@ -36,26 +36,19 @@ function NavMain() {
                 <option>Beletristika</option>
 
 
-
-
-
-
-
-
-
-           
-           
             </NavDropdown>
 
             {/* Only show Login and Register if the user is NOT logged in */}
-       
+            {!loggedInn && (
+                <>
                 <Nav.Link onClick={() => { navigate(RouteNames.REGISTRACIJA) }}>
                   Registracija
             </Nav.Link>
-                 {!loggedInn && (
-              <>
+               
+            
                 <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE) }}>
                   Logiranje
+                  <span className='Off'> Offline</span>
                 </Nav.Link>
               </>
             )}
@@ -64,10 +57,13 @@ function NavMain() {
             {loggedInn && (
               <Nav.Link onClick={() => { navigate(RouteNames.ADDITEM) }}>
                 Dodaj predmet
+                <span className='On'>Logirani ste</span>
               </Nav.Link>
+
             )}
           </Nav>
         </Navbar.Collapse>
+        
       </Navbar>
     </>
   );

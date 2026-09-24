@@ -25,11 +25,16 @@ export default function CategoriesList() {
   return (
 
     <>
-      <Container>
-         <h1>Pregled kategorija</h1>
-      <pre>   {JSON.stringify(categories,null, 2)}</pre>
+
+        <Container>
+           <h1>Pregled kategorija</h1>
    
-   </Container>
+            <pre>
+              {JSON.stringify(categories, null, 2)}
+            </pre>
+   
+           </Container>
+    
     </>
   )
 }

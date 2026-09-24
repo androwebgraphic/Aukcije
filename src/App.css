@@ -12,7 +12,10 @@
 
 /* https://grabient.com/_gAAgIXgL3gAAgPPgEIgBlgBmgIngAAgK8gJG */
 
-background: linear-gradient(180deg, #003c87 0.000%, #005aaa 20.000%, #007ad7 40.000%, #009afb 60.000%, #00b9ff 80.000%, #00d8ef 100.000%);
+/* background: linear-gradient(180deg, #003c87 0.000%, #005aaa 20.000%, #007ad7 40.000%, #009afb 60.000%, #00b9ff 80.000%, #00d8ef 100.000%); */
+/* https://grabient.com/_gKdgHPgKkgGhgFxgD_gJkgL8gLOgXRgEsgNKf9voufgA */
+
+background: linear-gradient(180deg, #4058cf 0.000%, #b940c9 50.000%, #ffd36b 100.000%);
 }
 html{
 
@@ -42,7 +45,18 @@ pre{
 }
 header{
 
-  padding: 2rem .5rem 2rem .5rem;
+  padding: .8rem .5rem .8rem .5rem;
+  /* background-image: url('./img/auctionBg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top ; */
+ 
+
+}
+.bg{
+
+  background-color: rgba(rgb(61, 59, 59), rgb(56, 59, 56), rgb(98, 98, 103), 1);
+  z-index: 9999;
 }
 header h1, .navbar-brand {
   /* margin-left: auto; */
@@ -72,7 +86,7 @@ p.warn {
   /* float: left; */
   margin-left: 45%;
   margin-bottom: 1rem;
-  /* padding: .2rem; */
+  padding: .5rem;
   border-radius: 50%;
   width:8.5%;
   background-color: azure;
@@ -113,6 +127,10 @@ a.dropdown-item{
 .mb-3 input::placeholder{
   color: #cecaca;
 }
+.badge{
+
+  margin-left:5rem;
+}
  span.On{
 
   color: rgb(7, 118, 17);
@@ -151,4 +169,17 @@ footer{
 .copy, .copy a{
 
   color: white;
+}
+@media screen and (max-width:600px){
+
+  .logo{
+
+      /* float: left; */
+  margin-left: 45%;
+  margin-bottom: 1rem;
+  padding: 0;
+  border-radius: 50%;
+  width:15%;
+  background-color: azure;
+  }
 }

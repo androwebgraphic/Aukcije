@@ -21,20 +21,12 @@ function NavMain() {
               Početna
             </Nav.Link>
            
-            <NavDropdown title="Kategorije" id="basic-nav-dropdown" onClick={() => { navigate(RouteNames.KATEGORIJE) }}>
-         
+            <NavDropdown title="Programi" id="basic-nav-dropdown">
 
-                <option>Odaberi kategoriju</option>
-                <option>Računala</option>
-                <option>AutiOldtimers</option>
-                <option>Alati</option>
-                <option>Satovi</option>
-                <option>Numizmatika</option>
-                <option>Nakit</option>
-                <option>Filatelija</option>
-                <option>Umjetnine</option>
-                <option>LP Ploče</option>
-                <option>Beletristika</option>
+               <NavDropdown.Item
+                            onClick={() => { navigate(RouteNames.KATEGORIJE) }}
+                            >Kategorije</NavDropdown.Item>
+         
 
 
             </NavDropdown>

@@ -7,7 +7,7 @@ import Badge from 'react-bootstrap/Badge';
 
 function NavMain() {
   
-  const loggedInn = true // This can be replaced with your actual auth state
+  const loggedInn = false // This can be replaced with your actual auth state
   const navigate = useNavigate();
   
   return (

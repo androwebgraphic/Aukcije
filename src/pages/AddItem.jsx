@@ -40,8 +40,16 @@ export default function AddItem() {
             <option value="">alati</option>
             <option value="">knjige i časopisi</option>
                 </select>
-            </Form.Group>
-          </Col>
+              </Form.Group>
+                </Col>
+                     <Col sm={12} md={6}>
+                       <Form.Group className="mb-3" controlId="formBasicCost" >
+                                     <Form.Label>Cijena</Form.Label>
+                                     <Form.Control type= "number" />
+                                   
+                                   </Form.Group>
+                     </Col>
+          
         </Row>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
           <Form.Label>Opis predmeta</Form.Label>

@@ -3,10 +3,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { APP_NAME, RouteNames } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import Badge from 'react-bootstrap/Badge';
 
 function NavMain() {
   
-  const loggedInn = false // This can be replaced with your actual auth state
+  const loggedInn = true // This can be replaced with your actual auth state
   const navigate = useNavigate();
   
   return (
@@ -48,7 +49,7 @@ function NavMain() {
             
                 <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE) }}>
                   Logiranje
-                  <span className='Off'> Offline</span>
+                  <span className='Off'><Badge bg="danger">andreas je Odjavljen</Badge></span>
                 </Nav.Link>
               </>
             )}
@@ -57,7 +58,7 @@ function NavMain() {
             {loggedInn && (
               <Nav.Link onClick={() => { navigate(RouteNames.ADDITEM) }}>
                 Dodaj predmet
-                <span className='On'>Logirani ste</span>
+                <span className='On'><Badge bg="success">andreas je  prijavljen</Badge></span>
               </Nav.Link>
 
             )}

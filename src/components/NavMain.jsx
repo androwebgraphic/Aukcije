@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function NavMain() {
   
-  const loggedInn = false // This can be replaced with your actual auth state
+  const loggedInn = true // This can be replaced with your actual auth state
   const navigate = useNavigate();
   
   return (
@@ -21,19 +21,7 @@ function NavMain() {
             </Nav.Link>
            
             <NavDropdown title="Kategorije" id="basic-nav-dropdown" onClick={() => { navigate(RouteNames.KATEGORIJE) }}>
-              <NavDropdown.Item>
-                računala
-                stari auti i motocikli
-                satovi
-                numizmatika
-                filatelija
-                nakit
-                umjetnine
-                Ploče(vinil)
-                starinsko oružje
-                alati
-                knjige i časopisi
-              </NavDropdown.Item>
+           
             </NavDropdown>
 
             {/* Only show Login and Register if the user is NOT logged in */}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import CategoriesService from '../services/categories/CategoriesServices'
+import { Container } from "react-bootstrap"
 
 
 
@@ -24,8 +25,11 @@ export default function CategoriesList() {
   return (
 
     <>
-      Pregled kategorija
-      {JSON.stringify(categories,null, 2)}
+      <Container>
+         <h1>Pregled kategorija</h1>
+      <pre>   {JSON.stringify(categories,null, 2)}</pre>
+   
+   </Container>
     </>
   )
 }

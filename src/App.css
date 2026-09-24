@@ -16,22 +16,25 @@ background: linear-gradient(180deg, #003c87 0.000%, #005aaa 20.000%, #007ad7 40.
 }
 .container {
 
-  position: relative;
+  /* position: relative; */
   width: 100%;
   /* max-width: 500px; */
-  height: 100vh;
-  min-height: 300px;
+  height: 100%;
+  min-height: 100%;
   /* Gives the container visible height if empty */
   isolation: isolate;
   /* Replaces z-index hacks to ensure child layering */
-  overflow: hidden;
+  /* overflow: hidden; */
   /* color: white; */
 
 margin-top: 2.5rem;
 
 }
 
+pre{
 
+  color: azure;
+}
 
 header h1, .navbar-brand {
   /* margin-left: auto; */

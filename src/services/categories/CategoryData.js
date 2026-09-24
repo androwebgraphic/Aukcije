@@ -64,7 +64,7 @@ export const categories = [
   },
 
   {
-    id:1,
+    id:10,
     name: 'Beletristika',
     description: 'Ovdje možete pregledati ponudu knjiga',
     numItems: 320

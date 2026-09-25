@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import CategoriesService from '../services/categories/CategoriesServices'
 import { Container, Table } from "react-bootstrap"
-import { FaComputer } from "react-icons/fa6";
+import DateFormat from "../components/DateFormat"
+
 
 
 
@@ -36,6 +37,7 @@ export default function CategoriesList() {
               <th>Naziv</th>
               <th>Opis</th>
               <th>broj oglasa</th>
+              <td>Kreirano</td>
 
             </tr>
           </thead>
@@ -45,7 +47,11 @@ export default function CategoriesList() {
               <tr key={c.id}>
                 <td>{c.name}</td>
                 <td>{c.description}</td>
-                <td >{ c.numItems}</td>
+                <td className="text-center">{c.numItems}</td>
+                <td>
+          
+                  <DateFormat date={ c.datumMoj} />
+                </td>
 
 
               </tr>

@@ -1,3 +1,5 @@
+
+
 export const categories = [
   
 
@@ -5,68 +7,78 @@ export const categories = [
     id:1,
     name: 'Računala',
     description: 'Ovdje možete pregledati ponudu računala',
-    numItems: 30
+    numItems: 30,
+datumMoj: '2026-09-25T00:00:00'
   },
 
   {
     id:2,
     name: 'AutiOldtimers',
     description: 'Ovdje možete pregledati ponudu oldtimer auta',
-    numItems: 15
+    numItems: 15,
+ 
   },
 
   {
     id:3,
     name: 'Alati',
     description: 'Ovdje možete pregledati ponudu alata',
-    numItems: 44
+    numItems: 44,
+
   },
   {
     id:4,
     name: 'Satovi',
     description: 'Ovdje možete pregledati ponudu satova',
-    numItems: 62
+    numItems: 62,
+
   },
 
   {
     id:5,
     name: 'Numizmatika',
     description: 'Ovdje možete pregledati ponudu starinskog novca',
-    numItems: 41
+    numItems: 41,
+
   },
 
   {
     id:6,
     name: 'Nakit',
     description: 'Ovdje možete pregledati ponudu nakita',
-    numItems: 130
+    numItems: 130,
+   
   },
 
   {
     id:7,
     name: 'Filatelija',
     description: 'Ovdje možete pregledati ponudu poštanskih markica',
-    numItems: 400
+    numItems: 400,
+  
   },
 
   {
     id:8,
     name: 'Umjetnine',
     description: 'Ovdje možete pregledati ponudu umjetničkih slika',
-    numItems: 10
+    numItems: 10,
+   
   },
 
   {
     id:9,
     name: 'LP',
     description: 'Ovdje možete pregledati ponudu starih ploča',
-    numItems: 300
+    numItems: 300,
+
   },
 
   {
     id:10,
     name: 'Beletristika',
     description: 'Ovdje možete pregledati ponudu knjiga',
-    numItems: 320
+    numItems: 320,
+  
   },
 ]

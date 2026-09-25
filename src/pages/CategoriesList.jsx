@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import CategoriesService from '../services/categories/CategoriesServices'
-import { Container } from "react-bootstrap"
+import { Container, Table } from "react-bootstrap"
+import { FaComputer } from "react-icons/fa6";
 
 
 
@@ -27,11 +28,39 @@ export default function CategoriesList() {
     <>
 
         <Container>
-           <h1>Pregled kategorija</h1>
+        <Table hover striped bordered >
+          <thead>
+
+            <tr>
+        
+              <th>Naziv</th>
+              <th>Opis</th>
+              <th>broj oglasa</th>
+
+            </tr>
+          </thead>
+
+          <tbody>
+            {categories && categories.map((c) => (
+              <tr key={c.id}>
+                <td>{c.name}</td>
+                <td>{c.description}</td>
+                <td >{ c.numItems}</td>
+
+
+              </tr>
+
+              
+      ))}
+
+          </tbody>
+
+
+</Table>
    
-            <pre>
+            {/* <pre>
               {JSON.stringify(categories, null, 2)}
-            </pre>
+            </pre> */}
    
            </Container>
     

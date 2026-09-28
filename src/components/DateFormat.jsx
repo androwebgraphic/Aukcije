@@ -1,10 +1,10 @@
-export default function DateFormat(dateValue, defaultView='-') {
+export default function DateFormat({date, defaultView='-'}) {
   
 
-  if (!dateValue) {
+  if (!date) {
   return defaultView
   }
-  const d = new Date(dateValue)
+  const d = new Date(date)
 console.log(d)
   if (isNaN(d.getTime())) {
   

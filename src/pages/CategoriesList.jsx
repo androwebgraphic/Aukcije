@@ -50,7 +50,7 @@ export default function CategoriesList() {
                 <td className="text-center">{c.numItems}</td>
                 <td>
           
-                  <DateFormat date={ c.datumMoj} />
+                  <DateFormat date={c.datumMoj} />
                 </td>
 
 

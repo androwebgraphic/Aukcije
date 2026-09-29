@@ -7,19 +7,19 @@ async function get() {
 }
 //2/4 CREATE od CRUD
 
-async function dodaj(categories) {
+async function add(categorie) {
   
-  if (categories.length === 0) {
+  if (categorie.length === 0) {
     
-    categories.id = 1
+    categorie.id = 1
   } else {
     
-    categories.id = categories[categories.length-1].id +1
+    categorie.id = categories[categories.length-1].id +1
   }
-  categories.push(categories)
+  categories.push(categorie)
 }
 export default {
 
   get,
-  dodaj,
+  add,
 }

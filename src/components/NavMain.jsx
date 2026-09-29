@@ -5,6 +5,7 @@ import { APP_NAME, RouteNames } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
 
+
 function NavMain() {
   
   const loggedInn = false // This can be replaced with your actual auth state
@@ -58,6 +59,7 @@ function NavMain() {
         </Navbar.Collapse>
         
       </Navbar>
+
     </>
   );
 }

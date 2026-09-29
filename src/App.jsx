@@ -11,6 +11,10 @@ import CategoriesList from './pages/CategoriesList.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
 import AddItem from './pages/AddItem.jsx';
+import CategoryNew from './pages/categories/CategoryNew.jsx';
+
+
+
 
 function App() {
   return (
@@ -29,13 +33,12 @@ function App() {
             <Route path={RouteNames.KATEGORIJE} element={<CategoriesList />} />
             <Route path={RouteNames.REGISTRACIJA} element={<Register />} />
           <Route path={RouteNames.LOGIRANJE} element={<Login />} />
-          <Route path={RouteNames.ADDITEM} element={<AddItem />}/>
-  
+          <Route path={RouteNames.ADDITEM} element={<AddItem />} />
+          <Route path={RouteNames.CATEGORY_NEW} element={<CategoryNew />} />
 
           </Routes>
 
-       
-
+   
 
 
       </Container>

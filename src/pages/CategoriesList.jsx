@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import CategoriesService from '../services/categories/CategoriesServices'
 import { Container, Table } from "react-bootstrap"
 import DateFormat from "../components/DateFormat"
+import { Link } from "react-router-dom"
+import { RouteNames } from "../constants"
 
 
 
@@ -28,7 +30,12 @@ export default function CategoriesList() {
 
     <>
 
-        <Container>
+      <Container>
+        <Link to={RouteNames.CATEGORY_NEW}>
+          dodavanje nove kategorije 
+        
+        </Link>
+
         <Table hover striped bordered >
           <thead>
 

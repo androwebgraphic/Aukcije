@@ -32,7 +32,7 @@ export default function CategoryNew() {
 
       name: dataNew.get('name'),
       description: dataNew.get('description'),
-      numItems: 2,
+      numItems: dataNew.get('numItems'),
       datumMoj: new Date(dataNew.get('datumMoj')).toISOString(),
 
 
@@ -65,17 +65,22 @@ export default function CategoryNew() {
               <FormLabel>Datum objave</FormLabel>
               <FormControl type="date" name="datumMoj" />
             </Form.Group>
+
+                 <Form.Group controlId="numItems">
+              <FormLabel>Broj oglasa</FormLabel>
+              <FormControl type="number" name="numItems" />
+            </Form.Group>
           </Col>
         </Row>
 
         <hr />
         <Row>
           <Col>
-            <Link to={RouteNames.KATEGORIJE}>Odustani</Link>
+            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger">Odustani</Link>
 
           </Col>
           <Col>
-            <Button type="submit">
+            <Button type="submit" className="btn btn-success">
 
               Dodaj novu kategoriju
             </Button>

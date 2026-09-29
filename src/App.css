@@ -167,8 +167,9 @@ form select{
 
 button[type='submit']{
 
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
   border-radius: 1.7rem;
+ margin-left:40rem;
 }
 
 footer{

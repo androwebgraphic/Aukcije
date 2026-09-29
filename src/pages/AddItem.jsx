@@ -3,6 +3,8 @@ import Form from 'react-bootstrap/Form';
 import { Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { Link } from 'react-router-dom';
+import { RouteNames } from '../constants';
 
 
 export default function AddItem() {
@@ -54,10 +56,12 @@ export default function AddItem() {
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
           <Form.Label>Opis predmeta</Form.Label>
           <Form.Control as="textarea" rows={3} placeholder='Opis predmeta'/>
-        </Form.Group>
-        <Button variant="primary" type="submit">
+          </Form.Group>
+             <Link to={RouteNames.KATEGORIJE}className='btn btn-danger'>Odustani</Link>
+        <Button variant="success" type="submit" >
         Dodaj predmet
-        </Button>
+          </Button>
+    
             </Form>
       </Container>
     </>

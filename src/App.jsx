@@ -27,7 +27,7 @@ function App() {
 
       <Header />
 
-  <ControlledCarousel ></ControlledCarousel>
+
       <Container>
 
    

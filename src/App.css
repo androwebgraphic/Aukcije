@@ -249,3 +249,6 @@ footer{
 
 
 
+.navbar-toggler:focus{
+  box-shadow: none;
+}

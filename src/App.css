@@ -164,14 +164,32 @@ form select{
 #root{
   text-align: left;
 }
+.carousel.slide{
 
+  margin-top: 1rem;
+}
+.carousel-item img{ 
+border-radius: .6rem;
+width: 100%;
+height: auto;
+}
+.carousel-caption{
+border-radius: .6rem;
+  background-color: rgba(0, 0, 0, 0.652);
+}
 button[type='submit']{
 
   /* background-color: var(--main-color); */
   border-radius: 1.7rem;
- margin-left:40rem;
+  width: 100%;
 }
+.btn.btn-danger{
+   border-radius: 1.7rem;
+    /* margin-left:10rem; */
+    float: right;
+    width: 100%;
 
+}
 footer{
 
   background-color: #122f78;
@@ -193,3 +211,6 @@ footer{
   background-color: azure;
   }
 }
+
+
+

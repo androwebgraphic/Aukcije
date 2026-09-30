@@ -75,15 +75,16 @@ export default function CategoryNew() {
 
         <hr />
         <Row>
+       
           <Col>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger">Odustani</Link>
+            <Button type="submit" className="btn btn-success" x-small={12} >
 
-          </Col>
-          <Col>
-            <Button type="submit" className="btn btn-success">
-
-              Dodaj novu kategoriju
+              Dodaj 
             </Button>
+          </Col>
+             <Col>
+            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" x-small={12} >Odustani</Link>
+
           </Col>
         </Row>
       </Form>

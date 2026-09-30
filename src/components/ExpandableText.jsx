@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaArrowTurnDown } from "react-icons/fa6";
 export default function ExpandableText({text, maxLength}) {
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -17,7 +18,7 @@ const displayedText = isExpanded ? text : `${text.substring(0, maxLength)}...`;
         onClick={() => setIsExpanded(!isExpanded)} 
         style={{ color: 'blue', cursor: 'pointer', marginLeft: '5px' }}
       >
-        {isExpanded ? ' Prikaži manje' : '...'}
+        {isExpanded ? ' Prikaži manje' : '...' }
       </span>
     </p>
   );

@@ -4,6 +4,9 @@ import { Container, Table } from "react-bootstrap"
 import DateFormat from "../components/DateFormat"
 import { Link } from "react-router-dom"
 import { RouteNames } from "../constants"
+import { FaArrowTurnDown } from "react-icons/fa6";
+import { FaArrowTurnUp } from "react-icons/fa6";
+import '../ResponsiveTable.css';
 
 // 1. Pomoćna komponenta za skraćivanje teksta
 function ExpandableText({ text, maxLength = 100 }) {
@@ -22,9 +25,9 @@ function ExpandableText({ text, maxLength = 100 }) {
       {displayedText}
       <span 
         onClick={() => setIsExpanded(!isExpanded)} 
-        style={{ color: 'green', cursor: 'pointer', marginLeft: '2px', fontWeight: 'bold' }}
+        style={{color: 'green',cursor: 'pointer', marginLeft: '.2rem', fontWeight: 'bold'}}
       >
-        {isExpanded ? ' (prikaži manje)' : '... cijeli tekst'} 
+        {isExpanded ?  <FaArrowTurnUp />:'...'} 
       </span>
     </span>
   );
@@ -50,7 +53,7 @@ export default function CategoriesList() {
         dodavanje nove kategorije 
       </Link>
 
-      <Table hover striped bordered>
+      <Table hover  bordered className="table-stacked">
         <thead>
           <tr>
             <th>Naziv</th>
@@ -63,13 +66,13 @@ export default function CategoriesList() {
         <tbody>
           {categories && categories.map((c) => (
             <tr key={<unsafe_url>c.id</unsafe_url>}>
-              <td>{c.name}</td>
-              <td>
+              <td data-label="naziv">{c.name}</td>
+              <td data-label='Opis'>
                 {/* 2. Korištenje ExpandableText komponente */}
                 <ExpandableText text={c.description} maxLength={50} />
               </td>
-              <td className="text-center">{c.numItems}</td>
-              <td>
+              <td data-label="broj oglasa"className="text-center">{c.numItems}</td>
+              <td data-label="kreirano"> 
                 <DateFormat date={c.datumMoj} />
               </td>
             </tr>

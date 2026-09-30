@@ -1,5 +1,11 @@
+import { useState } from 'react';
+import Carousel from 'react-bootstrap/Carousel';
+import watchImage from '../img/watch.jpg';
+import recordImage from '../img/records.jpg'
+import bubaImage from '../img/buba.jpg'
+import ExampleCarouselImage from './ExampleCarouselImage';
 
-import {ExampleCarouselImage} from 'ExampleCarouselImage'
+
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 
@@ -10,27 +16,33 @@ function ControlledCarousel() {
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
       <Carousel.Item>
-        <ExampleCarouselImage text="First slide" />
+   <ExampleCarouselImage></ExampleCarouselImage>
         <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <h3>Stari sat</h3>
+          <p>Volite li elegantni sat na  ruci na  pravom ste  mjestu</p>
+       
         </Carousel.Caption>
+       <img src={watchImage} alt="Watch" />
+
+
       </Carousel.Item>
       <Carousel.Item>
         <ExampleCarouselImage text="Second slide" />
         <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <h3>Ploče(LP)</h3>
+          <p>Volite li dobru glazbu, topli zvuk vinila ovdje  možete odabrati neku od vama omiljenih grupa</p>
         </Carousel.Caption>
+        <img src={recordImage} alt="records" />
       </Carousel.Item>
       <Carousel.Item>
         <ExampleCarouselImage text="Third slide" />
         <Carousel.Caption>
-          <h3>Third slide label</h3>
+          <h3>Simpa autić</h3>
           <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+            Da li u vama postoji hippie duh ako da ovo je autić za Vas
           </p>
         </Carousel.Caption>
+        <img src={bubaImage} alt="buba wolkswagen" />
       </Carousel.Item>
     </Carousel>
   );

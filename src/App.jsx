@@ -3,7 +3,7 @@ import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 
 import './App.css';
-import { Container } from 'react-bootstrap';
+import { Carousel, Container } from 'react-bootstrap';
 import { RouteNames } from './constants.js';
 import {Route, Routes } from 'react-router-dom';
 import Home from './pages/Home.jsx';
@@ -12,6 +12,10 @@ import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
 import AddItem from './pages/AddItem.jsx';
 import CategoryNew from './pages/categories/CategoryNew.jsx';
+import ControlledCarousel from './components/ControlledCarousel.jsx';
+
+
+
 
 
 
@@ -25,8 +29,8 @@ function App() {
 
 
       <Container>
-
-     
+<Carousel>   <ControlledCarousel className="responsive"></ControlledCarousel></Carousel>
+   
           
           <Routes>
             <Route path={RouteNames.HOME} element={<Home />} />
@@ -38,8 +42,10 @@ function App() {
 
           </Routes>
 
-   
-
+     
+        {/* <Carousel></Carousel> */}
+       
+ 
 
       </Container>
       <Footer />

@@ -1,0 +1,48 @@
+@media (max-width: 767.98px) {
+  /* Hide the main header row */
+  .table-stacked thead {
+    display: none;
+  }
+
+  /* Make the tbody and tr behave like block elements */
+  .table-stacked tbody,
+  .table-stacked tr,
+  .table-stacked td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Style each row as an individual card */
+  .table-stacked tr {
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    background-color: #fff;
+    padding: 0.5rem;
+  }
+
+  /* Align cells flex-style with key-value pairs */
+  .table-stacked td {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .table-stacked td:last-child {
+    border-bottom: none;
+  }
+
+  /* Inject column label using data-label attribute */
+  .table-stacked td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-align: left;
+    padding-right: 1rem;
+    color: #495057;
+  }
+}

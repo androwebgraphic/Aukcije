@@ -191,12 +191,7 @@ form select{
   /* float: right; */
 
 }
-.carousel.slide{
 
-  /* margin-top: 1rem; */
-  /* margin: 0 1rem 0 1rem; */
-  
-}
 
 .carousel-item img{ 
 border-radius: .6rem;
@@ -251,4 +246,15 @@ footer{
 
 .navbar-toggler:focus{
   box-shadow: none;
+}
+
+/* Prikaži padajući izbornik kada miš pređe preko naslova */
+.hover-dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0; /* Sprječava zatvaranje ako miš prelazi preko praznog prostora */
+}
+
+/* Osigurava da izbornik ostane vidljiv dok je miš na njemu */
+.dropdown-menu {
+  display: none;
 }

@@ -1,11 +1,12 @@
 import { Container } from "react-bootstrap";
 import { APP_NAME } from "../constants";
 
-
+import ControlledCarousel from "../components/ControlledCarousel";
 
 export default function Home() {
   return (
     <>
+        <ControlledCarousel></ControlledCarousel>
       <Container>
       <h1>Dobro došli na {APP_NAME}</h1>
       <h2>O nama </h2>

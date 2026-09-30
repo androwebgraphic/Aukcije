@@ -1,5 +1,5 @@
 
-import ControlledCarousel from "./ControlledCarousel";
+
 import NavMain from "./NavMain";
 import {Row,Col} from 'react-bootstrap'
 function Header() {
@@ -18,7 +18,7 @@ function Header() {
                             <NavMain></NavMain>
                </div>
   
-             <ControlledCarousel></ControlledCarousel>
+      
           </header>
   
 

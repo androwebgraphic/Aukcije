@@ -53,7 +53,7 @@ export default function CategoriesList() {
         dodavanje nove kategorije 
       </Link>
 
-      <Table hover  bordered className="table-stacked">
+      <Table hover  striped bordered className="table-stacked">
         <thead>
           <tr>
             <th>Naziv</th>

@@ -36,7 +36,7 @@ function NavMain() {
                </NavDropdown.Item>
             </NavDropdown>
  <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); setExpanded(false); }}>
-              Uvjeti korištenja
+              Uvjeti 
             </Nav.Link>
             {!loggedInn && (
                 <>

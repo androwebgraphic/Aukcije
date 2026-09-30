@@ -56,23 +56,23 @@ export default function CategoriesList() {
       <Table hover  striped bordered className="table-stacked">
         <thead>
           <tr>
-            <th>Naziv</th>
-            <th>Opis</th>
-            <th>broj oglasa</th>
-            <th>Kreirano</th>
+            <th key="naziv">Naziv</th>
+            <th key="opis">Opis</th>
+            <th key="brojOglasa">broj oglasa</th>
+            <th key="kreirano">Kreirano</th>
           </tr>
         </thead>
 
         <tbody>
           {categories && categories.map((c) => (
-            <tr key={<unsafe_url>c.id</unsafe_url>}>
-              <td data-label="naziv">{c.name}</td>
-              <td data-label='Opis'>
+            <tr key={c.id}>
+              <td data-label="naziv" key={c.name}>{c.name}</td>
+              <td data-label='Opis' key={c.description}>
                 {/* 2. Korištenje ExpandableText komponente */}
                 <ExpandableText text={c.description} maxLength={50} />
               </td>
-              <td data-label="broj oglasa"className="text-center">{c.numItems}</td>
-              <td data-label="kreirano"> 
+              <td data-label="broj oglasa"className="text-center" key={c.numItems}>{c.numItems}</td>
+              <td data-label="kreirano" key={c.datumMoj}> 
                 <DateFormat date={c.datumMoj} />
               </td>
             </tr>

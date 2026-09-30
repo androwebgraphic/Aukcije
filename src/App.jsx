@@ -13,6 +13,7 @@ import Login from './pages/Login.jsx';
 import AddItem from './pages/AddItem.jsx';
 import CategoryNew from './pages/categories/CategoryNew.jsx';
 import ControlledCarousel from './components/ControlledCarousel.jsx';
+import Uvjeti from './pages/Uvjeti.jsx';
 
 
 
@@ -39,7 +40,8 @@ function App() {
           <Route path={RouteNames.LOGIRANJE} element={<Login />} />
           <Route path={RouteNames.ADDITEM} element={<AddItem />} />
           <Route path={RouteNames.CATEGORY_NEW} element={<CategoryNew />} />
-
+  
+          <Route path={RouteNames.UVJETI} element={<Uvjeti /> } />
           </Routes>
 
      

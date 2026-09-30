@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
 
 function NavMain() {
-  const loggedInn = true;
+  const loggedInn = false;
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
@@ -35,7 +35,9 @@ function NavMain() {
                   Kategorije
                </NavDropdown.Item>
             </NavDropdown>
-
+ <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); setExpanded(false); }}>
+              Uvjeti korištenja
+            </Nav.Link>
             {!loggedInn && (
                 <>
                 <Nav.Link onClick={() => { navigate(RouteNames.REGISTRACIJA); setExpanded(false); }}>
@@ -55,7 +57,9 @@ function NavMain() {
                   <Badge bg="success">andreas je prijavljen</Badge>
                 </span>
               </Nav.Link>
+
             )}
+           
           </Nav>
         </Navbar.Collapse>
       </Navbar>

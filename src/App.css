@@ -258,3 +258,83 @@ footer{
 .dropdown-menu {
   display: none;
 }
+
+
+/* uvjeti css */
+/* .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 2.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    } */
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #0f172a;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: #334155;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: azure;
+    }
+
+    ul,ol {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      color: azure;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    .date {
+      font-style: italic;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight-box {
+      background-color: #eff6ff;
+      border-left: 4px solid var(--primary-color);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+    }

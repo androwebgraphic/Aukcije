@@ -57,10 +57,15 @@ export default function AddItem() {
           <Form.Label>Opis predmeta</Form.Label>
           <Form.Control as="textarea" rows={3} placeholder='Opis predmeta'/>
           </Form.Group>
-             <Link to={RouteNames.KATEGORIJE}className='btn btn-danger'>Odustani</Link>
-        <Button variant="success" type="submit" >
-        Dodaj predmet
-          </Button>
+             <Row>
+               <Col>
+                 <Link to={RouteNames.KATEGORIJE}className='btn btn-danger'>Odustani</Link>
+               </Col>
+                       <Col><Button variant="success" type="submit" >
+                       Dodaj predmet
+             
+            </Button></Col>
+              </Row>
     
             </Form>
       </Container>

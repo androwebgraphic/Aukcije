@@ -7,6 +7,7 @@ export const RouteNames = {
   REGISTRACIJA: '/registracija',
   LOGIRANJE: '/logiramje',
   ADDITEM: 'dodajpredmet',
-  CATEGORY_NEW: '/categories/dodajkategoriju'
+  CATEGORY_NEW: '/categories/dodajkategoriju',
+  UVJETI: '/uvjeti'
    
 }

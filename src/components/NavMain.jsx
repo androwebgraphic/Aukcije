@@ -13,7 +13,7 @@ function NavMain() {
   
   return (
     <>
-      <Navbar expand="sm" >
+      <Navbar expand="sm" data-bs-theme="dark">
         <Navbar.Brand>{APP_NAME}</Navbar.Brand> 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

@@ -127,7 +127,12 @@ border:none
 
 }
 a.dropdown-item{
-  color: var(--main-color)
+  color: var(--main-color);
+  background-color: azure;
+}
+.dropdown-menu{
+
+  background-color: azure;
 }
 
 .mb-3 input::placeholder{

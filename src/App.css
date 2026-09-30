@@ -181,7 +181,7 @@ height: auto;
 }
 .carousel-caption{
 border-radius: .6rem;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 button[type='submit']{
 

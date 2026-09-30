@@ -15,7 +15,8 @@ function ControlledCarousel() {
 
   return (
     <Carousel activeIndex={index} onSelect={handleSelect}>
-      <Carousel.Item>
+      <Carousel.Item key={1}
+      >
    <ExampleCarouselImage></ExampleCarouselImage>
         <Carousel.Caption>
           <h3>Stari sat</h3>
@@ -25,8 +26,8 @@ function ControlledCarousel() {
        <img src={watchImage} alt="Watch" />
 
 
-      </Carousel.Item>
-      <Carousel.Item>
+      </Carousel.Item >
+      <Carousel.Item key={2}>
         <ExampleCarouselImage text="Second slide" />
         <Carousel.Caption>
           <h3>Ploče(LP)</h3>
@@ -34,7 +35,7 @@ function ControlledCarousel() {
         </Carousel.Caption>
         <img src={recordImage} alt="records" />
       </Carousel.Item>
-      <Carousel.Item>
+      <Carousel.Item key={3}>
         <ExampleCarouselImage text="Third slide" />
         <Carousel.Caption>
           <h3>Simpa autić</h3>

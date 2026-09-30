@@ -166,7 +166,8 @@ form select{
 }
 .carousel.slide{
 
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
+  margin: 0 1rem 1rem 1rem;
 }
 .carousel-item img{ 
 border-radius: .6rem;
@@ -175,7 +176,7 @@ height: auto;
 }
 .carousel-caption{
 border-radius: .6rem;
-  background-color: rgba(0, 0, 0, 0.652);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 button[type='submit']{
 

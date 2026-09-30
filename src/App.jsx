@@ -27,9 +27,9 @@ function App() {
 
       <Header />
 
-
+  <ControlledCarousel ></ControlledCarousel>
       <Container>
-<Carousel>   <ControlledCarousel className="responsive"></ControlledCarousel></Carousel>
+
    
           
           <Routes>

@@ -1,4 +1,4 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../../constants";
 import CarsServices from "../../../services/categories/CarsServices";
@@ -36,58 +36,77 @@ export default function CarNew() {
 }
 
     return (
-        <>
+      <>
+        <Container>
             <h3>Unos novog automobila</h3>
 
-            <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv</Form.Label>
-                    <Form.Control type="text" name="naziv" required />
-                </Form.Group>
-
-                <Form.Group controlId="opis" className="mt-2">
-                    <Form.Label>Opis</Form.Label>
-                    <Form.Control as="textarea" rows={3} name="opis" placeholder="Unesite kratki opis vozila..." />
-                </Form.Group>
-
-                <Form.Group controlId="godinaProizvodnje" className="mt-2">
-                    <Form.Label>Godina proizvodnje</Form.Label>
-                    <Form.Control type="number" name="godinaProizvodnje" step={1} required />
-                </Form.Group>
-
-                <Form.Group controlId="stanje" className="mt-2">
-                    <Form.Label>Stanje</Form.Label>
-                    <Form.Control type="text" name="stanje" placeholder="npr. očuvan, treba restauraciju..." />
-                </Form.Group>
-
-                <Form.Group controlId="cijena" className="mt-2">
-                    <Form.Label>Početna cijena (€)</Form.Label>
-                    <Form.Control type="number" name="cijena" step={0.01} required />
-                </Form.Group>
-
-                <Form.Group controlId="datumObjavljeno" className="mt-2">
-                    <Form.Label>Datum objave</Form.Label>
-                    <Form.Control type="date" name="datumObjavljeno" required />
-                </Form.Group>
-
-                <Form.Group controlId="datumZavrsetak" className="mt-2">
-                    <Form.Label>Datum završetka aukcije</Form.Label>
-                    <Form.Control type="date" name="datumZavrsetak" required />
-                </Form.Group>
-
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.CARS} className="btn btn-danger w-100">
-                            Odustani
-                        </Link>
+            <Row>
+              <Form onSubmit={handleSubmit}>
+                  <Row>
+                    <Col sm={12} md={6}>
+                      <Form.Group controlId="naziv">
+                          <Form.Label>Naziv</Form.Label>
+                          <Form.Control type="text" name="naziv" required />
+                      </Form.Group>
                     </Col>
-                    <Col>
-                        <Button type="submit" variant="success" className="w-100">
-                            Dodaj
-                        </Button>
+                    <Col sm={12} md={6}>
+                      <Form.Group controlId="opis" className="mt-2">
+                          <Form.Label>Opis</Form.Label>
+                          <Form.Control as="textarea" rows={3} name="opis" placeholder="Unesite kratki opis vozila..." />
+                      </Form.Group>
                     </Col>
-                </Row>
-            </Form>
+                  </Row>
+                  <Row>
+                    <Col sm={12} md={6}>
+                      <Form.Group controlId="godinaProizvodnje" className="mt-2">
+                          <Form.Label>Godina proizvodnje</Form.Label>
+                          <Form.Control type="number" name="godinaProizvodnje" step={1} required />
+                      </Form.Group>
+                    </Col>
+                    <Col sm={12} md={6}>
+                      <Form.Group controlId="stanje" className="mt-2">
+                          <Form.Label>Stanje</Form.Label>
+                          <Form.Control type="text" name="stanje" placeholder="npr. očuvan, treba restauraciju..." />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Col sm={12} md={6}>
+                    <Form.Group controlId="cijena" className="mt-2">
+                        <Form.Label>Početna cijena (€)</Form.Label>
+                        <Form.Control type="number" name="cijena" step={0.01} required />
+                    </Form.Group>
+            </Col>
+              <Row>
+                <Col sm={12} md={6}>
+                    <Form.Group controlId="datumObjavljeno" className="mt-2">
+                
+                          <Form.Label>Datum objave</Form.Label>
+                          <Form.Control type="date" name="datumObjavljeno" required />
+                                            </Form.Group>
+                        </Col>
+                    <Col sm={12} md={6}>
+                      <Form.Group controlId="datumZavrsetak" className="mt-2">
+                          <Form.Label>Datum završetka aukcije</Form.Label>
+                          <Form.Control type="date" name="datumZavrsetak" required />
+                      </Form.Group>
+                    </Col>
+              </Row>
+                      <Row>
+                        <Col sm={6} md={6}>
+                            <Link to={RouteNames.CARS} className="btn btn-danger w-100">
+                                Odustani
+                            </Link>
+                        </Col>
+                        <Col sm={6} md={6}>
+                            <Button type="submit" variant="success" className="w-100">
+                                Dodaj
+                            </Button>
+                        </Col>
+                      </Row>
+              
+              </Form>
+          </Row>
+          </Container>
         </>
     );
 }

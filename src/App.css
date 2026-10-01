@@ -168,7 +168,10 @@ span.Off{
     color: rgb(224, 195, 34);
   font-size: .6rem;
 }
+form{
 
+  margin:  2rem 0 2rem 0;
+}
 label{
 
   color: azure;
@@ -206,7 +209,10 @@ button[type='submit']{
 
   /* background-color: var(--main-color); */
   border-radius: 1.7rem;
-  width: 100%;
+  /* width: 100%; */
+}
+.btn{
+  margin-top: 2rem;
 }
 .btn.btn-danger{
    border-radius: 1.7rem;

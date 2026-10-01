@@ -14,7 +14,8 @@ import AddItem from './pages/AddItem.jsx';
 import CategoryNew from './pages/categories/CategoryNew.jsx';
 import ControlledCarousel from './components/ControlledCarousel.jsx';
 import Uvjeti from './pages/Uvjeti.jsx';
-
+import CarsList from './pages/categories/cars/CarsList.jsx';
+import CarNew from './pages/categories/cars/CarNew.jsx';
 
 
 
@@ -38,7 +39,8 @@ function App() {
             <Route path={RouteNames.KATEGORIJE} element={<CategoriesList />} />
             <Route path={RouteNames.REGISTRACIJA} element={<Register />} />
           <Route path={RouteNames.LOGIRANJE} element={<Login />} />
-          <Route path={RouteNames.ADDITEM} element={<AddItem />} />
+          <Route path={RouteNames.CARS} element={<CarsList />} />
+          <Route path={RouteNames.CAR_NEW} element={<CarNew />} />
           <Route path={RouteNames.CATEGORY_NEW} element={<CategoryNew />} />
   
           <Route path={RouteNames.UVJETI} element={<Uvjeti /> } />

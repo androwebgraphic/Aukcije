@@ -32,8 +32,12 @@ function NavMain() {
            
             <NavDropdown title="Programi" id="basic-nav-dropdown">
                <NavDropdown.Item onClick={() => { navigate(RouteNames.KATEGORIJE); setExpanded(false); }}>
-                  Kategorije
-               </NavDropdown.Item>
+                Kategorije
+         
+          
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => { navigate(RouteNames.CARS); setExpanded(false); }}>
+             Auti</NavDropdown.Item>
             </NavDropdown>
  <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); setExpanded(false); }}>
               Uvjeti 

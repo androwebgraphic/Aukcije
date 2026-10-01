@@ -8,6 +8,8 @@ export const RouteNames = {
   LOGIRANJE: '/logiramje',
   ADDITEM: 'dodajpredmet',
   CATEGORY_NEW: '/categories/dodajkategoriju',
+  CARS:'/kategorije/cars',
+  CAR_NEW:'/kategorije/cars/dodajauto',
   UVJETI: '/uvjeti'
    
 }

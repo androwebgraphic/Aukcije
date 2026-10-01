@@ -38,7 +38,7 @@ export default function CarNew() {
     return (
       <>
         <Container>
-            <h3>Unos novog automobila</h3>
+            <h2>Unos novog automobila</h2>
 
             <Row>
               <Form onSubmit={handleSubmit}>
@@ -91,17 +91,18 @@ export default function CarNew() {
                       </Form.Group>
                     </Col>
               </Row>
-                      <Row>
+              <Row>
+                    <Col sm={6} md={6}>
+                            <Button type="submit" variant="success" className="w-100">
+                                Dodaj
+                            </Button>
+                        </Col>
                         <Col sm={6} md={6}>
                             <Link to={RouteNames.CARS} className="btn btn-danger w-100">
                                 Odustani
                             </Link>
                         </Col>
-                        <Col sm={6} md={6}>
-                            <Button type="submit" variant="success" className="w-100">
-                                Dodaj
-                            </Button>
-                        </Col>
+                    
                       </Row>
               
               </Form>

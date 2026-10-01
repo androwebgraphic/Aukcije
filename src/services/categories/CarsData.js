@@ -28,7 +28,8 @@ export const cars = [
     
         {
     codeId:1253,
-    name: 'Fićo',
+          name: 'Fićo',
+    description:'Ovaj mališa je  za  pravo čudo nekad  bio "jurilica sa svojih 120km/h" 😀',
     productionYear: 1977,
     condition: 'treba restauraciju',
     startPrice: 140.03,

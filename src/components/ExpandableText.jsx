@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaArrowTurnDown } from "react-icons/fa6";
+// import { FaArrowTurnDown } from "react-icons/fa6";
 export default function ExpandableText({text, maxLength}) {
 
   const [isExpanded, setIsExpanded] = useState(false)

@@ -10,6 +10,8 @@ export const RouteNames = {
   CATEGORY_NEW: '/categories/dodajkategoriju',
   CARS:'/kategorije/cars',
   CAR_NEW:'/kategorije/cars/dodajauto',
-  UVJETI: '/uvjeti'
+  UVJETI: '/uvjeti',
+  KATEGORIJE_PROMJENA: '/categories/:id',
+
    
 }

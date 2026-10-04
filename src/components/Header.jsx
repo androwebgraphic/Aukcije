@@ -1,7 +1,7 @@
 
 
 import NavMain from "./NavMain";
-import {Row,Col} from 'react-bootstrap'
+
 function Header() {
   return(
     <>
@@ -10,7 +10,7 @@ function Header() {
         <header>
  
             
-               <div className="h">
+               <div className="h" id='top'>
                  <img className="logo" src="src/img/aukcijelogo.svg" />
                  
                            {/* <h1>Aukcije</h1> */}

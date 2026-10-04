@@ -4,10 +4,10 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { APP_NAME, RouteNames } from '../constants';
 import { useNavigate } from 'react-router-dom';
-import Badge from 'react-bootstrap/Badge';
+
 
 function NavMain() {
-  const loggedInn = false;
+
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
@@ -39,30 +39,20 @@ function NavMain() {
               <NavDropdown.Item onClick={() => { navigate(RouteNames.CARS); setExpanded(false); }}>
              Auti</NavDropdown.Item>
             </NavDropdown>
- <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); setExpanded(false); }}>
-              Uvjeti 
-            </Nav.Link>
-            {!loggedInn && (
+
+          
                 <>
                 <Nav.Link onClick={() => { navigate(RouteNames.REGISTRACIJA); setExpanded(false); }}>
                   Registracija
                 </Nav.Link>
                 <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE); setExpanded(false); }}>
                   Logiranje
-                  <span className='Off'><Badge bg="danger">andreas je Odjavljen</Badge></span>
+             
                 </Nav.Link>
               </>
-            )}
+      
 
-            {loggedInn && (
-              <Nav.Link onClick={() => { navigate(RouteNames.ADDITEM); setExpanded(false); }}>
-                Dodaj predmet
-                <span className='On'>
-                  <Badge bg="success">andreas je prijavljen</Badge>
-                </span>
-              </Nav.Link>
-
-            )}
+    
            
           </Nav>
         </Navbar.Collapse>

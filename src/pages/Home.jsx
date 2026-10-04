@@ -17,7 +17,9 @@ export default function Home() {
           <p className='warn'>Isključivo je zabranjen bilo kakav oblik vrijeđanja na rasnoj, vjerskoj i nacionalnoj osnovi.<br></br>
             Svatko tko se ne bude pridžavao "Uvjeta korištenja" bit će mu blokiran a potom i uklonjen račun s Aukcija.
           </p>
-          <p>Sretno svima 😀</p>
+        <p>Sretno svima 😀</p>
+        
+             
   </Container>
   </>
 )

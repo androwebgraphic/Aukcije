@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
 import CategoriesService from '../services/categories/CategoriesServices'
-import { Button, Container, Table } from "react-bootstrap"
+import { Button, Container, FormGroup, Table } from "react-bootstrap"
 import DateFormat from "../components/DateFormat"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../constants"
 import { FaArrowTurnDown } from "react-icons/fa6";
 import { FaArrowTurnUp } from "react-icons/fa6";
 import '../ResponsiveTable.css';
-
-// Pomoćna komponenta za skraćivanje teksta
+import { Row } from 'react-bootstrap/Row'
+import { Col } from 'react-bootstrap/Col'
+ // Pomoćna komponenta za skraćivanje teksta
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -77,9 +78,10 @@ export default function CategoriesList() {
                 <DateFormat date={c.datumMoj} />
               </td>
               <td>
-                {/* Ispravljeno sa categories.id na c.id i dodana kosa crta na početak */}
+               
                 <Button onClick={() => { navigate(`/categories/${c.id}`) }}>
                   Promijeni
+                
                 </Button>
               </td>
             </tr>

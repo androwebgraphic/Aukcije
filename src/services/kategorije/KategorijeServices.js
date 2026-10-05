@@ -28,10 +28,23 @@ async function dodaj(kategorija) {
   }
 kategorije.push(kategorija)
 }
+//3/4 CRUD UPDAte
+
+async function promijeni(id, kategorija) {
+  
+  const index = nadiIndex(id)
+  kategorije[index] = {...kategorije[index], ...kategorija}
+}
+
+function nadiIndex(id) {
+  
+  return kategorije.findIndex(s => s.id===parseInt(id))
+}
 export default {
 
   get,
   dodaj,
   getByID,
+  promijeni
 
 }

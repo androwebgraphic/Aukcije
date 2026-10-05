@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import AutiServices from "../../../services/kategorije/AutiServices"
-import { Container, Table } from "react-bootstrap";
+import AutiServices from "../../../services/kategorije/AutiServices";
+import { Container, Table, Button } from "react-bootstrap";
 import DateFormat from "../../../components/DateFormat";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
 
@@ -37,6 +37,7 @@ function ExpandableText({ text, maxLength = 100 }) {
 
 export default function AutiList() {
   const [auti, setAuti] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     ucitajAute();
@@ -67,13 +68,14 @@ export default function AutiList() {
             <th>Kreirano</th>
             <th>Početna cijena</th>
             <th>Aukcija završava</th>
+            <th>Akcija</th>
           </tr>
         </thead>
 
         <tbody>
           {auti &&
             auti.map((c, index) => (
-              <tr key={c.codeID?? index}>
+              <tr key={c.codeID ?? index}>
                 <td data-label="Naziv">{c.naziv}</td>
                 <td data-label="Opis">
                   <ExpandableText text={c.opis} maxLength={50} />
@@ -88,6 +90,11 @@ export default function AutiList() {
                 <td data-label="Početna cijena">{c.pocetnaCijena}</td>
                 <td data-label="Aukcija završava">
                   <DateFormat date={c.zavrsava} />
+                </td>
+                <td data-label="Akcija">
+                  <Button onClick={() => { navigate(`/auti/${c.id}`); }}>
+                    Promjeni
+                  </Button>
                 </td>
               </tr>
             ))}

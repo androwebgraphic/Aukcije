@@ -10,6 +10,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import { useEffect, useState } from "react";
+import AutiServices from "../../services/kategorije/AutiServices";
+import { auti } from "../../services/kategorije/AutiData";
 
 
 
@@ -18,27 +20,27 @@ export default function KategorijePromijena() {
 
   const navigate = useNavigate()
   const params = useParams()
-  const [kategorija, setKategorija  ] = useState( {})
+  const [auto, setAuto ] = useState( {})
 
   useEffect(() => {
 
-    ucitajKategorije()
+    ucitajAuti()
   }, [])
   
-   async function ucitajKategorije() {
-     await KategorijeServices.getByID(params.id).then((odgovor) => {
+   async function ucitajAuti() {
+     await AutiServices.getByID(params.id).then((odgovor) => {
        const s = odgovor.data
        
        s.datumMoj = s.datumMoj.substring(0,10)
        
        
-       setKategorija(s)
+       setAuti(s)
      })
    }
-  async function promijeni(kategorija) {
+  async function promijeni(auto) {
 
-    await KategorijeServices.promijeni(params.id, kategorija).then(() => {
-      navigate(RouteNames.KATEGORIJE)
+    await AutiServices.promijeni(params.id, auto).then(() => {
+      navigate(RouteNames.AUTI)
 
     })
   }
@@ -62,7 +64,7 @@ export default function KategorijePromijena() {
 
   return (
     <>
-      <h2>Promjena kategoriju { kategorija.naziv}</h2>
+      <h2>Promjena auto { auti.naziv}</h2>
 
       <Form onSubmit={handleSubmit}>
         <Row>
@@ -70,7 +72,7 @@ export default function KategorijePromijena() {
             <Form.Group controlId="naziv">
               <FormLabel>Naziv</FormLabel>
               <FormControl type="text" name="naziv" required
-              defaultValue={kategorija.naziv }/>
+              defaultValue={auti.naziv }/>
             </Form.Group>
           </Col>
 
@@ -78,7 +80,7 @@ export default function KategorijePromijena() {
             <Form.Group controlId="opis">
               <FormLabel>Opis</FormLabel>
               <FormControl as="textarea" name="opis" rows={3}
-                defaultValue={kategorija.opis}
+                defaultValue={auti.opis}
               />
             </Form.Group>
           </Col>
@@ -87,14 +89,14 @@ export default function KategorijePromijena() {
             <Form.Group controlId="datumMoj">
               <FormLabel>Datum objave</FormLabel>
               <FormControl type="date" name="datumMoj"
-              defaultValue={kategorija.datumMoj}
+              defaultValue={auti.datumMoj}
               />
             </Form.Group> 
 
                  <Form.Group controlId="brojOglasa">
               <FormLabel>Broj oglasa</FormLabel>
               <FormControl type="number" name="brojOglasa"
-              defaultValue={kategorija.brojOglasa}
+              defaultValue={auti.brojOglasa}
               />
             </Form.Group>
           {/* </Col> */}
@@ -111,7 +113,7 @@ export default function KategorijePromijena() {
             </Button>
           </Col>
              <Col sm={12} md={6}>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" >Odustani</Link>
+            <Link to={RouteNames.AUTI} className="btn btn-danger" >Odustani</Link>
 
           </Col>
         </Row>

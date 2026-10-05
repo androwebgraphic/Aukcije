@@ -14,14 +14,26 @@ async function dodaj(auto) {
     auto.id = auti[auti.length - 1].id + 1;
   }
 
-  // 2. Dodavanje novog objekta `car` u polje `cars`
+
   auti.push(auto);
 
-  // 3. Vraćanje odgovora
+
   return { data: auto };
+}
+
+async function promijeni(id, auto) {
+  
+  const index = nadiIndex(id)
+  auti[index] = {...auti[index], ...auto}
+}
+
+function nadiIndex(id) {
+  
+  return auti.findIndex(s => s.id===parseInt(id))
 }
 
 export default {
   get,
   dodaj,
+  promijeni,
 };

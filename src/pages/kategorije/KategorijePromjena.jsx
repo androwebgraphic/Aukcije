@@ -60,7 +60,7 @@ export default function KategorijePromijena() {
 
   return (
     <>
-      <h2>Promjena kategorij</h2>
+      <h2>Promjena kategoriju { kategorije.naziv}</h2>
 
       <Form onSubmit={handleSubmit}>
         <Row>

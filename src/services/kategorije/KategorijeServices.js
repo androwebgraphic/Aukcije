@@ -18,15 +18,15 @@ async function getByID(id) {
 //2/4 CREATE od CRUD
 
 async function dodaj(kategorija) {
-  
-  if (kategorija.length === 0) {
+ 
+  if (kategorije.length === 0) {
     
     kategorija.id = 1
   } else {
     
-    kategorija.id = kategorija[kategorija.length-1].id +1
+    kategorija.id = kategorije[kategorije.length-1].id +1
   }
-kategorija.push(kategorija)
+kategorije.push(kategorija)
 }
 export default {
 

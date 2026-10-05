@@ -5,7 +5,6 @@ export default function DateFormat({date, defaultView='-'}) {
   return defaultView
   }
   const d = new Date(date)
-console.log(d)
   if (isNaN(d.getTime())) {
   
     return defaultView

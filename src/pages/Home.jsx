@@ -8,7 +8,7 @@ export default function Home() {
     <>
         <ControlledCarousel></ControlledCarousel>
       <Container>
-      <h1>Dobro došli na {APP_NAME}</h1>
+      <h1>Dobra došli na {APP_NAME}</h1>
       <h2>O nama </h2>
                 <p>Ova aplikacija "{APP_NAME}" je namijenjena kolekcionarima  koji nešto žele kupiti ili prodati</p>
 

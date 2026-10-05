@@ -10,7 +10,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import { useEffect, useState } from "react";
-import { kategorije } from "../../services/kategorije/KategorijeData";
 
 
 
@@ -19,7 +18,7 @@ export default function KategorijePromijena() {
 
   const navigate = useNavigate()
   const params = useParams()
-  const [kategorije, setKategorije  ] = useState( {})
+  const [kategorija, setKategorija  ] = useState( {})
 
   useEffect(() => {
 
@@ -28,9 +27,11 @@ export default function KategorijePromijena() {
    async function ucitajKategorije() {
      await KategorijeServices.getByID(params.id).then((odgovor) => {
        const s = odgovor.data
+       
        s.datumMoj = s.datumMoj.substring(0,10)
-       setKategorije(s)
-       console.log(odgovor.data)
+       
+       
+       setKategorija(s)
      })
    }
   async function promijeni(kategorija) {
@@ -60,7 +61,7 @@ export default function KategorijePromijena() {
 
   return (
     <>
-      <h2>Promjena kategoriju { kategorije.naziv}</h2>
+      <h2>Promjena kategoriju { kategorija.naziv}</h2>
 
       <Form onSubmit={handleSubmit}>
         <Row>
@@ -68,7 +69,7 @@ export default function KategorijePromijena() {
             <Form.Group controlId="naziv">
               <FormLabel>Naziv</FormLabel>
               <FormControl type="text" name="naziv" required
-              defaultValue={kategorije.naziv }/>
+              defaultValue={kategorija.naziv }/>
             </Form.Group>
           </Col>
 
@@ -76,23 +77,23 @@ export default function KategorijePromijena() {
             <Form.Group controlId="opis">
               <FormLabel>Opis</FormLabel>
               <FormControl as="textarea" name="opis" rows={3}
-                defaultValue={kategorije.opis}
+                defaultValue={kategorija.opis}
               />
             </Form.Group>
           </Col>
-{/* 
-          <Col sm={3} md={3}>
+
+       
             <Form.Group controlId="datumMoj">
               <FormLabel>Datum objave</FormLabel>
               <FormControl type="date" name="datumMoj"
-              defaultValue={kategorije.datumMoj}
+              defaultValue={kategorija.datumMoj}
               />
-            </Form.Group> */}
+            </Form.Group> 
 
                  <Form.Group controlId="brojOglasa">
               <FormLabel>Broj oglasa</FormLabel>
               <FormControl type="number" name="brojOglasa"
-              defaultValue={kategorije.brojOglasa}
+              defaultValue={kategorija.brojOglasa}
               />
             </Form.Group>
           {/* </Col> */}

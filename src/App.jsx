@@ -46,7 +46,7 @@ function App() {
           <Route path={RouteNames.AUTI} element={<AutiList />} />
           <Route path={RouteNames.AUTI_NOVI} element={<AutoNovi />} />
   
-                  <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijePromijena />} />
+          <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijePromijena />} />
   
           <Route path={RouteNames.UVJETI} element={<Uvjeti /> } />
           </Routes>

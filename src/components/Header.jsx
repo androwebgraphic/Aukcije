@@ -1,6 +1,7 @@
 
 
 import NavMain from "./NavMain";
+import aukcijelogo from '../img/aukcijelogo.svg'
 
 
 function Header() {
@@ -12,7 +13,7 @@ function Header() {
  
             
                <div className="h" id='top'>
-                 <img className="logo" src="src/img/aukcijelogo.svg " />
+                 <img className="logo" src={aukcijelogo} />
                  
                            {/* <h1>Aukcije</h1> */}
                         

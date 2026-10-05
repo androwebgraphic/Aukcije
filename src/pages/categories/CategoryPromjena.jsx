@@ -11,7 +11,7 @@ import { RouteNames } from "../../constants";
 import CategoriesServices from "../../services/categories/CategoriesServices";
 import { useEffect, useState } from "react";
 import { categories } from "../../services/categories/CategoryData";
-import MydModalWithGrid from "../../components/MyModalWithGrid";
+
 
 
 export default function CategoryPromijena() {
@@ -99,15 +99,15 @@ setCategories(s)
         <hr />
         <Row>
        
-          <Col>
-            <Button type="submit" className="btn btn-success" small={12} >
+          <Col sm={12} md={6}>
+            <Button type="submit" className="btn btn-success" small={12} md={6}>
 
               Promijeni
-              <MydModalWithGrid />
+       
             </Button>
           </Col>
-             <Col>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" small={12} >Odustani</Link>
+             <Col sm={12} md={6}>
+            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" >Odustani</Link>
 
           </Col>
         </Row>

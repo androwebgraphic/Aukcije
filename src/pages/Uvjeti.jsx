@@ -102,8 +102,8 @@ return(
   </div>
 
       <Row>
-        <Col><Button variant="success" type="submit" id='accept' >Prihvaćam</Button></Col>
-          <Col><Button variant="danger" type="submit" id='deny'>Odbijam</Button></Col>
+        <Col sm={12} md={6}><Button variant="success" type="submit" id='accept' >Prihvaćam</Button></Col>
+        <Col sm={12 } md={6}><Button variant="danger" type="submit" id='deny'>Odbijam</Button></Col>
       </Row>
 
 </Container>

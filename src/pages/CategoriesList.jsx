@@ -7,8 +7,7 @@ import { RouteNames } from "../constants"
 import { FaArrowTurnDown } from "react-icons/fa6";
 import { FaArrowTurnUp } from "react-icons/fa6";
 import '../ResponsiveTable.css';
-import { Row } from 'react-bootstrap/Row'
-import { Col } from 'react-bootstrap/Col'
+
  // Pomoćna komponenta za skraćivanje teksta
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);

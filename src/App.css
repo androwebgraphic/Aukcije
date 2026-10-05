@@ -154,21 +154,8 @@ a.dropdown-item{
 .mb-3 input::placeholder{
   color: #cecaca;
 }
-.badge{
 
-  margin-left:5rem;
-}
- span.On{
 
-  color: rgb(7, 118, 17);
-  font-size: .6rem;
-
-}
-span.Off{
-
-    color: rgb(224, 195, 34);
-  font-size: .6rem;
-}
 form{
 
   margin:  2rem 0 2rem 0;
@@ -210,16 +197,15 @@ button[type='submit']{
 
   /* background-color: var(--main-color); */
   border-radius: 1.7rem;
-  /* width: 100%; */
+  width: 100%;
 }
 .btn{
-  margin-top: 2rem;
+  margin: 1rem;
 }
 .btn.btn-danger{
    border-radius: 1.7rem;
     /* margin-left:10rem; */
-    float: right;
-    width: 100%;
+
 
 }
 footer{

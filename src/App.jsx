@@ -53,11 +53,7 @@ function App() {
 
      
         {/* <Carousel></Carousel> */}
-       
-        <MdOutlineVerticalAlignTop
-        
-        size={25}
-        />
+ 
    
       </Container>
     

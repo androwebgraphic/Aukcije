@@ -9,7 +9,7 @@ function ScrollToTopButton() {
   };
 
   return (
-    <button onClick={scrollToTop} style={{ position: 'fixed', bottom: '20px', right: '20px', borderRadius:'50%', border:'none'}}>
+    <button onClick={scrollToTop} style={{backgroundColor:'azure',  position:'fixed', bottom: '2rem', right: '5rem', borderRadius:'50%', border:'none'}}>
       <MdOutlineVerticalAlignTop
         size={35}
         color={'blue'}

@@ -77,13 +77,13 @@ export default function CategoryNew() {
         <Row>
        
           <Col>
-            <Button type="submit" className="btn btn-success" x-small={12} >
+            <Button type="submit" className="btn btn-success" sm={12}  md={6}>
 
               Dodaj 
             </Button>
           </Col>
              <Col>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" x-small={12} >Odustani</Link>
+            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" sm={12} md={6} >Odustani</Link>
 
           </Col>
         </Row>

@@ -36,7 +36,7 @@ function NavMain() {
          
           
               </NavDropdown.Item>
-              <NavDropdown.Item onClick={() => { navigate(RouteNames.CARS); setExpanded(false); }}>
+              <NavDropdown.Item onClick={() => { navigate(RouteNames.AUTI); setExpanded(false); }}>
              Auti</NavDropdown.Item>
             </NavDropdown>
 

@@ -1,17 +1,24 @@
 export const APP_NAME = 'Aukcije |'
 
 export const RouteNames = {
+  //kategorije
 
   HOME: '/',
   KATEGORIJE: '/kategorije',
+  KATEGORIJE_PROMJENA: '/kategorije/:id',
+  KATEGORIJA_NOVA: '/kategorije/dodajkategoriju',
+
+//auth
   REGISTRACIJA: '/registracija',
-  LOGIRANJE: '/logiramje',
-  ADDITEM: 'dodajpredmet',
-  CATEGORY_NEW: '/categories/dodajkategoriju',
-  CARS:'/kategorije/cars',
-  CAR_NEW:'/kategorije/cars/dodajauto',
+  LOGIRANJE: '/logiranje',
+
+  
+  AUTI:'/kategorije/auti',
+  AUTI_NOVI: '/kategorije/auti/dodajauto',
+  
+
   UVJETI: '/uvjeti',
-  KATEGORIJE_PROMJENA: '/categories/:id',
+
 
    
 }

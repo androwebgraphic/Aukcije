@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import CategoriesService from '../services/categories/CategoriesServices'
+import KategorijeServices from "../services/kategorije/KategorijeServices"
 import { Button, Container, FormGroup, Table } from "react-bootstrap"
 import DateFormat from "../components/DateFormat"
 import { Link, useNavigate } from "react-router-dom"
@@ -33,24 +33,24 @@ function ExpandableText({ text, maxLength = 100 }) {
   );
 }
 
-export default function CategoriesList() {
-  const [categories, setCategories] = useState([])
+export default function KategorijaList() {
+  const [kategorije, setKategorije] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => { 
-    loadCategories()
+    ucitajKategorije()
   }, [])
   
-  async function loadCategories() {
-    await CategoriesService.get()
+  async function ucitajKategorije() {
+    await KategorijeServices.get()
       .then((res) => {
-        setCategories(res.data)
+        setKategorije(res.data)
       })
   }
 
   return (
     <Container>
-      <Link to={RouteNames.CATEGORY_NEW} className="btn btn-success mb-3">
+      <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-3">
         dodavanje nove kategorije 
       </Link>
 
@@ -66,19 +66,19 @@ export default function CategoriesList() {
         </thead>
 
         <tbody>
-          {categories && categories.map((c) => (
+          {kategorije && kategorije.map((c) => (
             <tr key={c.id}>
-              <td data-label="naziv">{c.name}</td>
+              <td data-label="naziv">{c.naziv}</td>
               <td data-label="Opis">
-                <ExpandableText text={c.description} maxLength={50} />
+                <ExpandableText text={c.opis} maxLength={50} />
               </td>
-              <td data-label="broj oglasa" className="text-center">{c.numItems}</td>
+              <td data-label="broj oglasa" className="text-center">{c.brojOglasa}</td>
               <td data-label="kreirano"> 
                 <DateFormat date={c.datumMoj} />
               </td>
               <td>
                
-                <Button onClick={() => { navigate(`/categories/${c.id}`) }}>
+                <Button onClick={() => { navigate(`/kategorije/${c.id}`) }}>
                   Promijeni
                 
                 </Button>

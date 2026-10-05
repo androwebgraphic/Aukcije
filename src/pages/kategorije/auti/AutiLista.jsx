@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CarsServices from "../../../services/categories/CarsServices";
+import AutiServices from "../../../services/kategorije/AutiServices"
 import { Container, Table } from "react-bootstrap";
 import DateFormat from "../../../components/DateFormat";
 import { Link } from "react-router-dom";
@@ -35,17 +35,17 @@ function ExpandableText({ text, maxLength = 100 }) {
   );
 }
 
-export default function CarsList() {
-  const [cars, setCars] = useState([]);
+export default function AutiList() {
+  const [auti, setAuti] = useState([]);
 
   useEffect(() => {
-    loadCars();
+    ucitajAute();
   }, []);
 
-  async function loadCars() {
+  async function ucitajAute() {
     try {
-      const odgovor = await CarsServices.get();
-      setCars(odgovor.data);
+      const odgovor = await AutiServices.get();
+      setAuti(odgovor.data);
     } catch (error) {
       console.error("Greška pri dohvaćanju automobila:", error);
     }
@@ -53,7 +53,7 @@ export default function CarsList() {
 
   return (
     <Container>
-      <Link to={RouteNames.CAR_NEW} className="btn btn-success mb-3">
+      <Link to={RouteNames.AUTI_NOVI} className="btn btn-success mb-3">
         Dodavanje novog auta
       </Link>
 
@@ -71,23 +71,23 @@ export default function CarsList() {
         </thead>
 
         <tbody>
-          {cars &&
-            cars.map((c, index) => (
-              <tr key={c.id ?? index}>
-                <td data-label="Naziv">{c.name}</td>
+          {auti &&
+            auti.map((c, index) => (
+              <tr key={c.codeID?? index}>
+                <td data-label="Naziv">{c.naziv}</td>
                 <td data-label="Opis">
-                  <ExpandableText text={c.description} maxLength={50} />
+                  <ExpandableText text={c.opis} maxLength={50} />
                 </td>
-                <td data-label="Godina proizvodnje">{c.productionYear}</td>
+                <td data-label="Godina proizvodnje">{c.godinaProizvodnje}</td>
                 <td data-label="Stanje" className="text-center">
-                  {c.condition}
+                  {c.stanje}
                 </td>
                 <td data-label="Kreirano">
-                  <DateFormat date={c.dateAdded} />
+                  <DateFormat date={c.dodano} />
                 </td>
-                <td data-label="Početna cijena">{c.startPrice}</td>
+                <td data-label="Početna cijena">{c.pocetnaCijena}</td>
                 <td data-label="Aukcija završava">
-                  <DateFormat date={c.dateEnds} />
+                  <DateFormat date={c.zavrsava} />
                 </td>
               </tr>
             ))}

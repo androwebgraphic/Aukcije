@@ -8,32 +8,34 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import CategoriesServices from "../../services/categories/CategoriesServices";
+import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import { useEffect, useState } from "react";
-import { categories } from "../../services/categories/CategoryData";
+import { kategorije } from "../../services/kategorije/KategorijeData";
 
 
 
-export default function CategoryPromijena() {
+
+export default function KategorijePromijena() {
 
   const navigate = useNavigate()
   const params = useParams()
-  const [categories, setCategories  ] = useState( {})
+  const [kategorije, setKategorije  ] = useState( {})
 
   useEffect(() => {
 
-    loadCategories()
+    ucitajKategorije()
   },[])
-   async function loadCategories() {
-     await CategoriesServices.getByID(params.id).then((odgovor) => {
+   async function ucitajKategorije() {
+     await KategorijeServices.getByID(params.id).then((odgovor) => {
        const s = odgovor.data
        s.datumMoj = s.datumMoj.substring(0,10)
-setCategories(s)
+       setKategorije(s)
+       console.log(odgovor.data)
      })
    }
-  async function promijeni(category) {
+  async function promijeni(kategorija) {
 
-    await CategoriesServices.promijeni(category).then(() => {
+    await KategorijeServices.promijeni(kategorija).then(() => {
       navigate(RouteNames.KATEGORIJE)
 
     })
@@ -46,10 +48,10 @@ setCategories(s)
 
     promijeni({
 
-      name: dataNew.get('name'),
-      description: dataNew.get('description'),
-      numItems: dataNew.get('numItems'),
-      datumMoj: new Date(dataNew.get('datumMoj')).toISOString(),
+      naziv: dataNew.get('naziv'),
+      opis: dataNew.get('opis'),
+      brojOglasa: dataNew.get('brojOglasa'),
+      // datumMoj: new Date(dataNew.get('datumMoj')).toISOString(),
 
 
     })
@@ -58,42 +60,42 @@ setCategories(s)
 
   return (
     <>
-      <h2>Promjena kategorije { categories.name}</h2>
+      <h2>Promjena kategorij</h2>
 
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col sm={12} md={6}>
-            <Form.Group controlId="name">
+            <Form.Group controlId="naziv">
               <FormLabel>Naziv</FormLabel>
-              <FormControl type="text" name="name" required
-              defaultValue={categories.name }/>
+              <FormControl type="text" name="naziv" required
+              defaultValue={kategorije.naziv }/>
             </Form.Group>
           </Col>
 
           <Col sm={12} md={6}>
-            <Form.Group controlId="description">
+            <Form.Group controlId="opis">
               <FormLabel>Opis</FormLabel>
-              <FormControl as="textarea" name="description" rows={3}
-              defaultValue={categories.description}
+              <FormControl as="textarea" name="opis" rows={3}
+                defaultValue={kategorije.opis}
               />
             </Form.Group>
           </Col>
-
+{/* 
           <Col sm={3} md={3}>
             <Form.Group controlId="datumMoj">
               <FormLabel>Datum objave</FormLabel>
               <FormControl type="date" name="datumMoj"
-              defaultValue={categories.datumMoj}
+              defaultValue={kategorije.datumMoj}
               />
-            </Form.Group>
+            </Form.Group> */}
 
-                 <Form.Group controlId="numItems">
+                 <Form.Group controlId="brojOglasa">
               <FormLabel>Broj oglasa</FormLabel>
-              <FormControl type="number" name="numItems"
-              defaultValue={categories.numItems}
+              <FormControl type="number" name="brojOglasa"
+              defaultValue={kategorije.brojOglasa}
               />
             </Form.Group>
-          </Col>
+          {/* </Col> */}
         </Row>
 
         <hr />

@@ -1,15 +1,15 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../../constants";
-import CarsServices from "../../../services/categories/CarsServices";
+import AutiServices from "../../../services/kategorije/AutiServices";
 
-export default function CarNew() {
+export default function AtutoNovi() {
     const navigate = useNavigate();
 
-    async function add(car) {
-        const response = await CarsServices.add(car);
+    async function dodaj(auto) {
+        const response = await AutiServices.dodaj(auto);
         if (response) {
-            navigate(RouteNames.CARS); // Preusmjeravanje na listu auta
+            navigate(RouteNames.AUTI); // Preusmjeravanje na listu auta
         }
     }
 
@@ -24,14 +24,14 @@ export default function CarNew() {
     const dateAdded = datumOd ? new Date(datumOd).toISOString() : new Date().toISOString();
     const dateEnds = datumDo ? new Date(datumDo).toISOString() : new Date().toISOString();
 
-    add({
-        name: podatci.get('naziv') || '',
-        description: podatci.get('opis') || '',
-        productionYear: parseInt(podatci.get('godinaProizvodnje')) || 0,
-        condition: podatci.get('stanje') || 'očuvan',
-        startPrice: parseFloat(podatci.get('cijena')) || 0,
-        dateAdded: dateAdded,
-        dateEnds: dateEnds,
+    dodaj({
+        naziv: podatci.get('naziv') || '',
+       opis: podatci.get('opis') || '',
+        godinaProizvodnje: parseInt(podatci.get('godinaProizvodnje')) || 0,
+        stanje: podatci.get('stanje') || 'očuvan',
+       pocetnaCijena: parseFloat(podatci.get('cijena')) || 0,
+       dodano: dateAdded,
+        zavrsava: dateEnds,
     });
 }
 
@@ -98,7 +98,7 @@ export default function CarNew() {
                             </Button>
                         </Col>
                         <Col sm={6} md={6}>
-                            <Link to={RouteNames.CARS} className="btn btn-danger w-100">
+                            <Link to={RouteNames.AUTI} className="btn btn-danger w-100">
                                 Odustani
                             </Link>
                         </Col>

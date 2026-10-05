@@ -50,6 +50,7 @@ export default function KategorijaList() {
 
   return (
     <Container>
+      <h1>Lista kategorija</h1>
       <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-3">
         dodavanje nove kategorije 
       </Link>

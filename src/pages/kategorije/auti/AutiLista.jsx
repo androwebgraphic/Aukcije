@@ -53,7 +53,10 @@ export default function AutiList() {
   }
 
   return (
+
+  
     <Container>
+      <h1>Lista automobila </h1>
       <Link to={RouteNames.AUTI_NOVI} className="btn btn-success mb-3">
         Dodavanje novog auta
       </Link>

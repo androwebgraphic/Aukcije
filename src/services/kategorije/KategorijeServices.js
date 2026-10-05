@@ -19,18 +19,19 @@ async function getByID(id) {
 
 async function dodaj(kategorija) {
   
-  if (kategorije.length === 0) {
+  if (kategorija.length === 0) {
     
     kategorija.id = 1
   } else {
     
     kategorija.id = kategorija[kategorija.length-1].id +1
   }
-kategorije.push(kategorija)
+kategorija.push(kategorija)
 }
 export default {
 
   get,
   dodaj,
   getByID,
+
 }

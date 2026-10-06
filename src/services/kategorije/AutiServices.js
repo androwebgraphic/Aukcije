@@ -34,9 +34,17 @@ async function promijeni(id, auto) {
 
 // Pomoćna funkcija za pronalazak indeksa
 function nadiIndex(id) {
-  // findIndex traži funkciju (a => a.id == id)
-  return auti.findIndex((a) => a.id == id);
+  
+  return auti.findIndex(s => s.id===parseInt(id))
 }
+
+async function obrisi(id) {
+  
+  const index = nadiIndex(id)
+  auti.splice(index, 1)
+  console.log(`obrisan ${index}`)
+}
+
 
 // Eksportiraj sve funkcije uključujući i getByID
 export default {
@@ -44,4 +52,5 @@ export default {
   getByID,
   dodaj,
   promijeni,
+  obrisi,
 };

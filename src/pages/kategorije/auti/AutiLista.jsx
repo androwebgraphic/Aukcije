@@ -52,6 +52,16 @@ export default function AutiList() {
     }
   }
 
+    async function obrisi(id) {
+    
+      if (!confirm('Želite obrisat?')) {
+        return
+      }
+      await AutiServices.obrisi(id)
+  
+      ucitajAute()
+  }
+
   return (
 
   
@@ -98,6 +108,11 @@ export default function AutiList() {
                   <Button onClick={() => { navigate(`./${c.id}`); }}>
                     Promjeni
                   </Button>
+                  &nbsp; &nbsp;
+                <Button variant='danger' onClick={ () => obrisi(c.id) }>
+              Obriši
+
+                </Button>
                 </td>
               </tr>
             ))}

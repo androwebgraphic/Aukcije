@@ -48,6 +48,16 @@ export default function KategorijaList() {
       })
   }
 
+  async function obrisi(id) {
+  
+    if (!confirm('Želite obrisat?')) {
+      return
+    }
+    await KategorijeServices.obrisi(id)
+
+    ucitajKategorije()
+}
+
   return (
     <Container>
       <h1>Lista kategorija</h1>
@@ -82,6 +92,11 @@ export default function KategorijaList() {
                 <Button onClick={() => { navigate(`/kategorije/${c.id}`) }}>
                   Promijeni
                 
+                </Button>
+&nbsp; &nbsp;
+                <Button variant='danger' onClick={ () => obrisi(c.id) }>
+              Obriši
+
                 </Button>
               </td>
             </tr>

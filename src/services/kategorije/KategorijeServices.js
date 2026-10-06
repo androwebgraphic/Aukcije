@@ -1,7 +1,7 @@
 import { kategorije } from './KategorijeData'
 
 
-//1/4 READ od CRUD
+//1/4 cRud READ
 async function get() {
   
   return {data: [...kategorije]}
@@ -15,7 +15,7 @@ async function getByID(id) {
   }
 
 }
-//2/4 CREATE od CRUD
+//2/4  Crud CREATE
 
 async function dodaj(kategorija) {
  
@@ -28,7 +28,7 @@ async function dodaj(kategorija) {
   }
 kategorije.push(kategorija)
 }
-//3/4 CRUD UPDAte
+//3/4 crUd UPDATE
 
 async function promijeni(id, kategorija) {
   
@@ -40,11 +40,20 @@ function nadiIndex(id) {
   
   return kategorije.findIndex(s => s.id===parseInt(id))
 }
+
+async function obrisi(id) {
+  
+  const index = nadiIndex(id)
+  kategorije.splice(index,1)
+}
+
+//4/4 cruD DELETE
 export default {
 
   get,
   dodaj,
   getByID,
-  promijeni
+  promijeni,
+  obrisi
 
 }

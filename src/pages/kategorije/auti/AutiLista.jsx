@@ -93,14 +93,14 @@ export default function AutiList() {
                 <td data-label="Opis">
                   <ExpandableText text={c.opis} maxLength={50} />
                 </td>
-                <td data-label="Godina proizvodnje">{c.godinaProizvodnje}</td>
+                <td data-label="Godina proizvodnje">{c.godinaProizvodnje}. godine</td>
                 <td data-label="Stanje" className="text-center">
                   {c.stanje}
                 </td>
                 <td data-label="Kreirano">
                   <DateFormat date={c.dodano} />
                 </td>
-                <td data-label="Početna cijena">{c.pocetnaCijena}</td>
+                <td data-label="Početna cijena">{c.pocetnaCijena}<strong> € </strong></td>
                 <td data-label="Aukcija završava">
                   <DateFormat date={c.zavrsava} />
                 </td>

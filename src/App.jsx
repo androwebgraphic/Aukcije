@@ -15,6 +15,7 @@ import KategorijaNova from './pages/kategorije/KategorijaNova.jsx';
 import Uvjeti from './pages/Uvjeti.jsx';
 import AutiList from './pages/kategorije/auti/AutiLista.jsx';
 import AutoNovi from './pages/kategorije/auti/AutoNovi.jsx';
+import AutiPromijena from './pages/kategorije/auti/AutiPromjena.jsx';
 
 import { MdOutlineVerticalAlignTop } from "react-icons/md";
 import KategorijePromijena from '././pages/kategorije/KategorijePromjena.jsx'
@@ -45,7 +46,7 @@ function App() {
           <Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
           <Route path={RouteNames.AUTI} element={<AutiList />} />
           <Route path={RouteNames.AUTI_NOVI} element={<AutoNovi />} />
-  
+          <Route path={RouteNames.AUTI_PROMJENA} element={<AutiPromijena />} />
           <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijePromijena />} />
   
           <Route path={RouteNames.UVJETI} element={<Uvjeti /> } />

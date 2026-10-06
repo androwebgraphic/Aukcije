@@ -44,7 +44,7 @@ export default function KategorijePromijena() {
   }
 
   function handleSubmit(e) {
-    debugger
+    
     e.preventDefault()
     const dataNew = new FormData(e.target)
 

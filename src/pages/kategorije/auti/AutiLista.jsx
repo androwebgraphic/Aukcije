@@ -78,7 +78,7 @@ export default function AutiList() {
         <tbody>
           {auti &&
             auti.map((c, index) => (
-              <tr key={c.codeID ?? index}>
+              <tr key={c.id ?? index}>
                 <td data-label="Naziv">{c.naziv}</td>
                 <td data-label="Opis">
                   <ExpandableText text={c.opis} maxLength={50} />
@@ -95,7 +95,7 @@ export default function AutiList() {
                   <DateFormat date={c.zavrsava} />
                 </td>
                 <td data-label="Akcija">
-                  <Button onClick={() => { navigate(`/auti/${c.id}`); }}>
+                  <Button onClick={() => { navigate(`./${c.id}`); }}>
                     Promjeni
                   </Button>
                 </td>

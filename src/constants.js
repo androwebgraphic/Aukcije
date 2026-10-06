@@ -12,7 +12,7 @@ export const RouteNames = {
   REGISTRACIJA: '/registracija',
   LOGIRANJE: '/logiranje',
 
-  
+    AUTI_PROMJENA: 'kategorije/auti/:id',
   AUTI:'/kategorije/auti',
   AUTI_NOVI: '/kategorije/auti/dodajauto',
   

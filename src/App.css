@@ -1,5 +1,20 @@
 :root{
 
+  /* Baza */
+  --font-p: 1rem;       /* 16px */
+
+  /* Naslovi bazirani na Zlatnom rezu (1.618) */
+  --font-h6: 1.236rem;  /* ~19.8px */
+  --font-h5: 1.618rem;  /* ~25.9px */
+  --font-h4: 2.02rem;   /* ~32.3px */
+  --font-h3: 2.618rem;  /* ~41.9px */
+  --font-h2: 3.236rem;  /* ~51.8px */
+  --font-h1: 4.236rem;  /* ~67.8px */
+
+  /* Preporučeni line-height prema Zlatnom rezu */
+  --lh-body: 1.618;
+  --lh-heading: 1.2;
+
  --main-color:#1A3580;
 }
 @font-face {
@@ -52,7 +67,7 @@ header{
 /* align-self: self-start; */
   padding: .8rem .5rem .8rem .5rem;
 
-; 
+
   /* background-image: url('./img/auctionBg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -61,11 +76,12 @@ header{
 
 }
 .navbar-brand{
-  display: none;
-}
-header h1, .navbar-brand {
+  display: none;}
+/* h1 { font-size: var(--font-h1); line-height: var(--lh-heading); } */
+ .navbar-brand {
   /* margin-left: auto; */
   /* width: 20%; */
+  
   text-align: center;
   font-family: "BerkshireSwash-Regular", sans-serif;
   color: #f9f9fa;

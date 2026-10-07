@@ -2,14 +2,16 @@ import { Container } from "react-bootstrap";
 import { APP_NAME } from "../constants";
 
 import ControlledCarousel from "../components/ControlledCarousel";
+import Heading from "../components/UI/Heading";
 
 export default function Home() {
   return (
     <>
         <ControlledCarousel></ControlledCarousel>
       <Container>
-      <h1>Dobra došli na {APP_NAME}</h1>
-      <h2>O nama </h2>
+       
+        <Heading as='h1' className='display-1'>Dobra došli na {APP_NAME}</Heading>
+     <Heading as='h1' className="display-4"> O nama</Heading> 
                 <p>Ova aplikacija "{APP_NAME}" je namijenjena kolekcionarima  koji nešto žele kupiti ili prodati</p>
 
           <p className='warn'><strong>Pažljivo pročitajte Uvjete korištenja i potvrdite <cite>"Prihvaćam</cite> kako ne bi došlo do neželjenih komplikacija</strong></p>

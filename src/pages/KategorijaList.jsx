@@ -7,7 +7,7 @@ import { RouteNames } from "../constants"
 import { FaArrowTurnDown } from "react-icons/fa6";
 import { FaArrowTurnUp } from "react-icons/fa6";
 import '../ResponsiveTable.css';
-
+import Heading from "../components/UI/Heading"
  // Pomoćna komponenta za skraćivanje teksta
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -60,7 +60,8 @@ export default function KategorijaList() {
 
   return (
     <Container>
-      <h1>Lista kategorija</h1>
+      <Heading as='h1' className="display-1">Lista Kategorija </Heading>
+      
       <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-3">
         dodavanje nove kategorije 
       </Link>

@@ -9,6 +9,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KategorijeServices from '../../services/kategorije/KategorijeServices'
+import Heading from "../../components/UI/Heading";
 
 
 export default function KategorijaNova() {
@@ -42,7 +43,8 @@ export default function KategorijaNova() {
 
     return (
       <>
-        <h2>Unos nove kategorije</h2>
+             <Heading as='h2' color='azure' className="display-2" >Dodavanje nove  kategorije</Heading>
+       
 
         <Form onSubmit={handleSubmit}>
           <Row>

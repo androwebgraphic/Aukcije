@@ -10,6 +10,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import { useEffect, useState } from "react";
+import Heading from "../../components/UI/Heading";
 
 
 
@@ -62,7 +63,7 @@ export default function KategorijePromijena() {
 
   return (
     <>
-      <h2>Promjena kategoriju { kategorija.naziv}</h2>
+ <Heading as='h1' className='display-2'>Promjeni kategoriju { kategorija.naziv}</Heading>
 
       <Form onSubmit={handleSubmit}>
         <Row>

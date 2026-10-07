@@ -10,6 +10,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../../constants";
 import { useEffect, useState } from "react";
 import AutiServices from "../../../services/kategorije/AutiServices";
+import Heading from "../../../components/UI/Heading";
 
 export default function AutiPromijena() {
   const navigate = useNavigate();
@@ -59,14 +60,15 @@ export default function AutiPromijena() {
     });
   }
 
-  // Dok se podaci ne učitaju, prikazujemo poruku uvitavanja
+  // Dok se podaci ne učitaju, prikazujemo poruku učitavanja
   if (!auto) {
     return <div>Učitavanje...</div>;
   }
 
   return (
     <>
-      <h2>Promjena auta {auto.naziv}</h2>
+           <Heading as='h2' color='azure' className="display-2" >Lista auta</Heading>
+     
 
       <Form onSubmit={handleSubmit}>
         <Row>

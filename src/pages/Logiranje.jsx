@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Heading from '../components/UI/Heading';
 
 export default function Login() {
   
@@ -10,10 +11,10 @@ export default function Login() {
     
     <>
 
-   
+   <Heading as='h1' className='display-1'>Logiranje</Heading>
         <Container>
           
-          <h1>Logiranje</h1>
+     
           
            <Row>
              <Form>

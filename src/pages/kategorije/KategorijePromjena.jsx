@@ -20,10 +20,10 @@ export default function KategorijePromijena() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    ucitajKategorije();
+    ucitajKategoriju();
   }, [params.id]);
 
-  async function ucitajKategorije() {
+  async function ucitajKategoriju() {
     setLoading(true);
     try {
       const odgovor = await KategorijeServices.getByID(params.id);

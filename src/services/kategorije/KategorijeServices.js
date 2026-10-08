@@ -1,6 +1,6 @@
 import { DATA_SOURCE } from "../../constants";
-import  KategorijeServicesLocalStorage  from '../kategorije/KategorijeServicesLocalStorage'
-import KategorijeServicesMemorija  from '../kategorije/KategorijeServicesMemorija'
+import KategorijeServicesMemorija  from './KategorijeServicesMemorija'
+import KategorijeServicesLocalStorage from "./KategorijeServicesLocalStorage";
 
 
 let Servis = null
@@ -38,9 +38,9 @@ const AktivniServis = Servis || PrazanServis
 export default {
 
   get: () => AktivniServis.get(),
-  getByID: ()=> AktivniServis.getByID(),
-  dodaj: (kategorije) => AktivniServis.dodaj(kategorije), 
-  promijeni: (id, kategorije) => AktivniServis.promijeni(id, kategorije),
+  getByID: (id)=> AktivniServis.getByID(id),
+  dodaj: (kategorija) => AktivniServis.dodaj(kategorija), 
+  promijeni: (id, kategorija) => AktivniServis.promijeni(id, kategorija),
   obrisi: (id) => AktivniServis.obrisi(id)
 }
 // export {KategorijeServicesMemorija}

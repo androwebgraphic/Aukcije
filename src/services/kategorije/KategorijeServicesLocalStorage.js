@@ -16,7 +16,7 @@ async function get() {
 
 async function getByID(id) {
   const kategorije = dohvatiSveIzStorage()
-  const kategorija = kategorije.find(c=> c.id === parseInt(id, 10))
+  const kategorija = kategorije.find(c=> c.id === parseInt(id))
   return { data: kategorija }
 }
 
@@ -25,7 +25,7 @@ async function dodaj(kategorija) {
   if (kategorije.length === 0) {
     kategorija.id = 1
   } else {
-    const maxId = Math.max(...kategorije.map(sc=> c.id))
+    const maxId = Math.max(...kategorije.map(c=> c.id))
     kategorija.id = maxId + 1
   }
 
@@ -35,7 +35,7 @@ async function dodaj(kategorija) {
 
 async function promijeni(id, kategorija) {
   const kategorije = dohvatiSveIzStorage()
-  const index = kategorije.findIndex(c => c.id === parseInt(id, 10))
+  const index = kategorije.findIndex(c => c.id === parseInt(id))
 
   if (index !== -1) {
     kategorije[index] = { ...kategorije[index], ...kategorija }
@@ -45,7 +45,7 @@ async function promijeni(id, kategorija) {
 
 async function obrisi(id) {
   let kategorije = dohvatiSveIzStorage()
-  kategorije = kategorije.filter(c => c.id !== parseInt(id, 10))
+  kategorije = kategorije.filter(c => c.id !== parseInt(id))
   spremiUStorage(kategorije)
 }
 

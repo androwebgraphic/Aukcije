@@ -1,4 +1,4 @@
-import { auti } from "../../services/auti/AutiData";
+import { auti } from "./AutiData";
 
 // READ (Svi auti)
 async function get() {

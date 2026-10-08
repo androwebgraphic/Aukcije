@@ -1,4 +1,4 @@
-import { auti } from "../../services/kategorije/AutiData";
+import { auti } from "../../services/auti/AutiData";
 
 // READ (Svi auti)
 async function get() {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import AutiServices from "../../../services/kategorije/AutiServices";
+import AutiServices from "../../services/auti/AutiServices"
 import { Container, Table, Button } from "react-bootstrap";
-import DateFormat from "../../../components/DateFormat";
+import DateFormat from "../../components/DateFormat";
 import { Link, useNavigate } from "react-router-dom";
-import { RouteNames } from "../../../constants";
+import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
-import { Heading } from "../../../components/UI/Heading";
+import { Heading } from "../../components/UI/Heading";
 
 function ExpandableText({ text, maxLength = 100 }) {
 	const [isExpanded, setIsExpanded] = useState(false);

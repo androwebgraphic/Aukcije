@@ -112,6 +112,10 @@ p.warn {
 
   color: rgb(243, 178, 56);
 }
+p.storage{
+
+  font-size: 4rem;
+}
 
 .logo {
   /* float: left; */

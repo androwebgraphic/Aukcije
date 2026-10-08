@@ -1,8 +1,8 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { RouteNames } from "../../../constants";
-import AutiServices from "../../../services/kategorije/AutiServices";
-import Heading from "../../../components/UI/Heading";
+import { RouteNames } from "../../constants"
+import AutiServices from "../../services/auti/AutiServices"
+import Heading from "../../components/UI/Heading";
 
 export default function AtutoNovi() {
     const navigate = useNavigate();

@@ -9,7 +9,7 @@ import {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
-import AutiServices from "../../services/kategorije/AutiServices";
+import AutiServices from "../../services/auti/AutiServices";
 import Heading from "../../components/UI/Heading";
 
 export default function AutiPromijena() {

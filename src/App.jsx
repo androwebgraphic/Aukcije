@@ -13,9 +13,9 @@ import Logiranje from './pages/Logiranje.jsx';
 import KategorijaNova from './pages/kategorije/KategorijaNova.jsx';
 
 import Uvjeti from './pages/Uvjeti.jsx';
-import AutiList from './pages/kategorije/auti/AutiLista.jsx';
-import AutoNovi from './pages/kategorije/auti/AutoNovi.jsx';
-import AutiPromijena from './pages/kategorije/auti/AutiPromjena.jsx';
+import AutiList from './pages/auti/AutiLista.jsx';
+import AutoNovi from './pages/auti/AutoNovi.jsx';
+import AutiPromijena from './pages/auti/AutiPromjena.jsx';
 import KategorijePromijena from '././pages/kategorije/KategorijePromjena.jsx'
 import { RouteNames } from './constants.js';
 

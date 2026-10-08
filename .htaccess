@@ -1,0 +1,19 @@
+
+RewriteEngine on
+
+# 1. Prisilni HTTPS i WWW (tvoj postojeći kod)
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^origo\.hr$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.origo\.hr$
+RewriteRule ^(.*)$ "https://www.origo.hr/$1" [R=301,L]
+
+# 2. Preusmjeravanje nepostojećih ruta na početnu stranicu
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+
+# Postavke za JS datoteke
+<FilesMatch "\.js$">
+    Header set Content-Type "application/javascript; charset=UTF-8"
+</FilesMatch>

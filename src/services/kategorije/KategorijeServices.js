@@ -1,59 +1,46 @@
-import { kategorije } from './KategorijeData'
+import { DATA_SOURCE } from "../../constants";
+import  KategorijeServicesLocalStorage  from '../kategorije/KategorijeServicesLocalStorage'
+import KategorijeServicesMemorija  from '../kategorije/KategorijeServicesMemorija'
 
 
-//1/4 cRud READ
-async function get() {
+let Servis = null
+
+switch (DATA_SOURCE ){
   
-  return {data: [...kategorije]}
-}
-
-async function getByID(id) {
-  
-  return {
+  case 'memorija': 
     
-    data: kategorije.find( s => s.id === parseInt(id))
-  }
+    Servis = KategorijeServicesMemorija
 
-}
-//2/4  Crud CREATE
-
-async function dodaj(kategorija) {
- 
-  if (kategorije.length === 0) {
+    break
+  
+  case 'localStorage' :
     
-    kategorija.id = 1
-  } else {
+    Servis = KategorijeServicesLocalStorage
+
+    break
+  
+  default:
     
-    kategorija.id = kategorije[kategorije.length-1].id +1
-  }
-kategorije.push(kategorija)
-}
-//3/4 crUd UPDATE
-
-async function promijeni(id, kategorija) {
-  
-  const index = nadiIndex(id)
-  kategorije[index] = {...kategorije[index], ...kategorija}
+    Servis = null
 }
 
-function nadiIndex(id) {
-  
-  return kategorije.findIndex(s => s.id===parseInt(id))
+const PrazanServis = {
+
+  get: async () => ({ data: [] }),
+  dodaj: async (kategorija) => { console.log('Smjer nije implementiran') },
+  getByID: async (id) => ({ data: {} }),
+  promijeni: async (id, kategorije) => { console.error('Servis nije  implmentiran') },
+  obrisi: async (id) => {console.error('Servis nije  implementiran')}
 }
 
-async function obrisi(id) {
-  
-  const index = nadiIndex(id)
-  kategorije.splice(index,1)
-}
+const AktivniServis = Servis || PrazanServis
 
-//4/4 cruD DELETE
 export default {
 
-  get,
-  dodaj,
-  getByID,
-  promijeni,
-  obrisi
-
+  get: () => AktivniServis.get(),
+  getByID: ()=> AktivniServis.getByID(),
+  dodaj: (kategorije) => AktivniServis.dodaj(kategorije), 
+  promijeni: (id, kategorije) => AktivniServis.promijeni(id, kategorije),
+  obrisi: (id) => AktivniServis.obrisi(id)
 }
+// export {KategorijeServicesMemorija}

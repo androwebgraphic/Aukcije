@@ -1,7 +1,8 @@
-import { APP_NAME, RouteNames } from "../constants";
+import { DATA_SOURCE,APP_NAME, RouteNames } from "../constants";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
+
 
 import ScrollToTopButton from "./ScrollToTopButton";
 
@@ -22,7 +23,7 @@ function Footer() {
       <p className="copy">&copy; {APP_NAME} Sva prava pridržana {currentYear}.</p>
       
 
-  
+  {DATA_SOURCE}
       <ScrollToTopButton></ScrollToTopButton>
 
        

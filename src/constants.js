@@ -1,4 +1,4 @@
-export const APP_NAME = 'Aukcije |'
+export const APP_NAME = 'Aukcije '
 
 export const RouteNames = {
   //kategorije
@@ -22,3 +22,6 @@ export const RouteNames = {
 
    
 }
+
+//memorija, localStorage, firebase
+export const  DATA_SOURCE = 'localStorage'

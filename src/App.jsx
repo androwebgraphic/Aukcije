@@ -4,7 +4,7 @@ import Footer from "./components/Footer.jsx";
 
 import './App.css';
 import {  Container } from 'react-bootstrap';
-import { RouteNames } from './constants.js';
+
 import {Route, Routes } from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import KategorijaList from './/pages/KategorijaList.jsx'
@@ -16,9 +16,8 @@ import Uvjeti from './pages/Uvjeti.jsx';
 import AutiList from './pages/kategorije/auti/AutiLista.jsx';
 import AutoNovi from './pages/kategorije/auti/AutoNovi.jsx';
 import AutiPromijena from './pages/kategorije/auti/AutiPromjena.jsx';
-
-import { MdOutlineVerticalAlignTop } from "react-icons/md";
 import KategorijePromijena from '././pages/kategorije/KategorijePromjena.jsx'
+import { RouteNames } from './constants.js';
 
 
 
@@ -60,10 +59,11 @@ function App() {
     
       <Footer>
 
-
       </Footer>
     </>
   )
 }
 
 export default App
+
+

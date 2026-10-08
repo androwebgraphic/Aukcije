@@ -7,10 +7,10 @@ import {
   Row,
 } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { RouteNames } from "../../../constants";
+import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
-import AutiServices from "../../../services/kategorije/AutiServices";
-import Heading from "../../../components/UI/Heading";
+import AutiServices from "../../services/kategorije/AutiServices";
+import Heading from "../../components/UI/Heading";
 
 export default function AutiPromijena() {
   const navigate = useNavigate();

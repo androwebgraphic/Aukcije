@@ -28,7 +28,7 @@ export default function KategorijePromijena() {
     try {
       const odgovor = await KategorijeServices.getByID(params.id);
       console.log("Odgovor iz SErvisa: ",odgovor)
-      const s = odgovor?.data ? odgovor.data
+      const s = odgovor?.data? odgovor
       :data  || {};
 
       if (s && s.datumMoj) {

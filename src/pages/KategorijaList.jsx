@@ -5,43 +5,53 @@ import DateFormat from "../components/DateFormat"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../constants"
 
-// Uvoz ikona koje si naveo
+// Uvoz ikona za kategorije
 import { FaComputer } from "react-icons/fa6";
 import { TbCarSuv } from "react-icons/tb";
-import { MdWatch } from "react-icons/md";
+import { GiDiamondRing } from "react-icons/gi"; // Ikona za nakit
 import { GiPostStamp } from "react-icons/gi";
 import { VscTools } from "react-icons/vsc";
 import { RiBookShelfLine } from "react-icons/ri";
 import { PiHandCoinsBold } from "react-icons/pi";
 import { FaArrowTurnUp } from "react-icons/fa6";
+import { MdWatch } from "react-icons/md";
+import { FaRecordVinyl } from "react-icons/fa";
+import { AiOutlinePicture } from "react-icons/ai";
 
 import '../ResponsiveTable.css';
 import Heading from "../components/UI/Heading"
 
-// 1. Objekt koji grupira isključivo navedene ikone
+// 1. Objekt s dodijeljenim ikonama za kategorije
 const ICONS = {
   car: TbCarSuv,
   computer: FaComputer,
-  watch: MdWatch,
+  jewelry: GiDiamondRing, // Nakit
   stamp: GiPostStamp,
   tools: VscTools,
   books: RiBookShelfLine,
   coins: PiHandCoinsBold,
+  watches: MdWatch,
+  lp: FaRecordVinyl ,
+  pic:AiOutlinePicture
 };
 
-// 2. Logika za prepoznavanje odgovarajuće ikone na temelju naziva kategorije
+// 2. Funkcija koja određuje ikonu na temelju naziva kategorije
 const getCategoryIcon = (naziv) => {
   if (!naziv) return ICONS.tools;
 
   const name = naziv.toLowerCase().trim();
 
-  if (name.includes('aut') || name.includes('vozil')) return ICONS.car;
-  if (name.includes('računal') || name.includes('racunala') || name.includes('komp') || name.includes('elektronik')) return ICONS.computer;
-  if (name.includes('sat') || name.includes('nakit')) return ICONS.watch;
-  if (name.includes('markic') || name.includes('kolekc') || name.includes('starin')) return ICONS.stamp;
-  if (name.includes('knjig') || name.includes('literatur') || name.includes('strip')) return ICONS.books;
-  if (name.includes('financij') || name.includes('novac') || name.includes('posa')) return ICONS.coins;
-  if (name.includes('alat') || name.includes('uslug') || name.includes('stroj')) return ICONS.tools;
+  if (name.includes('auti') || name.includes('vozila')) return ICONS.car;
+  if (name.includes('računal') || name.includes('racunala') || name.includes('komp') )return ICONS.computer;
+  if (name.includes('nakit') || name.includes('prsten') || name.includes('zlato') || name.includes('srebro') || name.includes('bižuterija')) return ICONS.jewelry;
+  if (name.includes('markice') || name.includes('filatelija') || name.includes('starine')) return ICONS.stamp;
+  if (name.includes('beletristika') || name.includes('literatur') || name.includes('strip')) return ICONS.books;
+  if (name.includes('numizmatika') || name.includes('novac') || name.includes('posa')) return ICONS.coins;
+  if (name.includes('alati') || name.includes('uslug') || name.includes('stroj')) return ICONS.tools;
+  if (name.includes('satovi') || name.includes('uslug') || name.includes('stroj')) return ICONS.watches;
+  if (name.includes('Lp') || name.includes('ploce') || name.includes('stroj')) return ICONS.lp;
+    if (name.includes('Umjetnine') || name.includes('umjetnine') || name.includes('stroj')) return ICONS.pic;
+  
 
   return ICONS.tools;
 };
@@ -124,7 +134,7 @@ export default function KategorijaList() {
             return (
               <tr key={c.id}>
                 <td data-label="ikone" className="text-center align-middle">
-                  <IconComponent size={40} color="#0d6efd" />
+                  <IconComponent size={48} color="#0d6efd" />
                 </td>
                 <td data-label="naziv">{c.naziv}</td>
                 <td data-label="Opis">

@@ -75,17 +75,16 @@ header{
  
 
 }
-.navbar-brand{
-  display: none;}
+
 /* h1 { font-size: var(--font-h1); line-height: var(--lh-heading); } */
  .navbar-brand {
   /* margin-left: auto; */
   /* width: 20%; */
   
-  text-align: center;
+  text-align: left;
   font-family: "BerkshireSwash-Regular", sans-serif;
   color: #f9f9fa;
-   letter-spacing: .8rem;
+   letter-spacing: .4rem;
 }
 .container h1, h2{
   text-align: center;
@@ -120,6 +119,7 @@ p.storage{
 .logo {
   /* float: left; */
   margin-right: .5rem;
+  margin-left:1rem;
   margin-bottom: 1rem;
   /* padding: .5rem; */
   border-radius: 50%;
@@ -136,6 +136,7 @@ box-shadow: .1rem .1rem 1rem;
 
 .navbar {
 margin-bottom: 1rem;
+margin-right: auto;
  padding: 0 1rem 0 1rem;
   background-color:var(--main-color);
   border-radius: 2rem;
@@ -221,6 +222,7 @@ button[type='submit']{
 }
 .btn{
   margin: 1rem;
+    border-radius: 1.7rem;
 }
 .btn.btn-danger{
    border-radius: 1.7rem;
@@ -250,9 +252,7 @@ footer{
   float: left;
   background-color: azure;
   }
-.navbar-brand{
-  display: none;
-}
+
 }
 
 

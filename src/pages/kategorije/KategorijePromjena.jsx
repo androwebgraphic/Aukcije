@@ -134,12 +134,12 @@ export default function KategorijePromijena() {
 
         <hr />
         <Row>
-          <Col sm={12} md={6} className="mb-2">
-            <Button type="submit" variant="success" className="w-100">
+          <Col sm={12} md={3} className="mb-2">
+            <Button type="submit" variant="warning" className="w-100">
               Promijeni
             </Button>
           </Col>
-          <Col sm={12} md={6}>
+          <Col sm={12} md={3}>
             <Link to={RouteNames.KATEGORIJE} className="btn btn-danger w-100">
               Odustani
             </Link>

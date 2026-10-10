@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import KategorijeServices from "../services/kategorije/KategorijeServices"
-import { Button, Container, Table } from "react-bootstrap"
+import { Button, Container, Row, Col, Card, Badge } from "react-bootstrap"
 import DateFormat from "../components/DateFormat"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../constants"
@@ -14,44 +14,34 @@ import { VscTools } from "react-icons/vsc";
 import { RiBookShelfLine } from "react-icons/ri";
 import { PiHandCoinsBold } from "react-icons/pi";
 import { FaArrowTurnUp } from "react-icons/fa6";
-import { MdWatch } from "react-icons/md";
-import { FaRecordVinyl } from "react-icons/fa";
-import { AiOutlinePicture } from "react-icons/ai";
 
 import '../ResponsiveTable.css';
 import Heading from "../components/UI/Heading"
 
-// 1. Objekt s dodijeljenim ikonama za kategorije
+// 1. Objekt s ikonicama
 const ICONS = {
   car: TbCarSuv,
   computer: FaComputer,
-  jewelry: GiDiamondRing, // Nakit
+  jewelry: GiDiamondRing,
   stamp: GiPostStamp,
   tools: VscTools,
   books: RiBookShelfLine,
   coins: PiHandCoinsBold,
-  watches: MdWatch,
-  lp: FaRecordVinyl ,
-  pic:AiOutlinePicture
 };
 
-// 2. Funkcija koja određuje ikonu na temelju naziva kategorije
+// 2. Određivanje ikone na temelju naziva
 const getCategoryIcon = (naziv) => {
   if (!naziv) return ICONS.tools;
 
   const name = naziv.toLowerCase().trim();
 
-  if (name.includes('auti') || name.includes('vozila')) return ICONS.car;
-  if (name.includes('računal') || name.includes('racunala') || name.includes('komp') )return ICONS.computer;
+  if (name.includes('aut') || name.includes('vozil')) return ICONS.car;
+  if (name.includes('računal') || name.includes('racunala') || name.includes('komp') || name.includes('elektronik')) return ICONS.computer;
   if (name.includes('nakit') || name.includes('prsten') || name.includes('zlato') || name.includes('srebro') || name.includes('bižuterija')) return ICONS.jewelry;
-  if (name.includes('markice') || name.includes('filatelija') || name.includes('starine')) return ICONS.stamp;
-  if (name.includes('beletristika') || name.includes('literatur') || name.includes('strip')) return ICONS.books;
-  if (name.includes('numizmatika') || name.includes('novac') || name.includes('posa')) return ICONS.coins;
-  if (name.includes('alati') || name.includes('uslug') || name.includes('stroj')) return ICONS.tools;
-  if (name.includes('satovi') || name.includes('uslug') || name.includes('stroj')) return ICONS.watches;
-  if (name.includes('Lp') || name.includes('ploce') || name.includes('stroj')) return ICONS.lp;
-    if (name.includes('Umjetnine') || name.includes('umjetnine') || name.includes('stroj')) return ICONS.pic;
-  
+  if (name.includes('markic') || name.includes('kolekc') || name.includes('starin')) return ICONS.stamp;
+  if (name.includes('knjig') || name.includes('literatur') || name.includes('strip')) return ICONS.books;
+  if (name.includes('financij') || name.includes('novac') || name.includes('posa')) return ICONS.coins;
+  if (name.includes('alat') || name.includes('uslug') || name.includes('stroj')) return ICONS.tools;
 
   return ICONS.tools;
 };
@@ -108,56 +98,75 @@ export default function KategorijaList() {
   }
 
   return (
-    <Container>
-      <Heading as='h1' className="display-1">Lista Kategorija</Heading>
+    <Container className="my-4">
+      <Heading as='h1' className="display-1 mb-4">Lista Kategorija <small>({kategorije.length })</small> </Heading>
       
-      <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-3">
+      <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-4">
         dodavanje nove kategorije 
       </Link>
 
-      <Table hover striped bordered className="table-stacked">
-        <thead>
-          <tr>
-            <th className="text-center">Ikona</th>
-            <th>Naziv</th>
-            <th>Opis</th>
-            <th className="text-center">broj oglasa</th>
-            <th>Kreirano</th>
-            <th>Akcija</th>
-          </tr>
-        </thead>
+      {/* Grid sa Bootstrap Card elementima */}
+      <Row xs={1} sm={1} md={2} lg={3} className="g-2">
+        {kategorije && kategorije.map((c) => {
+          const IconComponent = getCategoryIcon(c.naziv);
 
-        <tbody>
-          {kategorije && kategorije.map((c) => {
-            const IconComponent = getCategoryIcon(c.naziv);
+          return (
+            <Col key={c.id}>
+              <Card className="h-100 shadow-sm border-0">
+                <Card.Body className="d-flex flex-column">
+                  
+                  {/* Zaglavlje kartice: Ikona i Naziv */}
+                  <div className="d-flex align-items-center gap-3 mb-3">
+                    <div 
+                      className="p-3 rounded-circle d-flex align-items-center justify-content-center" 
+                      style={{ backgroundColor: '#e7f1ff' }}
+                    >
+                      <IconComponent size={25} color="#1a3580" />
+                    </div>
+                    <div>
+                      <Card.Title color="#1a3580">{c.naziv} </Card.Title>
+                      <small className="text-muted">
+                        Kreirano: <DateFormat date={c.datumMoj} />
+                      </small>
+                    </div>
+                  </div>
 
-            return (
-              <tr key={c.id}>
-                <td data-label="ikone" className="text-center align-middle">
-                  <IconComponent size={48} color="#0d6efd" />
-                </td>
-                <td data-label="naziv">{c.naziv}</td>
-                <td data-label="Opis">
-                  <ExpandableText text={c.opis} maxLength={50} />
-                </td>
-                <td data-label="broj oglasa" className="text-center">{c.brojOglasa}</td>
-                <td data-label="kreirano"> 
-                  <DateFormat date={c.datumMoj} />
-                </td>
-                <td data-label="Akcija">
-                  <Button onClick={() => { navigate(`/kategorije/${c.id}`) }}>
-                    Promijeni
-                  </Button>
-                  &nbsp; &nbsp;
-                  <Button variant='danger' onClick={() => obrisi(c.id)}>
-                    Obriši
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+                  {/* Opis kategorije */}
+                  <Card.Text className="text-secondary flex-grow-1">
+                    <ExpandableText text={c.opis} maxLength={60} />
+                  </Card.Text>
+
+                  {/* Broj oglasa badge */}
+                  <div className="mb-3">
+                    <Badge bg="secondary" className="text-light px-2 py-2">
+                      Broj oglasa: {c.brojOglasa || 0}
+                    </Badge>
+                  </div>
+
+                  {/* Akcijski gumbi */}
+                  <div className="d-flex gap-2 mt-auto pt-2 border-top">
+                    <Button 
+                      variant="warning" 
+                      className="w-50"
+                      onClick={() => navigate(`/kategorije/${c.id}`)}
+                    >
+                      Promijeni
+                    </Button>
+                    <Button 
+                      variant="danger" 
+                      className="w-50"
+                      onClick={() => obrisi(c.id)}
+                    >
+                      Obriši
+                    </Button>
+                  </div>
+
+                </Card.Body>
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
     </Container>
   )
 }

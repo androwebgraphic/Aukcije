@@ -146,7 +146,7 @@ export default function AutiPromijena() {
         <hr />
         <Row>
           <Col sm={12} md={6}>
-            <Button type="submit" className="btn btn-success">
+            <Button type="submit" className="btn btn-warning">
               Promijeni
             </Button>
           </Col>

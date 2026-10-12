@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AutiServices from "../../services/auti/AutiServicesMemorija";
+import AutiServices from "../../services/auti/AutiServices";
 import { Container, Row, Col, Card, Button, Badge } from "react-bootstrap";
 import DateFormat from "../../components/DateFormat";
 import { Link, useNavigate } from "react-router-dom";

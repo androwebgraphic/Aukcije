@@ -7,6 +7,7 @@ import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
 import { TbCarSuv } from "react-icons/tb"; // Ikona za aute
 import Heading from "../../components/UI/Heading";
+import {motion} from "framer-motion"
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -63,7 +64,15 @@ export default function AutiList() {
   }
 
   return (
+
     <Container className="my-4">
+          <motion.div
+    
+    
+         initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
+            animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
+            transition={{ duration: 0.4, ease: "easeOut"  , delay:.4}} // Trajanje i glatkoća
+    >
       <Heading as="h2" color="azure" className="display-2 mb-4">
         Lista auta ({auti.length})
       </Heading>
@@ -71,7 +80,14 @@ export default function AutiList() {
       <Link to={RouteNames.AUTI_NOVI} className="btn btn-success mb-4">
         Dodavanje novog auta
       </Link>
-
+      </motion.div>
+      <motion.div
+      
+                  initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
+            animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
+            transition={{ duration: 0.7, ease: "easeOut"  , delay:.6}} // Trajanje i glatkoća
+      
+      >
       {/* Grid sa Bootstrap Card elementima */}
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
         {auti &&
@@ -152,8 +168,10 @@ export default function AutiList() {
                 </Card.Body>
               </Card>
             </Col>
+       
           ))}
-      </Row>
+        </Row>
+        </motion.div>
     </Container>
   );
 }

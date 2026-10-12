@@ -45,7 +45,7 @@ async function promijeni(id, auto) {
 
 async function obrisi(id) {
   let auti = dohvatiSveIzStorage()
-  auti = auti.filter(c => c.id !== parseInt(id))
+  auti = auti.filter(c=> c.id !== parseInt(id))
   spremiUStorage(auti)
 }
 

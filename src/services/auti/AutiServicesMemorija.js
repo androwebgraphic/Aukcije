@@ -1,38 +1,38 @@
-import { auti } from "./AutiData";
+import { auti } from './AutiData'
 
-// READ (Svi auti)
+
+//1/4 cRud READ
 async function get() {
-  return { data: [...auti] };
+  
+  return {data: [...auti]}
 }
 
-// READ (Jedan auto po ID-u) - OVO JE NEDOSTAJALO!
 async function getByID(id) {
-  const auto = auti.find((a) => a.id == id);
-  return { data: auto };
-}
+  
+  return { data: auti.find( s => s.id === parseInt(id))}
 
-// CREATE
+}
+//2/4  Crud CREATE
+
 async function dodaj(auto) {
+ 
   if (auti.length === 0) {
-    auto.id = 1; // Ispravljeno veliko 'I' u malo 'i'
+    
+    auto.id = 1
   } else {
-    auto.id = auti[auti.length - 1].id + 1;
+    
+    auto.id = auti[auti.length-1].id +1
   }
-
-  auti.push(auto);
-  return { data: auto };
+auti.push(auto)
 }
+//3/4 crUd UPDATE
 
-// UPDATE
 async function promijeni(id, auto) {
-  const index = nadiIndex(id);
-  if (index !== -1) {
-    auti[index] = { ...auti[index], ...auto };
-  }
-  return { data: auti[index] };
+  
+  const index = nadiIndex(id)
+  auti[index] = {...auti[index], ...auto}
 }
 
-// Pomoćna funkcija za pronalazak indeksa
 function nadiIndex(id) {
   
   return auti.findIndex(s => s.id===parseInt(id))
@@ -41,16 +41,16 @@ function nadiIndex(id) {
 async function obrisi(id) {
   
   const index = nadiIndex(id)
-  auti.splice(index, 1)
-  console.log(`obrisan ${index}`)
+  auti.splice(index,1)
 }
 
-
-// Eksportiraj sve funkcije uključujući i getByID
+//4/4 cruD DELETE
 export default {
+
   get,
-  getByID,
   dodaj,
+  getByID,
   promijeni,
-  obrisi,
-};
+  obrisi
+
+}

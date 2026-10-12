@@ -1,6 +1,5 @@
 import { DATA_SOURCE } from "../../constants";
 import AutiServicesMemorija  from './AutiServicesMemorija'
-;
 import AutiServicesLocalStorage from "./AutiServicesLocalStorage";
 
 
@@ -16,7 +15,7 @@ switch (DATA_SOURCE ){
   
   case 'localStorage' :
     
-    Servis =AutiServicesLocalStorage
+    Servis = AutiServicesLocalStorage
 
     break
   
@@ -41,7 +40,7 @@ export default {
   get: () => AktivniServis.get(),
   getByID: (id)=> AktivniServis.getByID(id),
   dodaj: (auto) => AktivniServis.dodaj(auto), 
-  promijeni: (id, auto) => AktivniServis.promijeni(id, auto),
+  promijeni: (id, auto )=> AktivniServis.promijeni(id, auto),
   obrisi: (id) => AktivniServis.obrisi(id)
 }
 // export {KategorijeServicesMemorija}

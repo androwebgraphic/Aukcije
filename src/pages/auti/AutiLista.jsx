@@ -71,7 +71,7 @@ export default function AutiList() {
     
          initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
             animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
-            transition={{ duration: 0.4, ease: "easeOut"  , delay:.4}} // Trajanje i glatkoća
+            transition={{ duration: 0.4, ease: "easeOut"  , delay:.2}} // Trajanje i glatkoća
     >
       <Heading as="h2" color="azure" className="display-2 mb-4">
         Lista auta ({auti.length})
@@ -85,7 +85,7 @@ export default function AutiList() {
       
                   initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
             animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
-            transition={{ duration: 0.7, ease: "easeOut"  , delay:.6}} // Trajanje i glatkoća
+            transition={{ duration: 0.7, ease: "easeOut"  , delay:.3}} // Trajanje i glatkoća
       
       >
       {/* Grid sa Bootstrap Card elementima */}

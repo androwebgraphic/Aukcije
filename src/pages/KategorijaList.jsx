@@ -108,7 +108,7 @@ export default function KategorijaList() {
         <motion.div 
       initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
             animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
-            transition={{ duration: 0.4, ease: "easeOut"  ,delay:.4}} // Trajanje i glatkoća
+            transition={{ duration: 0.4, ease: "easeOut"  ,delay:.2}} // Trajanje i glatkoća
     >
       <Heading as='h1' className="display-1 mb-4">   Lista Kategorija <small>({kategorije.length})</small> </Heading>
 
@@ -127,7 +127,7 @@ export default function KategorijaList() {
             
             initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
             animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
-            transition={{ duration: 0.7, ease: "easeOut"  , delay:.6}} // Trajanje i glatkoća
+            transition={{ duration: 0.7, ease: "easeOut"  , delay:.4}} // Trajanje i glatkoća
             
             >
               <Col key={c.id}>

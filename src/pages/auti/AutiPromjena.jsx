@@ -23,10 +23,10 @@ export default function AutiPromijena() {
 
   async function ucitajAuti() {
     await AutiServices.getByID(params.id).then((odgovor) => {
-      const s = odgovor.data;
+      const s = odgovor.data || {};
 
       // Pretvaramo ISO datume u YYYY-MM-DD za type="date" inpute
-      if (s.datumMoj) {
+      if (s && s.datumMoj) {
         s.datumMoj = s.datumMoj.substring(0, 10);
       }
       if (s.zavrsava) {

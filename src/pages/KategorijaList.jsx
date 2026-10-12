@@ -17,6 +17,7 @@ import { FaArrowTurnUp } from "react-icons/fa6";
 
 import '../ResponsiveTable.css';
 import Heading from "../components/UI/Heading"
+import {motion} from "framer-motion"
 
 // 1. Objekt s ikonicama
 const ICONS = {
@@ -71,6 +72,8 @@ function ExpandableText({ text, maxLength = 100 }) {
   );
 }
 
+
+
 export default function KategorijaList() {
   const [kategorije, setKategorije] = useState([])
   const navigate = useNavigate()
@@ -98,21 +101,41 @@ export default function KategorijaList() {
   }
 
   return (
-    <Container className="my-4">
-      <Heading as='h1' className="display-1 mb-4">Lista Kategorija <small>({kategorije.length })</small> </Heading>
-      
-      <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-4">
+    <>
+
+    <Container className="my-4" >
+    
+        <motion.div 
+      initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
+            animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
+            transition={{ duration: 0.4, ease: "easeOut"  ,}} // Trajanje i glatkoća
+    >
+      <Heading as='h1' className="display-1 mb-4">   Lista Kategorija <small>({kategorije.length})</small> </Heading>
+
+ <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-4">
         dodavanje nove kategorije 
       </Link>
-
+   </motion.div>
       {/* Grid sa Bootstrap Card elementima */}
       <Row xs={1} sm={1} md={2} lg={3} className="g-2">
         {kategorije && kategorije.map((c) => {
           const IconComponent = getCategoryIcon(c.naziv);
 
           return (
-            <Col key={c.id}>
-              <Card className="h-100 shadow-sm border-0">
+
+            <motion.div
+            
+            initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
+            animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
+            transition={{ duration: 0.7, ease: "easeOut"  , delay:.6}} // Trajanje i glatkoća
+            
+            >
+              <Col key={c.id}>
+             
+                
+  
+              <Card className="h-100 shadow-sm border-0" >
+
                 <Card.Body className="d-flex flex-column">
                   
                   {/* Zaglavlje kartice: Ikona i Naziv */}
@@ -161,12 +184,18 @@ export default function KategorijaList() {
                     </Button>
                   </div>
 
-                </Card.Body>
-              </Card>
-            </Col>
+                    </Card.Body>
+                  
+                </Card>
+         
+              </Col>
+              </motion.div>
           );
         })}
-      </Row>
-    </Container>
+        </Row>
+
+      </Container>
+     
+      </>
   )
 }

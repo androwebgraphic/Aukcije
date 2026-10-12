@@ -1,56 +1,47 @@
-import { auti } from "./AutiData";
+import { DATA_SOURCE } from "../../constants";
+import AutiServicesMemorija  from './AutiServicesMemorija'
+;
+import AutiServicesLocalStorage from "./AutiServicesLocalStorage";
 
-// READ (Svi auti)
-async function get() {
-  return { data: [...auti] };
-}
 
-// READ (Jedan auto po ID-u) - OVO JE NEDOSTAJALO!
-async function getByID(id) {
-  const auto = auti.find((a) => a.id == id);
-  return { data: auto };
-}
+let Servis = null
 
-// CREATE
-async function dodaj(auto) {
-  if (auti.length === 0) {
-    auto.id = 1; // Ispravljeno veliko 'I' u malo 'i'
-  } else {
-    auto.id = auti[auti.length - 1].id + 1;
-  }
-
-  auti.push(auto);
-  return { data: auto };
-}
-
-// UPDATE
-async function promijeni(id, auto) {
-  const index = nadiIndex(id);
-  if (index !== -1) {
-    auti[index] = { ...auti[index], ...auto };
-  }
-  return { data: auti[index] };
-}
-
-// Pomoćna funkcija za pronalazak indeksa
-function nadiIndex(id) {
+switch (DATA_SOURCE ){
   
-  return auti.findIndex(s => s.id===parseInt(id))
-}
+  case 'memorija': 
+    
+    Servis =AutiServicesMemorija
 
-async function obrisi(id) {
+    break
   
-  const index = nadiIndex(id)
-  auti.splice(index, 1)
-  console.log(`obrisan ${index}`)
+  case 'localStorage' :
+    
+    Servis =AutiServicesLocalStorage
+
+    break
+  
+  default:
+    
+    Servis = null
 }
 
+const PrazanServis = {
 
-// Eksportiraj sve funkcije uključujući i getByID
+  get: async () => ({ data: [] }),
+  dodaj: async (auto) => { console.log('Smjer nije implementiran') },
+  getByID: async (id) => ({ data: {} }),
+  promijeni: async (id, auti) => { console.error('Servis nije  implmentiran') },
+  obrisi: async (id) => {console.error('Servis nije  implementiran')}
+}
+
+const AktivniServis = Servis || PrazanServis
+
 export default {
-  get,
-  getByID,
-  dodaj,
-  promijeni,
-  obrisi,
-};
+
+  get: () => AktivniServis.get(),
+  getByID: (id)=> AktivniServis.getByID(id),
+  dodaj: (auto) => AktivniServis.dodaj(auto), 
+  promijeni: (id, auto) => AktivniServis.promijeni(id, auto),
+  obrisi: (id) => AktivniServis.obrisi(id)
+}
+// export {KategorijeServicesMemorija}

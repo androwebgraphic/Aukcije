@@ -26,7 +26,7 @@ async function dodaj(auto) {
     auto.id = 1
   } else {
     const maxId = Math.max(...auti.map(c=> c.id))
-    auti.id = maxId + 1
+    auto.id = maxId + 1
   }
 
   auti.push(auto)

@@ -67,7 +67,7 @@ export default function AutiPromijena() {
 
   return (
     <>
-           <Heading as='h2' color='azure' className="display-2" >Lista auta</Heading>
+      <Heading as='h2' color='azure' className="display-2" >Promjena auta: {auto.naziv }</Heading>
      
 
       <Form onSubmit={handleSubmit}>

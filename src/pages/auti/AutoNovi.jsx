@@ -39,7 +39,7 @@ export default function AtutoNovi() {
     return (
       <>
         <Container>
-           <Heading as='h2' color='azure' className="display-2" >Lista auta</Heading>
+           <Heading as='h2' color='azure' className="display-2" >Dodaj auto</Heading>
      
 
             <Row>

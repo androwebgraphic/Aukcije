@@ -37,11 +37,19 @@ function NavMain() {
           
               </NavDropdown.Item>
               <NavDropdown.Item onClick={() => { navigate(RouteNames.AUTI); setExpanded(false); }}>
-             Auti</NavDropdown.Item>
+                Auti</NavDropdown.Item>
+              
+                   <NavDropdown.Item onClick={() => { navigate(RouteNames.VINILI); setExpanded(false); }}>
+                Vinili</NavDropdown.Item>
+              
             </NavDropdown>
 
-          
-                <>
+    
+
+      
+
+
+   
                 <Nav.Link onClick={() => { navigate(RouteNames.REGISTRACIJA); setExpanded(false); }}>
                   Registracija
                 </Nav.Link>
@@ -49,15 +57,15 @@ function NavMain() {
                   Logiranje
              
                 </Nav.Link>
-              </>
+        
       
 
     
            
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
-    </>
+    </Navbar >
+  </>
   );
 }
 

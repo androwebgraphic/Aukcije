@@ -15,11 +15,16 @@ export const RouteNames = {
     AUTI_PROMJENA: 'kategorije/auti/:id',
   AUTI:'/kategorije/auti',
   AUTI_NOVI: '/kategorije/auti/dodajauto',
-  
+
+
+  // Vinili
+
 
   UVJETI: '/uvjeti',
 
-
+  VINILI_PROMJENA: '/kategorije/vinil/:id',
+  VINIL_NOVI: '/kategorije/vinili/dodajvinil',
+  VINILI:'/kategorije/vinili/'
    
 }
 

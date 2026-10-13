@@ -7,41 +7,44 @@ import Heading from "../../components/UI/Heading";
 export default function AtutoNovi() {
     const navigate = useNavigate();
 
-    async function dodaj(auto) {
-        const response = await AutiServices.dodaj(auto);
-        if (response) {
-            navigate(RouteNames.AUTI); // Preusmjeravanje na listu auta
+   async function dodaj(auto) {
+        try {
+            await AutiServices.dodaj(auto);
+            navigate(RouteNames.AUTI); // Preusmjeravanje uvijek nakon uspješnog slanja
+        } catch (error) {
+            console.error("Greška prilikom dodavanja auta:", error);
         }
     }
 
     function handleSubmit(e) {
-    e.preventDefault();
-    const podatci = new FormData(e.target);
+        e.preventDefault();
+        const podatci = new FormData(e.target);
 
-    // Sigurno dohvaćanje ili zadani datum
-    const datumOd = podatci.get('datumObjavljeno');
-    const datumDo = podatci.get('datumZavrsetak');
+        // 1. Trenutni datum i vrijeme (kada se oglas dodaje)
+        const datumObjave = new Date();
+        const dateAdded = datumObjave.toISOString();
 
-    const dateAdded = datumOd ? new Date(datumOd).toISOString() : new Date().toISOString();
-    const dateEnds = datumDo ? new Date(datumDo).toISOString() : new Date().toISOString();
+        // 2. Automatski izračun: datum objave + 7 dana
+        const datumZavrsetka = new Date(datumObjave);
+        datumZavrsetka.setDate(datumZavrsetka.getDate() + 7);
+        const dateEnds = datumZavrsetka.toISOString();
 
-    dodaj({
-        naziv: podatci.get('naziv') || '',
-       opis: podatci.get('opis') || '',
-        godinaProizvodnje: parseInt(podatci.get('godinaProizvodnje')) || 0,
-        stanje: podatci.get('stanje') || 'očuvan',
-       pocetnaCijena: parseFloat(podatci.get('cijena')) || 0,
-       dodano: dateAdded,
-        zavrsava: dateEnds,
-    });
-}
+        dodaj({
+            naziv: podatci.get('naziv') || '',
+            opis: podatci.get('opis') || '',
+            godinaProizvodnje: parseInt(podatci.get('godinaProizvodnje')) || 0,
+            stanje: podatci.get('stanje') || 'očuvan',
+            pocetnaCijena: parseFloat(podatci.get('cijena')) || 0,
+            dodano: dateAdded,    // Trenutni datum
+            zavrsava: dateEnds,   // Datum automatski pomaknut za 7 dana unaprijed
+        });
+    }
 
     return (
       <>
         <Container>
-           <Heading as='h2' color='azure' className="display-2" >Dodaj auto</Heading>
+           <Heading as='h2' color='azure' className="display-2">Dodaj auto</Heading>
      
-
             <Row>
               <Form onSubmit={handleSubmit}>
                   <Row>
@@ -58,6 +61,7 @@ export default function AtutoNovi() {
                       </Form.Group>
                     </Col>
                   </Row>
+
                   <Row>
                     <Col sm={12} md={6}>
                       <Form.Group controlId="godinaProizvodnje" className="mt-2">
@@ -72,41 +76,28 @@ export default function AtutoNovi() {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Col sm={12} md={6}>
-                    <Form.Group controlId="cijena" className="mt-2">
-                        <Form.Label>Početna cijena (€)</Form.Label>
-                        <Form.Control type="number" name="cijena" step={0.01} required />
-                    </Form.Group>
-            </Col>
-              <Row>
-                <Col sm={12} md={6}>
-                    <Form.Group controlId="datumObjavljeno" className="mt-2">
-                
-                          <Form.Label>Datum objave</Form.Label>
-                          <Form.Control type="date" name="datumObjavljeno" required />
-                                            </Form.Group>
-                        </Col>
-                    <Col sm={12} md={6}>
-                      <Form.Group controlId="datumZavrsetak" className="mt-2">
-                          <Form.Label>Datum završetka aukcije</Form.Label>
-                          <Form.Control type="date" name="datumZavrsetak" required />
+
+                  <Row>
+                    <Col sm={3}>
+                      <Form.Group controlId="cijena" className="mt-2">
+                          <Form.Label>Početna cijena (€)</Form.Label>
+                          <Form.Control type="number" name="cijena" step={0.01} required />
                       </Form.Group>
                     </Col>
-              </Row>
-              <Row>
+                  </Row>
+
+                  <Row className="mt-4">
                     <Col sm={6} md={6}>
-                            <Button type="submit" variant="success" className="w-100">
-                                Dodaj
-                            </Button>
-                        </Col>
-                        <Col sm={6} md={6}>
-                            <Link to={RouteNames.AUTI} className="btn btn-danger w-100">
-                                Odustani
-                            </Link>
-                        </Col>
-                    
-                      </Row>
-              
+                        <Button type="submit" variant="success" className="w-100">
+                            Dodaj
+                        </Button>
+                    </Col>
+                    <Col sm={6} md={6}>
+                        <Link to={RouteNames.AUTI} className="btn btn-danger w-100">
+                            Odustani
+                        </Link>
+                    </Col>
+                  </Row>
               </Form>
           </Row>
           </Container>

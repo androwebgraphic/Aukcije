@@ -24,7 +24,14 @@ export const RouteNames = {
 
   VINILI_PROMJENA: '/kategorije/vinil/:id',
   VINIL_NOVI: '/kategorije/vinili/dodajvinil',
-  VINILI:'/kategorije/vinili/'
+  VINILI: '/kategorije/vinili/',
+  
+
+  //korisnici
+
+  KORISNIK_PROMJENA: '/korisnici/:id',
+  KORISNIK_NOVI: '/korisnici/dodajkorisnika',
+  KORISNICI:'/korisnici'
    
 }
 

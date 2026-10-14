@@ -7,20 +7,28 @@ import { Container } from "react-bootstrap";
 
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home.jsx";
-import KategorijaList from ".//pages/KategorijaList.jsx";
-import Registracija from "./pages/Registracija.jsx";
+import Registracija from "./pages/korisnici/Registracija.jsx";
 import Logiranje from "./pages/Logiranje.jsx";
-import KategorijaNova from "./pages/kategorije/KategorijaNova.jsx";
 
-import Uvjeti from "./pages/Uvjeti.jsx";
+import KategorijaList from ".//pages/KategorijaList.jsx";
+import KategorijaNova from "./pages/kategorije/KategorijaNova.jsx";
+import KategorijePromijena from "././pages/kategorije/KategorijePromjena.jsx";
+
 import AutiList from "./pages/auti/AutiLista.jsx";
 import AutoNovi from "./pages/auti/AutoNovi.jsx";
 import AutiPromijena from "./pages/auti/AutiPromjena.jsx";
-import KategorijePromijena from "././pages/kategorije/KategorijePromjena.jsx";
+
 import { RouteNames } from "./constants.js";
 import VinilPromijena from "./pages/vinili/VinilPromjena.jsx";
 import VinilLista from "./pages/vinili/VinilLista.jsx";
 import VinilNovi from './pages/vinili/VinilNovi.jsx'
+
+import KorisniciLista from "./pages/korisnici/KorisniciLista.jsx";
+import KorisniciPromijena from "./pages/korisnici/KorisniciPromjena.jsx";
+import KorisnikoNovi from "./pages/korisnici/Registracija.jsx";
+
+import Uvjeti from "./pages/Uvjeti.jsx";
+import KorisniciList from "./pages/korisnici/KorisniciLista.jsx";
 
 function App() {
 	return (
@@ -31,11 +39,9 @@ function App() {
 				<Routes>
 					<Route path={RouteNames.HOME} element={<Home />} />
 					<Route path={RouteNames.KATEGORIJE} element={<KategorijaList />} />
-					<Route
-						path={RouteNames.KATEGORIJA_NOVA}
-						element={<KategorijaNova />}
+					<Route path={RouteNames.KATEGORIJA_NOVA} element={<KategorijaNova />}
 					/>
-					<Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
+		
 					<Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
 					<Route path={RouteNames.AUTI} element={<AutiList />} />
 					<Route path={RouteNames.AUTI_NOVI} element={<AutoNovi />} />
@@ -50,7 +56,14 @@ function App() {
 						path={RouteNames.VINILI_PROMJENA}
 						element={<VinilPromijena />}
 					/>
-					<Route path={RouteNames.VINIL_NOVI} element={<VinilNovi />} />
+          <Route path={RouteNames.VINIL_NOVI} element={<VinilNovi />} />
+          
+          <Route path={RouteNames.KORISNICI} element={<KorisniciList />} />
+          <Route path={RouteNames.KORISNIK_NOVI} element={<Registracija />} />
+          <Route path={RouteNames.KORISNIK_PROMJENA} element={ <KorisniciPromijena />} />
+
+
+          
 
 					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />
 				</Routes>

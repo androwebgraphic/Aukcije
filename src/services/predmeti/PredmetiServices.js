@@ -1,6 +1,6 @@
 import { DATA_SOURCE } from "../../constants";
-import AutiServicesMemorija  from './AutiServicesMemorija'
-import AutiServicesLocalStorage from "./AutiServicesLocalStorage";
+import PredmetiServicesMemorija  from './PredmetiServicesMemorija'
+import PredmetiServicesLocalStorage from "./PredmetiServicesLocalStorage";
 
 
 let Servis = null
@@ -9,13 +9,13 @@ switch (DATA_SOURCE ){
   
   case 'memorija': 
     
-    Servis =AutiServicesMemorija
+    Servis =PredmetiServicesMemorija
 
     break
   
   case 'localStorage' :
     
-    Servis = AutiServicesLocalStorage
+    Servis = PredmetiServicesLocalStorage
 
     break
   

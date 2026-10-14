@@ -36,11 +36,10 @@ function NavMain() {
          
           
               </NavDropdown.Item>
-              <NavDropdown.Item onClick={() => { navigate(RouteNames.AUTI); setExpanded(false); }}>
-                Auti</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => { navigate(RouteNames.PREDMET_NOVI); setExpanded(false); }}>
+                Dodaj Predmet</NavDropdown.Item>
               
-                   <NavDropdown.Item onClick={() => { navigate(RouteNames.VINILI); setExpanded(false); }}>
-                Vinili</NavDropdown.Item>
+            
               
                  <NavDropdown.Item onClick={() => { navigate(RouteNames.KORISNICI); setExpanded(false); }}>
                 Korisnici</NavDropdown.Item>

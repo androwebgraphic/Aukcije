@@ -12,9 +12,11 @@ export const RouteNames = {
   REGISTRACIJA: '/registracija',
   LOGIRANJE: '/logiranje',
 
-    AUTI_PROMJENA: 'kategorije/auti/:id',
-  AUTI:'/kategorije/auti',
-  AUTI_NOVI: '/kategorije/auti/dodajauto',
+  //Predmeti
+
+    PREDMETI_PROMJENA: '/predmeti/:id',
+  PREDMETI:'/predmeti',
+  PREDMET_NOVI: '/predmeti/dodajpredmet',
 
 
   // Vinili
@@ -22,9 +24,7 @@ export const RouteNames = {
 
   UVJETI: '/uvjeti',
 
-  VINILI_PROMJENA: '/kategorije/vinil/:id',
-  VINIL_NOVI: '/kategorije/vinili/dodajvinil',
-  VINILI: '/kategorije/vinili/',
+
   
 
   //korisnici

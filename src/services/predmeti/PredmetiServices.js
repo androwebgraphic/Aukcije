@@ -39,8 +39,8 @@ export default {
 
   get: () => AktivniServis.get(),
   getByID: (id)=> AktivniServis.getByID(id),
-  dodaj: (auto) => AktivniServis.dodaj(auto), 
-  promijeni: (id, auto )=> AktivniServis.promijeni(id, auto),
+  dodaj: (predmet) => AktivniServis.dodaj(predmet), 
+  promijeni: (id, predmet )=> AktivniServis.promijeni(id,predmet),
   obrisi: (id) => AktivniServis.obrisi(id)
 }
 // export {KategorijeServicesMemorija}

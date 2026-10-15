@@ -7,6 +7,7 @@ import { FaArrowTurnUp } from "react-icons/fa6";
 import { TbCarSuv } from "react-icons/tb";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
+import KategorijeServices from "../../services/kategorije/KategorijeServices";
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -51,9 +52,11 @@ function formatirajDatum(datumVrijednost) {
 
 export default function PredmetiList() {
   const [predmeti, setPredmeti] = useState([]);
+  const [kategorije, setKategorije] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    ucitajKategorije()
     ucitajPredmete();
   }, []);
 
@@ -66,6 +69,15 @@ export default function PredmetiList() {
     }
   }
 
+  async function ucitajKategorije() {
+    try {
+      const odgovor = await KategorijeServices.get();
+      setKategorije(odgovor.data);
+    } catch (error) {
+      console.error("Greška pri dohvaćanju kategorija:", error);
+    }
+  }
+
   async function obrisi(id) {
     if (!confirm("Želite obrisati?")) {
       return;
@@ -75,7 +87,7 @@ export default function PredmetiList() {
   }
  function prikaziNazivKategorije(id) {
       
-      const kategorija = kategorija.find(s => s.id === id)
+      const kategorija = kategorije.find(s => s.id === id)
       return kategorija.naziv
     }
   return (
@@ -151,7 +163,7 @@ export default function PredmetiList() {
                           <strong>Završava:</strong> {formatirajDatum(c.zavrsava)}
                         </small>
                            <small className="text-muted d-block">
-                          <strong>U kategoriji:</strong> {(c.kategorija)}
+                          <strong>U kategoriji:</strong> {prikaziNazivKategorije(c.kategorija)}
                         </small>
                       </div>
                     </div>

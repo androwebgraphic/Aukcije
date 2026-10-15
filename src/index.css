@@ -25,10 +25,38 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+
 }
+
+
+/* Osnovni stil za svaku stavku u našem custom izborniku */
+/* .my-dropdown-item {
+  padding: 0.4rem 1rem;
+  color: #dee2e6;
+  background-color: #212529;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.my-dropdown-item {
+  padding: 0.4rem 1rem;
+  color: #dee2e6;
+  background-color: #212529;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.my-dropdown-item.sub {
+  padding-left: 2rem;
+  font-size: 0.9rem;
+}
+
+.my-dropdown-item:hover {
+  background-color: #0d6efd !important;
+  color: #ffffff !important;
+} */
 
 @media (prefers-color-scheme: dark) {
   :root {

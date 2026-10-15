@@ -81,7 +81,7 @@ export default function PredmetiPromijena() {
 
   return (
     <Container className="my-4">
-      <Heading as="h2" color="azure" className="display-2 mb-4">
+      <Heading as="h2" color="azure" >
         Promjena predmeta: {predmet.naziv}
       </Heading>
 
@@ -143,9 +143,9 @@ export default function PredmetiPromijena() {
                 defaultValue={predmet.pocetnaCijena || ""}
               />
             </Form.Group>
-          </Col>
+     </Col>
 
-          <Col sm={12} md={6}>
+        <Col sm={12} md={6}>
             <Form.Group controlId="dodano">
               <FormLabel>Datum i sat dodavanja</FormLabel>
               <FormControl
@@ -167,17 +167,17 @@ export default function PredmetiPromijena() {
                 defaultValue={predmet.zavrsava || ""}
               />
             </Form.Group>
-          </Col>
+          </Col> 
         </Row>
 
         <hr className="my-4" />
         <Row>
-          <Col sm={6} md={6}>
+          <Col sm={6} md={4}>
             <Button type="submit" variant="warning" className="w-100">
               Promijeni
             </Button>
           </Col>
-          <Col sm={6} md={6}>
+          <Col sm={6} md={4} style={{marginLeft:'auto'}}>
             <Button
               type="button"
               variant="danger"

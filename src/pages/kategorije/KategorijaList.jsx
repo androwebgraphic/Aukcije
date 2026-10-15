@@ -110,7 +110,7 @@ export default function KategorijaList() {
             animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
             transition={{ duration: 0.4, ease: "easeOut"  ,delay:.2}} // Trajanje i glatkoća
     >
-      <Heading as='h1' className="display-1 mb-4">   Lista Kategorija <small>({kategorije.length})</small> </Heading>
+      <Heading as='h2' >   Lista Kategorija <small>({kategorije.length})</small> </Heading>
 
  <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-4">
         dodavanje nove kategorije 

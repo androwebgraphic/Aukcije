@@ -76,8 +76,8 @@ export default function PredmetNovi() {
   }
 
   return (
-    <Container>
-      <Heading as="h2" color="azure" className="display-2 mb-4">
+    <Container className="mt-3">
+      <Heading as="h2" color="azure" >
         Dodaj predmet
       </Heading>
 

@@ -78,7 +78,7 @@ export default function KategorijePromijena() {
 
   return (
     <>
-      <Heading as="h1" className="display-2 mb-4">
+      <Heading as="h2" >
         Promijeni kategoriju: {kategorija.naziv}
       </Heading>
 

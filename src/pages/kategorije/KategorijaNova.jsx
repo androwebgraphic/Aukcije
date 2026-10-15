@@ -43,7 +43,7 @@ export default function KategorijaNova() {
 
     return (
       <>
-             <Heading as='h2' color='azure' className="display-2" >Dodavanje nove  kategorije</Heading>
+             <Heading as='h2' color='azure' >Dodavanje nove  kategorije</Heading>
        
 
         <Form onSubmit={handleSubmit}>

@@ -32,6 +32,7 @@
 
 background: linear-gradient(180deg, #4058cf 0.000%, #b940c9 50.000%, #ffd36b 100.000%);
 }
+
 html{
 
   min-height: 100vh;
@@ -92,6 +93,7 @@ header{
     word-spacing: .1rem;
    
 }
+
 .h{
 
   display: grid;
@@ -104,7 +106,7 @@ p{
 }
 .container h1{
 
-  margin:2.5rem 0 2.5rem 0;
+  margin:.9rem 0;
   word-spacing: .5rem;
 }
 p.warn {
@@ -135,7 +137,7 @@ box-shadow: .1rem .1rem 1rem;
 
 
 .navbar {
-margin-bottom: 1rem;
+/* margin-bottom: 1rem; */
 margin-right: auto;
  padding: 0 1rem 0 1rem;
   background-color:var(--main-color);
@@ -156,7 +158,7 @@ border:none
 
   color: azure;
 
-  text-align: center;
+  text-align: left;
 }
 .navbar-toggler {
   border: none;
@@ -167,11 +169,26 @@ a.dropdown-item{
   color: var(--main-color);
   background-color: azure;
 }
-.dropdown-menu{
-
-  background-color: azure;
+/* Stil za podkategorije koji potpuno ignorira Bootstrap i radi savršeno */
+.moj-sub-item {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 1rem 0.4rem 2rem; /* Uvučeno udesno da glumi podmeniju */
+  clear: both;
+  font-weight: 400;
+  color: #dee2e6; /* Boja teksta u tamnoj temi */
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent; /* Uvijek transparentno dok nema miša */
+  cursor: pointer;
+  font-size: 0.9rem;
 }
 
+/* Kada staviš miša, mijenja se pozadina SAMO tog jednog reda */
+.moj-sub-item:hover {
+  color: #ffffff !important;
+  background-color: #0d6efd !important;
+}
 .mb-3 input::placeholder{
   color: #cecaca;
 }
@@ -179,16 +196,13 @@ a.dropdown-item{
 
 form{
 
-  margin:  2rem 0 2rem 0;
+  margin:  1rem 0 2rem 0;
 }
 label{
 
   color: azure;
 }
-form select{
 
-  /* margin-top: 1rem; */
-}
 .hide{
 
   display: none;
@@ -283,31 +297,10 @@ footer{
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     } */
 
-    h1 {
-      color: var(--primary-color);
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 0.75rem;
-    }
-
-    h2 {
-      font-size: 1.35rem;
-      margin-top: 2rem;
-      margin-bottom: 0.75rem;
-      color: #0f172a;
-    }
-
-    h3 {
-      font-size: 1.1rem;
-      margin-top: 1.25rem;
-      margin-bottom: 0.5rem;
-      color: #334155;
-    }
-
+   
     p {
       margin-top: 0;
-      margin-bottom: 1rem;
+      margin-bottom: .8rem;
       color: azure;
     }
 

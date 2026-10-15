@@ -97,7 +97,7 @@ export default function PredmetiList() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
       >
-        <Heading as="h2" color="azure" className="display-2 mb-4">
+        <Heading as="h2" color="azure" className=" mb-2 mt-0">
           Lista predmeta ({predmeti.length})
         </Heading>
 

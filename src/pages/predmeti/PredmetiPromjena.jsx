@@ -1,10 +1,11 @@
 import {
-	Button,
-	Col,
-	Form,
-	FormControl,
-	FormLabel,
-	Row,
+  Button,
+  Col,
+  Container,
+  Form,
+  FormControl,
+  FormLabel,
+  Row,
 } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
@@ -13,149 +14,181 @@ import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import Heading from "../../components/UI/Heading";
 
 export default function PredmetiPromijena() {
-	const navigate = useNavigate();
-	const params = useParams();
-	const [predmet, setPredmet] = useState(null);
+  const navigate = useNavigate();
+  const params = useParams();
+  const [predmet, setPredmet] = useState(null);
 
-	useEffect(() => {
-		ucitajPredmeti();
-	}, []);
+  useEffect(() => {
+    ucitajPredmet();
+  }, []);
 
-	async function ucitajPredmeti() {
-		await PredmetiServices.getByID(params.id).then((odgovor) => {
-			const s = odgovor.data || {};
+  async function ucitajPredmet() {
+    try {
+      // Ako tvoj servis koristi samo .get(params.id) umjesto getByID, promijeni dolje u PredmetiServices.get(params.id)
+      const odgovor = await PredmetiServices.getByID(params.id);
+      console.log("Dohvaćeni predmet za promjenu:", odgovor);
 
-			// Pretvaramo ISO datume u YYYY-MM-DD za type="date" inpute
-			if (s && s.datumMoj) {
-				s.datumMoj = s.datumMoj.substring(0, 10);
-			}
-			if (s.zavrsava) {
-				s.zavrsava = s.zavrsava.substring(0, 10);
-			}
+      const s = odgovor.data || odgovor || {};
 
-			setPredmet(s);
-		});
-	}
+      // Pomoćna funkcija za formatiranje datuma u YYYY-MM-DDTHH:mm:ss
+      const formatirajZaInput = (datumStr) => {
+        if (!datumStr) return "";
+        return datumStr.substring(0, 19);
+      };
 
-	async function promijeni(predmetPodaci) {
-		await PredmetiServices.promijeni(params.id, predmetPodaci).then(() => {
-			navigate(RouteNames.PREDMETI);
-		});
-	}
+      if (s.dodano) s.dodano = formatirajZaInput(s.dodano);
+      if (s.zavrsava) s.zavrsava = formatirajZaInput(s.zavrsava);
 
-	function handleSubmit(e) {
-		e.preventDefault();
-		const dataNew = new FormData(e.currentTarget);
+      setPredmet(s);
+    } catch (error) {
+      console.error("Greška kod učitavanja predmeta za promjenu:", error);
+    }
+  }
 
-		const formatDatum = (d) => (d ? new Date(d).toISOString() : null);
+  async function promijeni(predmetPodaci) {
+    try {
+      await PredmetiServices.promijeni(params.id, predmetPodaci);
+      navigate(RouteNames.PREDMETI);
+    } catch (error) {
+      console.error("Greška prilikom izmjene predmeta:", error);
+    }
+  }
 
-		promijeni({
-			naziv: dataNew.get("naziv"),
-			opis: dataNew.get("opis"),
-			godinaNastanka: Number(dataNew.get("godinaNastanka")),
-			stanje: dataNew.get("stanje"),
-			datumMoj: formatDatum(dataNew.get("datumMoj")),
-			pocetnaCijena: Number(dataNew.get("pocetnaCijena")),
-			zavrsava: formatDatum(dataNew.get("zavrsava")),
-		});
-	}
+  function handleSubmit(e) {
+    e.preventDefault();
+    const dataNew = new FormData(e.currentTarget);
 
-	// Dok se podaci ne učitaju, prikazujemo poruku učitavanja
-	if (!predmet) {
-		return <div>Učitavanje...</div>;
-	}
+    const formatDatum = (d) => (d ? new Date(d).toISOString() : null);
 
-	return (
-		<>
-			<Heading as="h2" color="azure" className="display-2">
-				Promjena predmeta: {predmet.naziv}
-			</Heading>
+    promijeni({
+      naziv: dataNew.get("naziv"),
+      opis: dataNew.get("opis"),
+      godinaNastanka: Number(dataNew.get("godinaNastanka")),
+      stanje: dataNew.get("stanje"),
+      pocetnaCijena: Number(dataNew.get("pocetnaCijena")),
+      dodano: formatDatum(dataNew.get("dodano")),
+      zavrsava: formatDatum(dataNew.get("zavrsava")),
+    });
+  }
 
-			<Form onSubmit={handleSubmit}>
-				<Row>
-					<Col sm={12} md={6}>
-						<Form.Group controlId="naziv">
-							<FormLabel>Naziv</FormLabel>
-							<FormControl
-								type="text"
-								name="naziv"
-								required
-								defaultValue={predmet.naziv}
-							/>
-						</Form.Group>
-					</Col>
+  if (!predmet) {
+    return (
+      <Container className="my-4">
+        <Heading as="h4" color="azure">Učitavanje podataka predmeta...</Heading>
+      </Container>
+    );
+  }
 
-					<Col sm={12} md={6}>
-						<Form.Group controlId="opis">
-							<FormLabel>Opis</FormLabel>
-							<FormControl
-								as="textarea"
-								name="opis"
-								rows={3}
-								defaultValue={predmet.opis}
-							/>
-						</Form.Group>
-					</Col>
+  return (
+    <Container className="my-4">
+      <Heading as="h2" color="azure" className="display-2 mb-4">
+        Promjena predmeta: {predmet.naziv}
+      </Heading>
 
-					<Col sm={12} md={6}>
-						<Form.Group controlId="godinaNastanka">
-							<FormLabel>Godina nastanka</FormLabel>
-							<FormControl
-								type="number"
-								name="godinaNastanka"
-								defaultValue={predmet.godinaNastanka}
-							/>
-						</Form.Group>
-					</Col>
+      <Form onSubmit={handleSubmit}>
+        <Row className="g-3">
+          <Col sm={12} md={6}>
+            <Form.Group controlId="naziv">
+              <FormLabel>Naziv</FormLabel>
+              <FormControl
+                type="text"
+                name="naziv"
+                required
+                defaultValue={predmet.naziv || ""}
+              />
+            </Form.Group>
+          </Col>
 
-					<Col sm={12} md={6}>
-						<Form.Group controlId="stanje">
-							<FormLabel>Stanje</FormLabel>
-							<FormControl
-								type="text"
-								name="stanje"
-								defaultValue={predmet.stanje}
-							/>
-						</Form.Group>
-					</Col>
+          <Col sm={12} md={12}>
+            <Form.Group controlId="opis">
+              <FormLabel>Opis</FormLabel>
+              <FormControl
+                as="textarea"
+                name="opis"
+                rows={3}
+                defaultValue={predmet.opis || ""}
+              />
+            </Form.Group>
+          </Col>
 
-					<Col sm={12} md={6}>
-						<Form.Group controlId="pocetnaCijena">
-							<FormLabel>Pocetna cijena</FormLabel>
-							<FormControl
-								type="number"
-								name="pocetnaCijena"
-								defaultValue={predmet.pocetnaCijena}
-							/>
-						</Form.Group>
-					</Col>
+          <Col sm={12} md={6}>
+            <Form.Group controlId="godinaNastanka">
+              <FormLabel>Godina nastanka</FormLabel>
+              <FormControl
+                type="number"
+                name="godinaNastanka"
+                defaultValue={predmet.godinaNastanka || ""}
+              />
+            </Form.Group>
+          </Col>
 
-					<Col sm={12} md={6}>
-						<Form.Group controlId="zavrsava">
-							<FormLabel>Zavrsava</FormLabel>
-							<FormControl
-								type="date"
-								name="zavrsava"
-								defaultValue={predmet.zavrsava}
-							/>
-						</Form.Group>
-					</Col>
-				</Row>
+          <Col sm={12} md={6}>
+            <Form.Group controlId="stanje">
+              <FormLabel>Stanje</FormLabel>
+              <FormControl
+                type="text"
+                name="stanje"
+                defaultValue={predmet.stanje || ""}
+              />
+            </Form.Group>
+          </Col>
 
-				<hr />
-				<Row>
-					<Col sm={12} md={6}>
-						<Button type="submit" className="btn btn-warning">
-							Promijeni
-						</Button>
-					</Col>
-					<Col sm={12} md={6}>
-						<Link to={RouteNames.PREDMETI} className="btn btn-danger">
-							Odustani
-						</Link>
-					</Col>
-				</Row>
-			</Form>
-		</>
-	);
+          <Col sm={12} md={6}>
+            <Form.Group controlId="pocetnaCijena">
+              <FormLabel>Početna cijena</FormLabel>
+              <FormControl
+                type="number"
+                step="0.01"
+                name="pocetnaCijena"
+                defaultValue={predmet.pocetnaCijena || ""}
+              />
+            </Form.Group>
+          </Col>
+
+          <Col sm={12} md={6}>
+            <Form.Group controlId="dodano">
+              <FormLabel>Datum i sat dodavanja</FormLabel>
+              <FormControl
+                type="datetime-local"
+                step="1"
+                name="dodano"
+                defaultValue={predmet.dodano || ""}
+              />
+            </Form.Group>
+          </Col>
+
+          <Col sm={12} md={6}>
+            <Form.Group controlId="zavrsava">
+              <FormLabel>Datum i sat završetka</FormLabel>
+              <FormControl
+                type="datetime-local"
+                step="1"
+                name="zavrsava"
+                defaultValue={predmet.zavrsava || ""}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <hr className="my-4" />
+        <Row>
+          <Col sm={6} md={6}>
+            <Button type="submit" variant="warning" className="w-100">
+              Promijeni
+            </Button>
+          </Col>
+          <Col sm={6} md={6}>
+            <Button
+              type="button"
+              variant="danger"
+              className="w-100"
+              onClick={() => navigate(RouteNames.PREDMETI)}
+            >
+              Odustani
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </Container>
+  );
 }

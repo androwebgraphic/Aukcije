@@ -36,8 +36,8 @@ function NavMain() {
          
           
               </NavDropdown.Item>
-              <NavDropdown.Item onClick={() => { navigate(RouteNames.PREDMET_NOVI); setExpanded(false); }}>
-                Dodaj Predmet</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => { navigate(RouteNames.PREDMETI); setExpanded(false); }}>
+             Predmeti</NavDropdown.Item>
               
             
               

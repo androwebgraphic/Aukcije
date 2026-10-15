@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import KategorijeServices from "../services/kategorije/KategorijeServices"
+import KategorijeServices from "../../services/kategorije/KategorijeServices"
 import { Button, Container, Row, Col, Card, Badge } from "react-bootstrap"
-import DateFormat from "../components/DateFormat"
+import DateFormat from "../../components/DateFormat"
 import { Link, useNavigate } from "react-router-dom"
-import { RouteNames } from "../constants"
+import { RouteNames } from "../../constants"
 
 // Uvoz ikona za kategorije
 import { FaComputer } from "react-icons/fa6";
@@ -15,8 +15,8 @@ import { RiBookShelfLine } from "react-icons/ri";
 import { PiHandCoinsBold } from "react-icons/pi";
 import { FaArrowTurnUp } from "react-icons/fa6";
 
-import '../ResponsiveTable.css';
-import Heading from "../components/UI/Heading"
+
+import Heading from "../../components/UI/Heading"
 import {motion} from "framer-motion"
 
 // 1. Objekt s ikonicama

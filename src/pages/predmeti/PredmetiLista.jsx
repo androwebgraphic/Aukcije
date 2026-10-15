@@ -73,7 +73,11 @@ export default function PredmetiList() {
     await PredmetiServices.obrisi(id);
     ucitajPredmete();
   }
-
+ function prikaziNazivKategorije(id) {
+      
+      const kategorija = kategorija.find(s => s.id === id)
+      return kategorija.naziv
+    }
   return (
     <Container className="my-4">
       <motion.div
@@ -145,6 +149,9 @@ export default function PredmetiList() {
                         </small>
                         <small className="text-muted d-block">
                           <strong>Završava:</strong> {formatirajDatum(c.zavrsava)}
+                        </small>
+                           <small className="text-muted d-block">
+                          <strong>U kategoriji:</strong> {(c.kategorija)}
                         </small>
                       </div>
                     </div>

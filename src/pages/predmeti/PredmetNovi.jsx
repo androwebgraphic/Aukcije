@@ -61,6 +61,7 @@ export default function PredmetNovi() {
   function handleSubmit(e) {
     e.preventDefault();
     const podatci = new FormData(e.target);
+   
 
     dodaj({
       naziv: podatci.get("naziv") || "",
@@ -70,6 +71,7 @@ export default function PredmetNovi() {
       pocetnaCijena: parseFloat(podatci.get("cijena")) || 0,
       dodano: trenutakDodavanja.toISOString(),
       zavrsava: trenutakZavrsetka.toISOString(),
+    
     });
   }
 
@@ -96,8 +98,9 @@ export default function PredmetNovi() {
             <Form.Group controlId="kategorije">
               <Form.Label>Kategorija</Form.Label>
               <FormSelect name="kategorije" required>
+                
                 <option value="">Odaberi kategoriju...</option>
-                {kategorije.map((k) => (
+                {kategorije && kategorije.map((k) => (
                   <option key={k.id} value={k.id}>
                     {k.naziv}
                   </option>
@@ -162,7 +165,7 @@ export default function PredmetNovi() {
               />
             </Form.Group>
           </Col>
-
+              
           <Col sm={12} md={6}>
             <Form.Group controlId="zavrsava">
               <Form.Label>Datum i sat završetka (+7 dana)</Form.Label>

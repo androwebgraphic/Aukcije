@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Button,
   Col,
@@ -16,8 +16,14 @@ import KategorijeServices from "../../services/kategorije/KategorijeServices";
 export default function KategorijePromijena() {
   const navigate = useNavigate();
   const params = useParams();
-  const [kategorija, setKategorija] = useState(null); // Postavljamo na null dok se ne učita
+
+  const [kategorija, setKategorija] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({});
+
+  const nazivRef = useRef();
+  const opisRef = useRef();
+  const datumRef = useRef();
 
   useEffect(() => {
     ucitajKategoriju();
@@ -27,7 +33,6 @@ export default function KategorijePromijena() {
     setLoading(true);
     try {
       const odgovor = await KategorijeServices.getByID(params.id);
-      console.log("Odgovor iz SErvisa: ",odgovor)
       const s = odgovor.data;
 
       if (s && s.datumMoj) {
@@ -53,19 +58,33 @@ export default function KategorijePromijena() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const dataNew = new FormData(e.target);
+
+    const naziv = nazivRef.current.value;
+    const opis = opisRef.current.value;
+    
+
+    const newErrors = {};
+
+    if (!naziv.trim()) {
+      newErrors.naziv = "Naziv je obavezan.";
+    }
+    if (!opis.trim()) {
+      newErrors.opis = "Opis je obavezan.";
+    }
+  
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
     promijeni({
-      naziv: dataNew.get("naziv"),
-      opis: dataNew.get("opis"),
-      brojOglasa: Number(dataNew.get("brojOglasa")),
-      datumMoj: dataNew.get("datumMoj")
-        ? new Date(dataNew.get("datumMoj")).toISOString()
-        : null,
+      naziv,
+      opis,
+  
     });
   }
 
-  // 1. Dok se podaci učitavaju, prikazujemo Spinner
   if (loading || !kategorija) {
     return (
       <div className="text-center my-5">
@@ -78,22 +97,23 @@ export default function KategorijePromijena() {
 
   return (
     <>
-      <Heading as="h2" >
-        Promijeni kategoriju: {kategorija.naziv}
-      </Heading>
+      <Heading as="h2">Promijeni kategoriju: {kategorija.naziv}</Heading>
 
-      {/* 2. key={kategorija.id || params.id} osigurava da se defaultValue ispravno napuni */}
-      <Form onSubmit={handleSubmit} key={kategorija.id || params.id}>
+      <Form onSubmit={handleSubmit} key={kategorija.id || params.id} noValidate>
         <Row>
           <Col sm={12} md={6}>
             <Form.Group controlId="naziv" className="mb-3">
               <FormLabel>Naziv</FormLabel>
               <FormControl
                 type="text"
-                name="naziv"
-                required
+                ref={nazivRef}
                 defaultValue={kategorija.naziv || ""}
+                isInvalid={!!errors.naziv}
+                onChange={() => setErrors({ ...errors, naziv: null })}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.naziv}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
 
@@ -102,45 +122,30 @@ export default function KategorijePromijena() {
               <FormLabel>Opis</FormLabel>
               <FormControl
                 as="textarea"
-                name="opis"
+                ref={opisRef}
                 rows={3}
                 defaultValue={kategorija.opis || ""}
+                isInvalid={!!errors.opis}
+                onChange={() => setErrors({ ...errors, opis: null })}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.opis}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
-            <Form.Group controlId="datumMoj" className="mb-3">
-              <FormLabel>Datum objave</FormLabel>
-              <FormControl
-                type="date"
-                name="datumMoj"
-                defaultValue={kategorija.datumMoj || ""}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col sm={12} md={6}>
-            <Form.Group controlId="brojOglasa" className="mb-3">
-              <FormLabel>Broj oglasa</FormLabel>
-              <FormControl
-                type="number"
-                name="brojOglasa"
-                defaultValue={kategorija.brojOglasa ?? ""}
-              />
-            </Form.Group>
-          </Col>
+          
         </Row>
 
         <hr />
         <Row>
-          <Col sm={12} md={3} className="mb-2">
-            <Button type="submit" variant="warning" className="w-100">
+          <Col xs={6} md={3} className="mb-2">
+            <Button type="submit" variant="warning" className="w-50">
               Promijeni
             </Button>
           </Col>
-          <Col sm={12} md={3}>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger w-100">
+          <Col xs={6} md={3}>
+            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger w-50">
               Odustani
             </Link>
           </Col>

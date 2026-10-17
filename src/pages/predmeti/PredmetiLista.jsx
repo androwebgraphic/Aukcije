@@ -9,6 +9,7 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 
+
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -37,7 +38,6 @@ function ExpandableText({ text, maxLength = 100 }) {
   );
 }
 
-// Sigurno formatiranje datuma i sata
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
   const datum = new Date(datumVrijednost);
@@ -56,7 +56,7 @@ export default function PredmetiList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    ucitajKategorije()
+    ucitajKategorije();
     ucitajPredmete();
   }, []);
 
@@ -85,11 +85,12 @@ export default function PredmetiList() {
     await PredmetiServices.obrisi(id);
     ucitajPredmete();
   }
- function prikaziNazivKategorije(id) {
-      
-      const kategorija = kategorije.find(s => s.id === id)
-      return kategorija.naziv
-    }
+
+  function prikaziNazivKategorije(id) {
+    const kategorija = kategorije.find((s) => s.id === id);
+    return kategorija ? kategorija.naziv : "Nepoznato";
+  }
+
   return (
     <Container className="my-4">
       <motion.div
@@ -101,19 +102,21 @@ export default function PredmetiList() {
           Lista predmeta ({predmeti.length})
         </Heading>
 
-        <Link to={RouteNames.PREDMET_NOVI} className="btn btn-success mb-4">
-          Dodavanje novog predmeta
-        </Link>
+ <Link to={RouteNames.PREDMET_NOVI} >
+            <Button variant="success" size="sm" className="mb-3">Dodaj predmet</Button>
+      </Link>
       </motion.div>
+
       <motion.div
         initial={{ opacity: 0, x: -1000 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
       >
+        {/* Row je sada van petlje, a Col je unutar map-a */}
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
           {predmeti &&
             predmeti.map((c, index) => (
-              <Col key={c.id ?? index}>
+              <Col key={c.id ?? index} >
                 <Card className="h-100 shadow-sm border-0">
                   <Card.Body className="d-flex flex-column">
                     <div className="d-flex align-items-center gap-3 mb-3">
@@ -162,7 +165,7 @@ export default function PredmetiList() {
                         <small className="text-muted d-block">
                           <strong>Završava:</strong> {formatirajDatum(c.zavrsava)}
                         </small>
-                           <small className="text-muted d-block">
+                        <small className="text-muted d-block">
                           <strong>U kategoriji:</strong> {prikaziNazivKategorije(c.kategorija)}
                         </small>
                       </div>
@@ -172,12 +175,14 @@ export default function PredmetiList() {
                       <Button
                         variant="warning"
                         className="w-50"
+                        size="sm"
                         onClick={() => navigate(`/predmeti/${c.id}`)}>
                         Promijeni
                       </Button>
                       <Button
                         variant="danger"
                         className="w-50"
+                        size="sm"
                         onClick={() => obrisi(c.id)}>
                         Obriši
                       </Button>

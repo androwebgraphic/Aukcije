@@ -40,7 +40,7 @@ function App() {
 
 					<Route path={RouteNames.KATEGORIJE} element={<KategorijaList />} />
           <Route path={RouteNames.KATEGORIJA_NOVA} element={<KategorijaNova />} />
-          				
+          <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijePromijena/> } />
 
           
 					<Route path={RouteNames.PREDMETI} element={<PredmetiList />} />

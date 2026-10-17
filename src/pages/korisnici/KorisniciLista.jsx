@@ -74,12 +74,12 @@ export default function KorisniciList() {
             animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
             transition={{ duration: 0.4, ease: "easeOut"  , delay:.2}} // Trajanje i glatkoća
     >
-      <Heading as="h2" color="azure" className="display-2 mb-4">
+      <Heading as="h2" color="azure" >
         Lista korisnika ({korisnici.length})
       </Heading>
 
       <Link to={RouteNames.KORISNIK_NOVI} className="btn btn-success mb-4">
-        Dodavanje novog korisnika
+        Dodavanje korisnika
       </Link>
       </motion.div>
       <motion.div

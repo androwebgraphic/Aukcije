@@ -1,3 +1,4 @@
+import React, { useRef, useState } from "react";
 import {
   Button,
   Col,
@@ -8,90 +9,118 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import KategorijeServices from '../../services/kategorije/KategorijeServices'
+import KategorijeServices from '../../services/kategorije/KategorijeServices';
 import Heading from "../../components/UI/Heading";
 
-
 export default function KategorijaNova() {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  // Reference za dohvaćanje vrijednosti
+  const nazivRef = useRef();
+  const opisRef = useRef();
+  const datumRef = useRef();
+  
 
+  // Stanje za greške
+  const [errors, setErrors] = useState({});
 
-
-
-    async function dodaj(kategorija) {
-        await KategorijeServices.dodaj(kategorija).then(()=>{
-            navigate(RouteNames.KATEGORIJE)
-        })
-    }
-    function handleSubmit(e) {
-     
-      e.preventDefault()
-      const dataNew = new FormData(e.target)
-
-      dodaj({
-
-        naziv: dataNew.get('naziv'),
-        opis: dataNew.get('opis'),
-        brojOglasa: dataNew.get('brojOglasa'),
-        datumMoj: new Date(dataNew.get('datumMoj')).toISOString(),
-
-
-      })
-    }
-
-
-    return (
-      <>
-             <Heading as='h2' color='azure' >Dodavanje nove  kategorije</Heading>
-       
-
-        <Form onSubmit={handleSubmit}>
-          <Row>
-            <Col sm={12} md={6}>
-              <Form.Group controlId="naziv">
-                <FormLabel>Naziv</FormLabel>
-                <FormControl type="text" name="naziv" required />
-              </Form.Group>
-            </Col>
-
-            <Col sm={12} md={6}>
-              <Form.Group controlId="opis">
-                <FormLabel>Opis</FormLabel>
-                <FormControl as="textarea" name="opis" rows={3} />
-              </Form.Group>
-            </Col>
-
-            <Col sm={3} md={3}>
-              <Form.Group controlId="datumMoj">
-                <FormLabel>Datum objave</FormLabel>
-                <FormControl type="date" name="datumMoj" />
-              </Form.Group>
-
-              <Form.Group controlId="numItems">
-                <FormLabel>Broj oglasa</FormLabel>
-                <FormControl type="number" name="brojOglasa" />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <hr />
-          <Row>
-       
-            <Col>
-              <Button type="submit" className="btn btn-success" sm={12} md={6} >
-
-                Dodaj
-              </Button>
-            </Col>
-            <Col>
-              <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" sm={12} md={6} >Odustani</Link>
-
-            </Col>
-          </Row>
-        </Form>
-      </>
-
-    );
+  async function dodaj(kategorija) {
+    await KategorijeServices.dodaj(kategorija).then(() => {
+      navigate(RouteNames.KATEGORIJE);
+    });
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    // 1. Dohvati trenutne vrijednosti
+    const naziv = nazivRef.current.value;
+    const opis = opisRef.current.value;
+    // const datumMoj = datumRef.current.value;
+    
+
+    // 2. Validacija
+    const newErrors = {};
+
+    if (!naziv.trim()) {
+      newErrors.naziv = "Naziv je obavezan.";
+    }
+    if (!opis.trim()) {
+      newErrors.opis = "Opis je obavezan.";
+    }
+    // if (!datumMoj) {
+    //   newErrors.datumMoj = "Datum objave je obavezan.";
+    // }
+  
+
+    // 3. Ako ima grešaka, postavi ih u stanje i prekini slanje
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // 4. Ako je sve u redu, pošalji podatke
+    dodaj({
+      naziv,
+      opis,
+
+      // datumMoj: new Date(datumMoj).toISOString(),
+    });
+  }
+
+  return (
+    <>
+      <Heading as='h2' color='azure'>Dodavanje nove kategorije</Heading>
+
+      <Form onSubmit={handleSubmit} noValidate>
+        <Row>
+          <Col sm={12} md={6}>
+            <Form.Group controlId="naziv">
+              <FormLabel>Naziv</FormLabel>
+              <FormControl 
+                type="text" 
+                ref={nazivRef} 
+                isInvalid={!!errors.naziv}
+                onChange={() => setErrors({...errors, naziv: null})}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.naziv}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
+          <Col sm={12} md={6}>
+            <Form.Group controlId="opis">
+              <FormLabel>Opis</FormLabel>
+              <FormControl 
+                as="textarea" 
+                ref={opisRef} 
+                rows={3} 
+                isInvalid={!!errors.opis}
+                onChange={() => setErrors({...errors, opis: null})}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.opis}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
+         </Row>
+
+        <hr />
+        <Row>
+          <Col>
+            <Button type="submit" className="btn btn-success" size="small">
+              Dodaj
+            </Button>
+          </Col>
+          <Col>
+            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger">
+              Odustani
+            </Link>
+          </Col>
+        </Row>
+      </Form>
+    </>
+  );
+}

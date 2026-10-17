@@ -172,20 +172,16 @@ export default function PredmetiPromijena() {
 
         <hr className="my-4" />
         <Row>
-          <Col sm={6} md={4}>
-            <Button type="submit" variant="warning" className="w-100">
+          <Col xs={6} md={6}>
+            <Button type="submit" variant="warning" size="sm"  className="w-50">
               Promijeni
             </Button>
+
+
           </Col>
-          <Col sm={6} md={4} style={{marginLeft:'auto'}}>
-            <Button
-              type="button"
-              variant="danger"
-              className="w-100"
-              onClick={() => navigate(RouteNames.PREDMETI)}
-            >
-              Odustani
-            </Button>
+          <Col xs={6} md={6}>
+            <Button variant="danger" size="sm" className="w-50" onClick={() => navigate(RouteNames.PREDMETI)}>
+Odustani            </Button>
           </Col>
         </Row>
       </Form>

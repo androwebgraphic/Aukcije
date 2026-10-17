@@ -28,7 +28,10 @@
 
 }
 
+.invalid-feedback{
 
+  background-color: #eee;
+}
 /* Osnovni stil za svaku stavku u našem custom izborniku */
 /* .my-dropdown-item {
   padding: 0.4rem 1rem;
@@ -58,7 +61,7 @@
   color: #ffffff !important;
 } */
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme:light) {
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
@@ -73,9 +76,7 @@
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+ 
 }
 
 body {

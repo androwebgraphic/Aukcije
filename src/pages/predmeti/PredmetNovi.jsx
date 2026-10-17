@@ -67,6 +67,7 @@ export default function PredmetNovi() {
       naziv: podatci.get("naziv") || "",
       kategorija: parseInt(podatci.get('kategorije')) || 0,
       godinaNastanka: parseInt(podatci.get("godinaNastanka")) || 0,
+      opis:(podatci.get('opis')) || 0,
       stanje: podatci.get("stanje") || "očuvan",
       pocetnaCijena: parseFloat(podatci.get("cijena")) || 0,
       dodano: trenutakDodavanja.toISOString(),
@@ -94,7 +95,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col sm={6} md={6}>
             <Form.Group controlId="kategorije">
               <Form.Label>Kategorija</Form.Label>
               <FormSelect name="kategorije" required>
@@ -108,19 +109,7 @@ export default function PredmetNovi() {
               </FormSelect>
             </Form.Group>
           </Col>
-
-          <Col sm={12} md={12}>
-            <Form.Group controlId="opis">
-              <Form.Label>Opis</Form.Label>
-              <Form.Control
-                as="textarea"
-                name="opis"
-                rows={3}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col sm={12} md={6}>
+        <Col sm={6} md={6}>
             <Form.Group controlId="godinaNastanka">
               <Form.Label>Godina nastanka</Form.Label>
               <Form.Control
@@ -129,8 +118,20 @@ export default function PredmetNovi() {
               />
             </Form.Group>
           </Col>
+          <Col sm={6} md={6}>
+            <Form.Group controlId="opis">
+              <Form.Label>Opis</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="opis"
+                // rows={3}
+              />
+            </Form.Group>
+          </Col>
 
-          <Col sm={12} md={6}>
+  
+
+          <Col xs={6} md={3}>
             <Form.Group controlId="stanje">
               <Form.Label>Stanje</Form.Label>
               <Form.Control
@@ -141,7 +142,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col xs={6} md={3}>
             <Form.Group controlId="cijena">
               <Form.Label>Početna cijena</Form.Label>
               <Form.Control
@@ -152,9 +153,9 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col sm={6} md={3}>
             <Form.Group controlId="dodano">
-              <Form.Label>Datum i sat dodavanja (Automatski)</Form.Label>
+              <Form.Label>dodano</Form.Label>
               <Form.Control
                 type="datetime-local"
                 step="1"
@@ -166,9 +167,9 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
               
-          <Col sm={12} md={6}>
+          <Col sm={6} md={3}>
             <Form.Group controlId="zavrsava">
-              <Form.Label>Datum i sat završetka (+7 dana)</Form.Label>
+              <Form.Label>završava(+7 dana)</Form.Label>
               <Form.Control
                 type="datetime-local"
                 step="1"
@@ -181,15 +182,15 @@ export default function PredmetNovi() {
           </Col>
         </Row>
 
-        <Row className="mt-4">
-          <Col sm={6} md={6}>
-            <Button type="submit" variant="success" className="w-100">
+        <Row className="mt-4 ">
+          <Col xs={6} md={6}>
+            <Button type="submit" variant="success" size="sm" className="w-100">
               Dodaj
             </Button>
           </Col>
-          <Col sm={6} md={6}>
-            <Link to={RouteNames.PREDMETI} className="btn btn-danger w-100">
-              Odustani
+          <Col xs={6} md={6} >
+            <Link to={RouteNames.PREDMETI}  >
+              <Button variant="danger" size="sm" className="w-100 " >Odustani</Button>
             </Link>
           </Col>
         </Row>

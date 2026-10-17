@@ -112,8 +112,8 @@ export default function KategorijaList() {
     >
       <Heading as='h2' >   Lista Kategorija <small>({kategorije.length})</small> </Heading>
 
- <Link to={RouteNames.KATEGORIJA_NOVA} className="btn btn-success mb-4">
-        dodavanje nove kategorije 
+ <Link to={RouteNames.KATEGORIJA_NOVA} >
+            <Button variant="success" size="sm" className="mb-3">Dodaj kategoriju</Button>
       </Link>
    </motion.div>
       {/* Grid sa Bootstrap Card elementima */}
@@ -130,7 +130,7 @@ export default function KategorijaList() {
             transition={{ duration: 0.7, ease: "easeOut"  , delay:.4}} // Trajanje i glatkoća
             
             >
-              <Col key={c.id}>
+              <Col key={c.id} className="h-100">
              
                 
   
@@ -148,9 +148,7 @@ export default function KategorijaList() {
                     </div>
                     <div>
                       <Card.Title color="#1a3580">{c.naziv} </Card.Title>
-                      <small className="text-muted">
-                        Kreirano: <DateFormat date={c.datumMoj} />
-                      </small>
+                    
                     </div>
                   </div>
 
@@ -170,14 +168,18 @@ export default function KategorijaList() {
                   <div className="d-flex gap-2 mt-auto pt-2 border-top">
                     <Button 
                       variant="warning" 
-                      className="w-50"
+                        className="w-50"
+                        size="sm"
                       onClick={() => navigate(`/kategorije/${c.id}`)}
                     >
                       Promijeni
-                    </Button>
+                      </Button>
+                      
+
                     <Button 
                       variant="danger" 
-                      className="w-50"
+                        className="w-50"
+                        size="sm"
                       onClick={() => obrisi(c.id)}
                     >
                       Obriši

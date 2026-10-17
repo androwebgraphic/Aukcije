@@ -44,18 +44,14 @@ html{
 
   /* position: relative; */
 
-  width: 100%;
+  /* width: 100%; */
   border-radius: .7rem;
   
   height: 100%;
   min-height: 100vh;
-  /* Gives the container visible height if empty */
-  isolation: isolate;
-  /* Replaces z-index hacks to ensure child layering */
-  /* overflow: hidden; */
-  /* color: white; */
 
-/* margin-top: 2.5rem; */
+  isolation: isolate;
+
 
 }
 
@@ -65,7 +61,7 @@ pre{
 }
 header{
 
-/* align-self: self-start; */
+
   padding: .8rem .5rem .8rem .5rem;
 
 
@@ -77,7 +73,6 @@ header{
 
 }
 
-/* h1 { font-size: var(--font-h1); line-height: var(--lh-heading); } */
  .navbar-brand {
   /* margin-left: auto; */
   /* width: 20%; */
@@ -119,17 +114,17 @@ p.storage{
 }
 
 .logo {
-  /* float: left; */
-  margin-right: .5rem;
-  margin-left:1rem;
-  margin-bottom: 1rem;
+
+  margin-right: .9rem;
+  margin-left:.9rem;
+  /* margin-bottom: 1rem; */
   /* padding: .5rem; */
   border-radius: 50%;
-  width:20%;
+  width:2rem;
   height: auto;
 filter: opacity(0.9);
 
-box-shadow: .1rem .1rem 1rem;
+/* box-shadow: .1rem .1rem 1rem; */
   background-color: azure;
   
 }
@@ -169,38 +164,36 @@ a.dropdown-item{
   color: var(--main-color);
   background-color: azure;
 }
-/* Stil za podkategorije koji potpuno ignorira Bootstrap i radi savršeno */
+
 .moj-sub-item {
   display: block;
   width: 100%;
-  padding: 0.4rem 1rem 0.4rem 2rem; /* Uvučeno udesno da glumi podmeniju */
+  padding: 0.4rem 1rem 0.4rem 2rem;
   clear: both;
   font-weight: 400;
-  color: #dee2e6; /* Boja teksta u tamnoj temi */
+  color: #dee2e6; 
   text-align: inherit;
   white-space: nowrap;
-  background-color: transparent; /* Uvijek transparentno dok nema miša */
+  background-color:#2144a6 ; 
   cursor: pointer;
   font-size: 0.9rem;
 }
 
-/* Kada staviš miša, mijenja se pozadina SAMO tog jednog reda */
 .moj-sub-item:hover {
   color: #ffffff !important;
   background-color: #0d6efd !important;
-}
-.mb-3 input::placeholder{
-  color: #cecaca;
-}
+} 
+
 
 
 form{
 
-  margin:  1rem 0 2rem 0;
+  margin:  1rem 0 1rem 0;
 }
 label{
 
   color: azure;
+  font-size: .9rem;
 }
 
 .hide{
@@ -228,22 +221,19 @@ height: auto;
 border-radius: .6rem;
   background-color: rgba(0, 0, 0, 0.6);
 }
-button[type='submit']{
-
-  /* background-color: var(--main-color); */
+/* button[type='submit']{
+padding:0;
+   background-color: var(--main-color); 
   border-radius: 1.7rem;
-  width: 100%;
-}
+
+}  */
 .btn{
-  margin: 1rem;
+  /* margin-bottom: 1rem; */
     border-radius: 1.7rem;
 }
-.btn.btn-danger{
-   border-radius: 1.7rem;
-    /* margin-left:10rem; */
 
 
-}
+
 footer{
 
   background-color: #122f78;
@@ -254,14 +244,14 @@ footer{
 }
 @media screen and (max-width:600px){
 
-  .logo{
+ .logo{
 
       /* float: left; */
   /* margin-left: 45%; */
   margin-bottom: 1rem;
   padding: 0;
   border-radius: 50%;
-  width:50%;
+  width:2rem;
   height: auto;
   float: left;
   background-color: azure;
@@ -329,11 +319,15 @@ footer{
       border-radius: 0 4px 4px 0;
     }
 
+.card{
 
+  height: 100%;
+  min-height: 100%;
+}
 
     @media (max-width: 640px) {
       .container {
-        padding: 1.5rem;
+        /* padding: 1.5rem; */
       }
 
       h1 {

@@ -36,7 +36,7 @@ export default function KorisnikoNovi() {
     return (
       <>
         <Container>
-           <Heading as='h2' color='azure' className="display-2">Registracija</Heading>
+           <Heading as='h2' color='azure' >Registracija</Heading>
      
             <Row>
               <Form onSubmit={handleSubmit}>
@@ -48,7 +48,7 @@ export default function KorisnikoNovi() {
                       </Form.Group>
                     </Col>
                     <Col sm={12} md={6}>
-                      <Form.Group controlId="email" className="mt-2">
+                      <Form.Group controlId="email" >
                     <Form.Label>email</Form.Label>
                       <Form.Control type="text" name="email" required placeholder="Upiši adresu e-pošte"/>
                         

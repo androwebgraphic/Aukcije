@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
-import { Container, Row, Col, Card, Button, Badge } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Badge, Form } from "react-bootstrap";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
@@ -52,9 +52,9 @@ function formatirajDatum(datumVrijednost) {
 export default function PredmetiList() {
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Stanje za tekst pretrage
   const navigate = useNavigate();
   
-  // Dohvaćamo parametre iz URL-a (npr. ?kategorija=auti)
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
 
@@ -94,11 +94,15 @@ export default function PredmetiList() {
     return kategorija ? kategorija.naziv : "Nepoznato";
   }
 
-  // Filtriramo predmete ovisno o URL parametru
+  // Filtriranje predmeta prema kategoriji (iz URL-a) i upisanom tekstu (pretraga)
   const filtriraniPredmeti = predmeti.filter((c) => {
-    if (!kategorijaFilter) return true; // Ako nema filtera, prikaži sve
     const nazivKat = prikaziNazivKategorije(c.kategorija);
-    return nazivKat.toLowerCase() === kategorijaFilter.toLowerCase();
+    const zadovoljavaKategoriju = !kategorijaFilter || nazivKat.toLowerCase() === kategorijaFilter.toLowerCase();
+    
+    // Provjera sadrži li naziv predmeta upisani tekst (ignoriramo mala/velika slova)
+    const zadovoljavaPretragu = c.naziv.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return zadovoljavaKategoriju && zadovoljavaPretragu;
   });
 
   return (
@@ -109,12 +113,24 @@ export default function PredmetiList() {
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
       >
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
-          Lista aukcija{kategorijaFilter ? `- ${kategorijaFilter.toUpperCase()}` : ""} ({filtriraniPredmeti.length})
+          Lista predmeta {kategorijaFilter ? `- ${kategorijaFilter.toUpperCase()}` : ""} ({filtriraniPredmeti.length})
         </Heading>
 
-        <Link to={RouteNames.PREDMET_NOVI} >
-          <Button variant="success" size="sm" className="mb-3">Dodaj predmet</Button>
-        </Link>
+        <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <Link to={RouteNames.PREDMET_NOVI} className="mb-0">
+            <Button variant="success" size="sm">Dodaj predmet</Button>
+          </Link>
+
+          {/* Input polje za automatsku pretragu */}
+          <Form.Control
+            type="text"
+            placeholder="Pretraži predmete..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ maxWidth: '300px' }}
+            size="sm"
+          />
+        </div>
       </motion.div>
 
       <motion.div

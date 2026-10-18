@@ -54,9 +54,10 @@ function NavMain() {
   <option value="" disabled>Programi ▼</option>
   <option value={RouteNames.KATEGORIJE}>Kategorije</option>
   <option value={RouteNames.PREDMETI}>Predmeti</option>
-  <option value={RouteNames.PREDMETI}>&nbsp;&nbsp;&nbsp;&nbsp;Auti</option>
-  <option value={RouteNames.PREDMETI}>&nbsp;&nbsp;&nbsp;&nbsp;Lp</option>
-  <option value={RouteNames.PREDMETI}>&nbsp;&nbsp;&nbsp;&nbsp;Nakit</option>
+ <option value={`${RouteNames.PREDMETI}?kategorija=auti`}>&nbsp;&nbsp;&nbsp;&nbsp;Auti</option>
+  <option value={`${RouteNames.PREDMETI}?kategorija=lp`}>&nbsp;&nbsp;&nbsp;&nbsp;Lp</option>
+                <option value={`${RouteNames.PREDMETI}?kategorija=nakit`}>&nbsp;&nbsp;&nbsp;&nbsp;Nakit</option>
+                  <option value={`${RouteNames.PREDMETI}?kategorija=filatelija`}>&nbsp;&nbsp;&nbsp;&nbsp;Filatelija</option>
   <option value={RouteNames.KORISNICI}>Korisnici</option>
 </select>
             </div>

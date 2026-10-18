@@ -23,7 +23,7 @@ function Footer() {
       <p className="copy">&copy; {APP_NAME} Sva prava pridržana {currentYear}.</p>
       
 
- <p className="storage">{DATA_SOURCE}</p> 
+ <p className="storage"><span>Koristi se:</span>{DATA_SOURCE}</p> 
       <ScrollToTopButton></ScrollToTopButton>
 
        

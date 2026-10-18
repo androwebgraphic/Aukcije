@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import { Container, Row, Col, Card, Button, Badge } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
 import { TbCarSuv } from "react-icons/tb";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
-
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -54,6 +53,10 @@ export default function PredmetiList() {
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const navigate = useNavigate();
+  
+  // Dohvaćamo parametre iz URL-a (npr. ?kategorija=auti)
+  const [searchParams] = useSearchParams();
+  const kategorijaFilter = searchParams.get("kategorija");
 
   useEffect(() => {
     ucitajKategorije();
@@ -91,6 +94,13 @@ export default function PredmetiList() {
     return kategorija ? kategorija.naziv : "Nepoznato";
   }
 
+  // Filtriramo predmete ovisno o URL parametru
+  const filtriraniPredmeti = predmeti.filter((c) => {
+    if (!kategorijaFilter) return true; // Ako nema filtera, prikaži sve
+    const nazivKat = prikaziNazivKategorije(c.kategorija);
+    return nazivKat.toLowerCase() === kategorijaFilter.toLowerCase();
+  });
+
   return (
     <Container className="my-4">
       <motion.div
@@ -99,12 +109,12 @@ export default function PredmetiList() {
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
       >
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
-          Lista predmeta ({predmeti.length})
+          Lista aukcija{kategorijaFilter ? `- ${kategorijaFilter.toUpperCase()}` : ""} ({filtriraniPredmeti.length})
         </Heading>
 
- <Link to={RouteNames.PREDMET_NOVI} >
-            <Button variant="success" size="sm" className="mb-3">Dodaj predmet</Button>
-      </Link>
+        <Link to={RouteNames.PREDMET_NOVI} >
+          <Button variant="success" size="sm" className="mb-3">Dodaj predmet</Button>
+        </Link>
       </motion.div>
 
       <motion.div
@@ -112,21 +122,20 @@ export default function PredmetiList() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
       >
-        {/* Row je sada van petlje, a Col je unutar map-a */}
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
-          {predmeti &&
-            predmeti.map((c, index) => (
+          {filtriraniPredmeti &&
+            filtriraniPredmeti.map((c, index) => (
               <Col key={c.id ?? index} >
                 <Card className="h-100 shadow-sm border-0">
                   <Card.Body className="d-flex flex-column">
                     <div className="d-flex align-items-center gap-3 mb-3">
                       <div
-                        className="p-3 rounded-circle d-flex align-items-center justify-content-center"
+                        className="p-1 rounded-circle d-flex align-items-center justify-content-center"
                         style={{ backgroundColor: "#e7f1ff" }}>
-                        <TbCarSuv size={32} color="#1a3580" />
+                        <TbCarSuv size={25} color="#1a3580" />
                       </div>
                       <div>
-                        <Card.Title className="mb-0 fw-bold">
+                        <Card.Title className="mb-0 " style={{color:'#1a3580'}}>
                           {c.naziv}
                         </Card.Title>
                         {c.godinaNastanka && (

@@ -141,20 +141,20 @@ export default function KategorijaList() {
                   {/* Zaglavlje kartice: Ikona i Naziv */}
                   <div className="d-flex align-items-center gap-3 mb-3">
                     <div 
-                      className="p-3 rounded-circle d-flex align-items-center justify-content-center" 
+                      className="p-1 rounded-circle d-flex align-items-center justify-content-center" 
                       style={{ backgroundColor: '#e7f1ff' }}
                     >
                       <IconComponent size={25} color="#1a3580" />
                     </div>
                     <div>
-                      <Card.Title color="#1a3580">{c.naziv} </Card.Title>
+                      <Card.Title style={{color:"#1a3580"}}>{c.naziv} </Card.Title>
                     
                     </div>
                   </div>
 
                   {/* Opis kategorije */}
                   <Card.Text className="text-secondary flex-grow-1">
-                    <ExpandableText text={c.opis} maxLength={60} />
+                      <ExpandableText text={c.opis} maxLength={60}  />
                   </Card.Text>
 
                   {/* Broj oglasa badge */}

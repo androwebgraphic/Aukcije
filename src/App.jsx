@@ -45,6 +45,7 @@ function App() {
           
 					<Route path={RouteNames.PREDMETI} element={<PredmetiList />} />
 					<Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
+					<Route path={RouteNames.PREDMETI_KATEGORIJA} element={<PredmetiList />} />
 					<Route path={RouteNames.PREDMETI_PROMJENA} element={<PredmetiPromjena />} />
 
 				

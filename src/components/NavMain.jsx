@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { APP_NAME, RouteNames } from '../constants';
-import { useNavigate } from 'react-router-dom';
-import { IoIosArrowDropdown } from "react-icons/io";
+import { Link, useNavigate } from 'react-router-dom';
+import { NavDropdown } from 'react-bootstrap';
+import KategorijeServices from '../services/kategorije/KategorijeServices';
 
 function NavMain() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
+  const [kategorije, setKategorije] = useState([])
+
+  async function ucitajKategorije() {
+    await KategorijeServices.get().then((o) => setKategorije(o.data))
+  }
+
+  useEffect(() => {
+    ucitajKategorije()
+  }, [])
 
   // Funkcija koja hvata odabir iz padajućeg izbornika
   const handleChange = (e) => {
@@ -22,45 +32,30 @@ function NavMain() {
   return (
     <>
       <Navbar expand="sm" data-bs-theme="dark" expanded={expanded} onToggle={(isOpen) => setExpanded(isOpen)}>
-        <Navbar.Brand>{APP_NAME}</Navbar.Brand> 
+        <Navbar.Brand>{APP_NAME}</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        
+
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto align-items-sm-center">
             <Nav.Link onClick={() => { navigate(RouteNames.HOME); setExpanded(false); }}>
               Početna
             </Nav.Link>
-       
-            {/* Nativni padajući izbornik - uvijek radi u svakom pregledniku */}
-            <div>
-              <select 
-  aria-label="Programi izbornik"
-  onChange={handleChange}
-  defaultValue=""
-  style={{
-    backgroundColor: '#1a3580',
-    color: '#dee2e6',
-    border: 'none',                 // Uklanja rub
-    outline: 'none',                // Uklanja plavi/bijeli okvir kod fokusa
-    WebkitAppearance: 'none',       // Uklanja zadanu strelicu za Safari/Chrome
-    MozAppearance: 'none',          // Uklanja zadanu strelicu za Firefox
-    appearance: 'none',             // Standardno uklanjanje strelice
-    padding: '0.375rem 1.5rem 0.375rem 0.75rem', // Dodano malo više desnog paddinga da tekst ne ide do ruba
-    borderRadius: '0.375rem',
-    cursor: 'pointer',
-    fontSize: '1rem'
-  }}
->
-  <option value="" disabled>Programi ▼</option>
-  <option value={RouteNames.KATEGORIJE}>Kategorije</option>
-  <option value={RouteNames.PREDMETI}>Predmeti</option>
- <option value={`${RouteNames.PREDMETI}?kategorija=auti`}>&nbsp;&nbsp;&nbsp;&nbsp;Auti</option>
-  <option value={`${RouteNames.PREDMETI}?kategorija=lp`}>&nbsp;&nbsp;&nbsp;&nbsp;Lp</option>
-                <option value={`${RouteNames.PREDMETI}?kategorija=nakit`}>&nbsp;&nbsp;&nbsp;&nbsp;Nakit</option>
-                  <option value={`${RouteNames.PREDMETI}?kategorija=filatelija`}>&nbsp;&nbsp;&nbsp;&nbsp;Filatelija</option>
-  <option value={RouteNames.KORISNICI}>Korisnici</option>
-</select>
-            </div>
+
+
+            <NavDropdown title="Programi" id="programi">
+              <NavDropdown.Item href="#action/3.1">Kategorije</NavDropdown.Item>
+
+              <NavDropdown title="Predmeti" id="predmeti">
+                <NavDropdown.Item href={RouteNames.PREDMETI}>Svi</NavDropdown.Item>
+                {kategorije && kategorije.map((k) => (
+                  <NavDropdown.Item href={`/predmeti/kategorija/${k.id}`} key={k.id}>
+                    {k.naziv}
+                  </NavDropdown.Item>
+                ))}
+
+              </NavDropdown>
+              <NavDropdown.Item href={RouteNames.KORISNICI}>Korisnici</NavDropdown.Item>
+            </NavDropdown>
 
             <Nav.Link onClick={() => { navigate(RouteNames.KORISNIK_NOVI); setExpanded(false); }}>
               Registracija

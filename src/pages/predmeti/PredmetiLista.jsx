@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import { Container, Row, Col, Card, Button, Badge, Form } from "react-bootstrap";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
 import { TbCarSuv } from "react-icons/tb";
@@ -54,6 +54,7 @@ export default function PredmetiList() {
   const [kategorije, setKategorije] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Stanje za tekst pretrage
   const navigate = useNavigate();
+   const params = useParams()
   
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
@@ -66,7 +67,16 @@ export default function PredmetiList() {
   async function ucitajPredmete() {
     try {
       const odgovor = await PredmetiServices.get();
-      setPredmeti(odgovor.data);
+      if(params.id){
+        const filtrirano = odgovor.data.filter(p=>p.kategorija===parseInt(params.id))
+        console.table(filtrirano)
+        setPredmeti(filtrirano)
+      }else{
+        setPredmeti(odgovor.data);
+      }
+
+
+      
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
     }
@@ -107,6 +117,7 @@ export default function PredmetiList() {
 
   return (
     <Container className="my-4">
+ 
       <motion.div
         initial={{ opacity: 0, x: -1000 }}
         animate={{ opacity: 1, x: 0 }}

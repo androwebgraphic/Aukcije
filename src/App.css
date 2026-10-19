@@ -202,11 +202,44 @@ a.dropdown-item {
   font-size: 0.9rem;
 }
 
-.moj-sub-item:hover {
-  color: #ffffff !important;
-  background-color: #0d6efd !important;
+#basic-navbar-nav > div > div > div > div > div{
+  overflow: auto;
+  max-height: 200px;
+  margin-left:5rem;
+  margin-top:-.9rem
 }
+#basic-navbar-nav > div > div > div > div > div a:hover{
 
+  background-color: #6988dc;
+
+
+}
+.dropdown-menu .show{
+
+  background-color: #1A3580;
+  border:none;
+}
+.dropdown{
+
+  /* border:none; */
+}
+ .show {
+
+  background-color: #3e5698;
+    /* border-radius: .7rem; */
+    /* border:none; */
+
+}
+a.dropdown-toggle .nav-link{
+
+  background-color:#3e5698 ;
+
+}
+a.nav-link{
+
+  text-align:center;
+
+}
 
 .card-body p {
 
@@ -373,7 +406,3 @@ li {
 }
 
 
-#basic-navbar-nav > div > div > div > div > div{
-  overflow: auto;
-  max-height: 200px;
-}

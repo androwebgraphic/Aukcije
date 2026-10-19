@@ -90,4 +90,12 @@ datumMoj: '2026-09-25T00:00:00'
       datumMoj:'2026-01-28T10:28:01'
   
   },
+    {
+    id:11,
+    naziv: 'Motocikli',
+    opis: 'Ako ste ljubitelj starih motocikala a ne trazite brzinu od 200km/h, ovdje cete naci takav',
+      datumMoj: '2026-01-28T10:28:01',
+      brojOglas:10,
+  
+  },
 ]

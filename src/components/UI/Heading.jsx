@@ -1,4 +1,4 @@
-export const Heading = ({
+ const Heading = ({
   as: Component = 'h1', // Zadana vrijednost je 'h1'
   color,
   size,

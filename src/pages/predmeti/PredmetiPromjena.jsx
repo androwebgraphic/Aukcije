@@ -3,34 +3,47 @@ import {
   Col,
   Container,
   Form,
+  FormSelect,
   FormControl,
   FormLabel,
   Row,
 } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
-import Heading from "../../components/UI/Heading";
+import KategorijeServices from "../../services/kategorije/KategorijeServices";
+import Heading from "../../components/UI/Heading"
 
 export default function PredmetiPromijena() {
   const navigate = useNavigate();
   const params = useParams();
   const [predmet, setPredmet] = useState(null);
+  const [kategorije, setKategorije] = useState([]);
+  const [odabranaKategorija, setOdabranaKategorija] = useState("");
 
   useEffect(() => {
-    ucitajPredmet();
-  }, []);
+    ucitajPodatke();
+  }, [params.id]);
 
-  async function ucitajPredmet() {
+  async function ucitajPodatke() {
     try {
-      // Ako tvoj servis koristi samo .get(params.id) umjesto getByID, promijeni dolje u PredmetiServices.get(params.id)
-      const odgovor = await PredmetiServices.getByID(params.id);
-      console.log("Dohvaćeni predmet za promjenu:", odgovor);
+      const [resKategorije, resPredmet] = await Promise.all([
+        KategorijeServices.get(),
+        PredmetiServices.getByID(params.id)
+      ]);
 
-      const s = odgovor.data || odgovor || {};
+      const katLista = resKategorije.data || resKategorije || [];
+      setKategorije(katLista);
 
-      // Pomoćna funkcija za formatiranje datuma u YYYY-MM-DDTHH:mm:ss
+      const siroviPodaci = resPredmet.data !== undefined ? resPredmet.data : resPredmet;
+      const s = siroviPodaci.data !== undefined ? siroviPodaci.data : siroviPodaci;
+
+      if (!s || Object.keys(s).length === 0) {
+        console.error("Predmet nije pronađen!");
+        return;
+      }
+
       const formatirajZaInput = (datumStr) => {
         if (!datumStr) return "";
         return datumStr.substring(0, 19);
@@ -40,8 +53,19 @@ export default function PredmetiPromijena() {
       if (s.zavrsava) s.zavrsava = formatirajZaInput(s.zavrsava);
 
       setPredmet(s);
+
+      // Pronalazimo točnu kategoriju prema ID-u ili nazivu
+      const pronadjenaKat = katLista.find(
+        (k) => k.id === s.kategorija || k.naziv === s.kategorija
+      );
+
+      if (pronadjenaKat) {
+        setOdabranaKategorija(String(pronadjenaKat.id));
+      } else if (s.kategorija !== undefined && s.kategorija !== null) {
+        setOdabranaKategorija(String(s.kategorija));
+      }
     } catch (error) {
-      console.error("Greška kod učitavanja predmeta za promjenu:", error);
+      console.error("Greška kod učitavanja podataka za promjenu:", error);
     }
   }
 
@@ -60,6 +84,11 @@ export default function PredmetiPromijena() {
 
     const formatDatum = (d) => (d ? new Date(d).toISOString() : null);
 
+    const katVrijednost = odabranaKategorija;
+    const finalnaKategorija = !isNaN(Number(katVrijednost)) && katVrijednost !== "" 
+      ? Number(katVrijednost) 
+      : katVrijednost;
+
     promijeni({
       naziv: dataNew.get("naziv"),
       opis: dataNew.get("opis"),
@@ -68,6 +97,7 @@ export default function PredmetiPromijena() {
       pocetnaCijena: Number(dataNew.get("pocetnaCijena")),
       dodano: formatDatum(dataNew.get("dodano")),
       zavrsava: formatDatum(dataNew.get("zavrsava")),
+      kategorija: finalnaKategorija,
     });
   }
 
@@ -81,12 +111,31 @@ export default function PredmetiPromijena() {
 
   return (
     <Container className="my-4">
-      <Heading as="h2" color="azure" >
+      <Heading as="h2" color="azure">
         Promjena predmeta: {predmet.naziv}
       </Heading>
 
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
+          <Col sm={6} md={6}>
+            <Form.Group controlId="kategorija">
+              <Form.Label>Kategorija</Form.Label>
+              <FormSelect 
+                name="kategorija" 
+                value={odabranaKategorija} 
+                onChange={(e) => setOdabranaKategorija(e.target.value)}
+                required
+              >
+                <option value="" disabled>Odaberi kategoriju...</option>
+                {kategorije && kategorije.map((k) => (
+                  <option key={k.id} value={String(k.id)}>
+                    {k.naziv}
+                  </option>
+                ))}
+              </FormSelect>
+            </Form.Group>
+          </Col>
+
           <Col sm={12} md={6}>
             <Form.Group controlId="naziv">
               <FormLabel>Naziv</FormLabel>
@@ -143,9 +192,9 @@ export default function PredmetiPromijena() {
                 defaultValue={predmet.pocetnaCijena || ""}
               />
             </Form.Group>
-     </Col>
+          </Col>
 
-        <Col sm={12} md={6}>
+          <Col sm={12} md={6}>
             <Form.Group controlId="dodano">
               <FormLabel>Datum i sat dodavanja</FormLabel>
               <FormControl
@@ -173,15 +222,14 @@ export default function PredmetiPromijena() {
         <hr className="my-4" />
         <Row>
           <Col xs={6} md={6}>
-            <Button type="submit" variant="warning" size="sm"  className="w-50">
+            <Button type="submit" variant="warning" size="sm" className="w-50">
               Promijeni
             </Button>
-
-
           </Col>
           <Col xs={6} md={6}>
             <Button variant="danger" size="sm" className="w-50" onClick={() => navigate(RouteNames.PREDMETI)}>
-Odustani            </Button>
+              Odustani
+            </Button>
           </Col>
         </Row>
       </Form>

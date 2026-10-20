@@ -33,9 +33,15 @@ export default function GeneriranjePodataka() {
             'Stari stripovi',
         ];
 
+        // Popis ikona za predmete
+        const ikoneList = ['box', 'gem', 'clock', 'laptop', 'car', 'book', 'palette', 'music', 'camera', 'tag'];
+
+
         for (let i = 0; i < broj; i++) {
             await KategorijeService.dodaj({
-                naziv: nazivKategorijeList[i % nazivKategorijeList.length] + (i >= nazivKategorijeList.length ? ` ${Math.floor(i / nazivKategorijeList.length) + 1}` : '')
+                naziv: nazivKategorijeList[i % nazivKategorijeList.length] + (i >= nazivKategorijeList.length ? ` ${Math.floor(i / nazivKategorijeList.length) + 1}` : ''),
+                ikona: ikoneList[i % ikoneList.length],
+                opis: faker.commerce.productDescription
             });
         }
     };
@@ -49,19 +55,24 @@ export default function GeneriranjePodataka() {
             throw new Error('Nema dostupnih kategorija u bazi. Prvo morate generirati kategorije!');
         }
 
-        // Popis ikona za predmete
-        const ikoneList = ['box', 'gem', 'clock', 'laptop', 'car', 'book', 'palette', 'music', 'camera', 'tag'];
-
+        
         for (let i = 0; i < broj; i++) {
             // Nasumični odabir kategorije iz baze
             const odabranaKategorija = kategorije[faker.number.int({ min: 0, max: kategorije.length - 1 })];
 
             const predmet = {
-                ikona: ikoneList[i % ikoneList.length],
+                
                 naziv: faker.commerce.productName(),
                 pocetnaCijena: faker.number.float({ min: 10, max: 1000, fractionDigits: 2 }),
-                datumObjave: faker.date.soon().toISOString().split('T')[0],
-                kategorija: odabranaKategorija.id // ID kategorije
+                datumObjave: faker.date.soon().toISOString(),
+                dodano: faker.date.past().toISOString(),
+                zavrsava: faker.date.future().toISOString(),
+                kategorija: odabranaKategorija.id, // ID kategorije
+                godinaNastanka: faker.number.int({min: 1884, max: 2010}),
+                opis: faker.commerce.productDescription,
+                stanje: faker.commerce.productMaterial,
+                
+
             };
 
             await PredmetiService.dodaj(predmet);

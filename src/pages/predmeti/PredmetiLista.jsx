@@ -8,6 +8,7 @@ import { TbCarSuv } from "react-icons/tb";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
+import IkonaKategorije from "../../components/UI/IkonaKategorije";
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -121,6 +122,10 @@ export default function PredmetiList() {
     return zadovoljavaKategoriju && zadovoljavaPretragu;
   });
 
+  function dohvatiIkonaKategorije(kategorijaID){
+    return kategorije.find(k=>k.id===kategorijaID).ikona
+  }
+
   return (
     <Container className="my-4">
  
@@ -166,7 +171,7 @@ export default function PredmetiList() {
                       <div
                         className="p-1 rounded-circle d-flex align-items-center justify-content-center"
                         style={{ backgroundColor: "#e7f1ff" }}>
-                        <TbCarSuv size={25} color="#1a3580" />
+                        <IkonaKategorije nazivIkona={dohvatiIkonaKategorije(c.kategorija)} />
                       </div>
                       <div>
                         <Card.Title className="mb-0 " style={{color:'#1a3580'}}>

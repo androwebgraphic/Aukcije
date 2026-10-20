@@ -1,51 +1,17 @@
 import { useEffect, useState } from "react"
 import KategorijeServices from "../../services/kategorije/KategorijeServices"
 import { Button, Container, Row, Col, Card, Badge } from "react-bootstrap"
-import DateFormat from "../../components/DateFormat"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants"
 
-// Uvoz ikona za kategorije
-import { FaComputer } from "react-icons/fa6";
-import { TbCarSuv } from "react-icons/tb";
-import { GiDiamondRing } from "react-icons/gi"; // Ikona za nakit
-import { GiPostStamp } from "react-icons/gi";
-import { VscTools } from "react-icons/vsc";
-import { RiBookShelfLine } from "react-icons/ri";
-import { PiHandCoinsBold } from "react-icons/pi";
-import { FaArrowTurnUp } from "react-icons/fa6";
 
 
 import Heading from "../../components/UI/Heading"
 import {motion} from "framer-motion"
+import IkonaKategorije from "../../components/UI/IkonaKategorije"
 
 // 1. Objekt s ikonicama
-const ICONS = {
-  car: TbCarSuv,
-  computer: FaComputer,
-  jewelry: GiDiamondRing,
-  stamp: GiPostStamp,
-  tools: VscTools,
-  books: RiBookShelfLine,
-  coins: PiHandCoinsBold,
-};
 
-// 2. Određivanje ikone na temelju naziva
-const getCategoryIcon = (naziv) => {
-  if (!naziv) return ICONS.tools;
-
-  const name = naziv.toLowerCase().trim();
-
-  if (name.includes('aut') || name.includes('vozil')) return ICONS.car;
-  if (name.includes('računal') || name.includes('racunala') || name.includes('komp') || name.includes('elektronik')) return ICONS.computer;
-  if (name.includes('nakit') || name.includes('prsten') || name.includes('zlato') || name.includes('srebro') || name.includes('bižuterija')) return ICONS.jewelry;
-  if (name.includes('markic') || name.includes('kolekc') || name.includes('starin')) return ICONS.stamp;
-  if (name.includes('knjig') || name.includes('literatur') || name.includes('strip')) return ICONS.books;
-  if (name.includes('financij') || name.includes('novac') || name.includes('posa')) return ICONS.coins;
-  if (name.includes('alat') || name.includes('uslug') || name.includes('stroj')) return ICONS.tools;
-
-  return ICONS.tools;
-};
 
 // Pomoćna komponenta za skraćivanje teksta
 function ExpandableText({ text, maxLength = 100 }) {
@@ -119,8 +85,6 @@ export default function KategorijaList() {
       {/* Grid sa Bootstrap Card elementima */}
       <Row xs={1} sm={1} md={2} lg={3} className="g-2">
         {kategorije && kategorije.map((c) => {
-          const IconComponent = getCategoryIcon(c.naziv);
-
           return (
 
             <motion.div
@@ -144,7 +108,7 @@ export default function KategorijaList() {
                       className="p-1 rounded-circle d-flex align-items-center justify-content-center" 
                       style={{ backgroundColor: '#e7f1ff' }}
                     >
-                      <IconComponent size={25} color="#1a3580" />
+                      <IkonaKategorije nazivIkona={c.ikona} />
                     </div>
                     <div>
                       <Card.Title style={{color:"#1a3580"}}>{c.naziv} </Card.Title>
@@ -160,7 +124,7 @@ export default function KategorijaList() {
                   {/* Broj oglasa badge */}
                   <div className="mb-3">
                     <Badge bg="secondary" className="text-light px-2 py-2">
-                      Broj oglasa: {c.brojOglasa || 0}
+                      Broj oglasa: dovući kasnije
                     </Badge>
                   </div>
 

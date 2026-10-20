@@ -3,6 +3,7 @@ import KategorijeServices from "../../services/kategorije/KategorijeServices"
 import { Button, Container, Row, Col, Card, Badge } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants"
+import { FaArrowTurnUp } from "react-icons/fa6"
 
 
 

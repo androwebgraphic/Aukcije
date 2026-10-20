@@ -58,16 +58,18 @@ export default function GeneriranjePodataka() {
 
 		// Popis ikona za predmete
 		const ikoneList = [
-			"box",
-			"gem",
-			"clock",
-			"laptop",
-			"car",
-			"book",
-			"palette",
-			"music",
-			"camera",
-			"tag",
+			"auti",
+	
+			"satovi",
+			"racunala",
+			"alati",
+			"beletristika",
+			"numiamatika",
+			"lp",
+			"nakit",
+      "filatelija",
+      "umjetnine",
+      "motori"
 		];
 
 		for (let i = 0; i < broj; i++) {

@@ -60,9 +60,18 @@ export default function KategorijePromijena() {
     e.preventDefault();
 
     const naziv = nazivRef.current.value;
-    const opis = opisRef.current.value;
+    const opis = opisRef.current.value; 
+    if (naziv.trim().length < 2 || naziv.trim().length > 30){
+  
+      alert('Naziv ne smije biti manji od 2 znaka ni veći od 30') 
+      return
+    }
     
-
+     if (opis.trim().length < 3 || opis.trim().length > 100) {
+  
+       alert('Opis ne smije biti manji od 2 znaka ni veći od 100')
+       return
+}
     const newErrors = {};
 
     if (!naziv.trim()) {

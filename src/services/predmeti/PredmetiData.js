@@ -2,6 +2,7 @@ export const predmeti = [
   // --- 1. RAČUNALA ---
   {
     id: 1,
+   
     naziv: "Commodore 64",
     godinaNastanka: 1982,
     opis: "Legendarno kućno računalo u originalnom kućištu s ispravnim napajanjem i kazetofonom.",

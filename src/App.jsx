@@ -23,6 +23,7 @@ import PredmetiPromjena from "./pages/predmeti/PredmetiPromjena.jsx";
 import KorisniciLista from "./pages/korisnici/KorisniciLista.jsx";
 import KorisniciPromijena from "./pages/korisnici/KorisniciPromjena.jsx";
 
+import GeneriranjePodataka from "./pages/GeneriranjePodataka"
 
 import Uvjeti from "./pages/Uvjeti.jsx";
 
@@ -53,7 +54,7 @@ function App() {
           <Route path={RouteNames.KORISNIK_NOVI} element={<Registracija />} />
           <Route path={RouteNames.KORISNIK_PROMJENA} element={ <KorisniciPromijena />} />
 
-
+          <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
           
 
 					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />

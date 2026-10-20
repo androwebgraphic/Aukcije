@@ -32,9 +32,13 @@ export const RouteNames = {
 
   KORISNIK_PROMJENA: '/korisnici/:id',
   KORISNIK_NOVI: '/korisnici/dodajkorisnika',
-  KORISNICI:'/korisnici'
+  KORISNICI: '/korisnici',
+  
+
+  //generiranje. podataka
+   GENERIRANJE_PODATAKA: '/generiraj-podatke'
    
 }
 
 //memorija, localStorage, firebase
-export const  DATA_SOURCE = 'memorija'
+export const  DATA_SOURCE = 'localStorage'

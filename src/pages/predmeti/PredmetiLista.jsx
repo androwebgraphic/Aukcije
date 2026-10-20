@@ -59,10 +59,12 @@ export default function PredmetiList() {
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
 
-  useEffect(() => {
-    ucitajKategorije();
-    ucitajPredmete();
-  }, []);
+
+   useEffect(() => {
+    // Možemo prvo učitati kategorije, pa predmete, ili oboje paralelno
+    Promise.all([ucitajKategorije(), ucitajPredmete()]);
+  }, [params.id]); // Dodavanje params.id u dependency array osigurava osvježavanje kod promjene ruta
+
 
   async function ucitajPredmete() {
     try {
@@ -104,6 +106,10 @@ export default function PredmetiList() {
     return kategorija ? kategorija.naziv : "Nepoznato";
   }
 
+  const aktivnaKategorijaNaziv = params.id 
+    ? prikaziNazivKategorije(parseInt(params.id)) 
+    : kategorijaFilter;
+
   // Filtriranje predmeta prema kategoriji (iz URL-a) i upisanom tekstu (pretraga)
   const filtriraniPredmeti = predmeti.filter((c) => {
     const nazivKat = prikaziNazivKategorije(c.kategorija);
@@ -123,8 +129,9 @@ export default function PredmetiList() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
       >
-        <Heading as="h2" color="azure" className=" mb-2 mt-0">
-          Lista predmeta {kategorijaFilter ? `- ${kategorijaFilter.toUpperCase()}` : ""} ({filtriraniPredmeti.length})
+        
+     <Heading as="h2" color="azure" className=" mb-2 mt-0">
+          Lista predmeta  {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({filtriraniPredmeti.length})
         </Heading>
 
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">

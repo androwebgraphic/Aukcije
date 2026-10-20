@@ -54,9 +54,19 @@ function NavMain() {
                 ))}
 
               </NavDropdown>
+
+              
+ <NavDropdown.Divider /><NavDropdown title="generiraj podatke">
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
+                            >Generiraj podatke</NavDropdown.Item>
+                        </NavDropdown>
+
+
+
               <NavDropdown.Item href={RouteNames.KORISNICI}>Korisnici</NavDropdown.Item>
             </NavDropdown>
-
+                  
             <Nav.Link onClick={() => { navigate(RouteNames.KORISNIK_NOVI); setExpanded(false); }}>
               Registracija
             </Nav.Link>

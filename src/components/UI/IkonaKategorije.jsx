@@ -10,12 +10,14 @@ import { PiHandCoinsBold } from "react-icons/pi";
 export default function IkonaKategorije({nazivIkona}){
 
     switch(nazivIkona){
-        case 'car':
+        case 'auti':
             return <TbCarSuv size={25} color="#1a3580" />
         case 'box':
             return <VscTools size={25} color="#1a3580" />
         case 'racunala':
-        return <FaComputer  size={25} color="#ec851d"/>
+        return <FaComputer size={25} color="#ec851d" />
+      case 'nakit':
+        return <GiDiamondRing size={25 } color="#0fb509"/>
         default:
             return <VscTools size={25} color="#1a3580" />
     }

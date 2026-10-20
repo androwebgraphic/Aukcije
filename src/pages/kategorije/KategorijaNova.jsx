@@ -18,7 +18,7 @@ export default function KategorijaNova() {
   // Reference za dohvaćanje vrijednosti
   const nazivRef = useRef();
   const opisRef = useRef();
-  const datumRef = useRef();
+
   
 
   // Stanje za greške
@@ -41,7 +41,17 @@ export default function KategorijaNova() {
 
     // 2. Validacija
     const newErrors = {};
-
+    if (naziv.trim().length < 3 || naziv.trim().length > 10) {
+    
+  
+      alert('Naziv terba biti najmanje 3 znaka i najvi[e 10')
+        return
+    }
+    if (opis.trim().length < 3 || opis.trim().length > 10) {
+      
+      alert('Opis mora biti najmanje 3 i najvi[e 10 znakova')
+      return
+    }
     if (!naziv.trim()) {
       newErrors.naziv = "Naziv je obavezan.";
     }

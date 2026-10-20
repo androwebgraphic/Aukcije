@@ -30,7 +30,8 @@ export default function GeneriranjePodataka() {
 			"Starinsko oružje",
 			"Alati",
 			"Beletristika",
-			"Stari stripovi",
+      "Stari stripovi",
+      "Stari filmovi",
 		];
 
 		for (let i = 0; i < broj; i++) {

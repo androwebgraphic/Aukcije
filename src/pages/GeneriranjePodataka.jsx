@@ -39,13 +39,15 @@ const ikoneList = [
       "alati", "beletristika", "stripovi", "filmovi"
     ];
 		for (let i = 0; i < broj; i++) {
+			//debugger
 			await KategorijeServices.dodaj({
 				naziv:
 					nazivKategorijeList[i % nazivKategorijeList.length] +
 					(i >= nazivKategorijeList.length
 						? ` ${Math.floor(i / nazivKategorijeList.length) + 1}`
             : ""),
-        ikona:ikoneList[i]
+        ikona:ikoneList[i],
+		opis: faker.commerce.productDescription()
 			});
 		}
 	};

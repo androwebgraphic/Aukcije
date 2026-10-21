@@ -6,11 +6,15 @@ import {
   FormControl,
   FormLabel,
   Row,
+
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KategorijeServices from '../../services/kategorije/KategorijeServices';
 import Heading from "../../components/UI/Heading";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function KategorijaNova() {
   const navigate = useNavigate();
@@ -41,17 +45,42 @@ export default function KategorijaNova() {
 
     // 2. Validacija
     const newErrors = {};
-    if (naziv.trim().length < 3 || naziv.trim().length > 10) {
+    if (naziv.trim().length < 3 || naziv.trim().length > 30 || naziv.trim.length ==="") {
     
-  
-      alert('Naziv terba biti najmanje 3 znaka i najvi[e 10')
-        return
-    }
-    if (opis.trim().length < 3 || opis.trim().length > 10) {
-      
-      alert('Opis mora biti najmanje 3 i najvi[e 10 znakova')
-      return
-    }
+            toast.error("naziv ne smije biti prazno polje, broj znakova veci od 2 a manji od 30", {
+    
+              position: "top-center",
+              autoclose: 2500,
+            
+            })
+            return
+          
+          }  else {
+                toast.success("Naziv prihvaćen", {
+          
+                    position: "top-center",
+                    autoclose: 2500,
+                  
+                  })
+              }
+    if (opis.trim().length < 3 || opis.trim().length > 100) {
+    
+            toast.error("Opis ne smije biti prazno polje, broj znakova veci od 2 a mnji od 100", {
+    
+              position: "top-center",
+              autoclose: 2500,
+            
+            })
+            return
+          
+          }  else {
+                toast.success("Opis prihvaćen", {
+          
+                    position: "top-center",
+                    autoclose: 2500,
+                  
+                  })
+              }
     if (!naziv.trim()) {
       newErrors.naziv = "Naziv je obavezan.";
     }

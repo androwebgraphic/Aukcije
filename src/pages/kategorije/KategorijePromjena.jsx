@@ -12,6 +12,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Heading from "../../components/UI/Heading";
 import { RouteNames } from "../../constants";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
+import {ToastContainer, toast} from "react-toastify"
 
 export default function KategorijePromijena() {
   const navigate = useNavigate();
@@ -61,21 +62,47 @@ export default function KategorijePromijena() {
 
     const naziv = nazivRef.current.value;
     const opis = opisRef.current.value; 
-    if (naziv.trim().length < 2 || naziv.trim().length > 30){
-  
-      alert('Naziv ne smije biti manji od 2 znaka ni veći od 30') 
+    if (naziv.trim().length < 2 || naziv.trim().length > 30 || naziv.trim() === "") {
+
+      toast.error("Polja ne smiju biti prazna, broj znakova veci od 2 a mnji od 10", {
+
+        position: "top-center",
+        autoclose: 3000,
+        
+      })
       return
+      
+    } else {
+      toast.success("Naziv je. prihvaćen")
     }
     
-     if (opis.trim().length < 3 || opis.trim().length > 100) {
   
-       alert('Opis ne smije biti manji od 2 znaka ni veći od 100')
-       return
-}
+      if (opis.trim().length < 3 || opis.trim().length > 500 || opis.trim().length ==="") {
+
+        toast.error("Opis ne smije biti prazno polje, broj znakova veci od 2 a mnji od 500", {
+
+          position: "top-center",
+          autoclose: 2500,
+        
+        })
+        return
+      
+      }
+    
+     else {
+      toast.success("Opis prihvaćen", {
+
+          position: "top-center",
+          autoclose: 2500,
+        
+        })
+    }
+
     const newErrors = {};
 
     if (!naziv.trim()) {
       newErrors.naziv = "Naziv je obavezan.";
+      
     }
     if (!opis.trim()) {
       newErrors.opis = "Opis je obavezan.";

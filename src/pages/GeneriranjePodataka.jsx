@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button, Form, Alert, Container, Row, Col } from "react-bootstrap";
 import { Faker, hr, en } from "@faker-js/faker";
-import KategorijeService from "../services/kategorije/KategorijeServices";
-import PredmetiService from "../services/predmeti/PredmetiServices";
+import KategorijeServices from "../services/kategorije/KategorijeServices";
+import PredmetiServices from "../services/predmeti/PredmetiServices";
 
 export default function GeneriranjePodataka() {
 	const [brojKategorije, setBrojKategorije] = useState(5);
@@ -30,8 +30,8 @@ export default function GeneriranjePodataka() {
 			"Starinsko oružje",
 			"Alati",
 			"Beletristika",
-      "Stari stripovi",
-      "Stari filmovi",
+			"Stari stripovi",
+			"Stari filmovi",
 		];
 
 		for (let i = 0; i < broj; i++) {
@@ -47,8 +47,8 @@ export default function GeneriranjePodataka() {
 
 	const generirajPredmete = async (broj) => {
 		// Dohvaćamo sve kategorije iz baze kako bismo dobili njihove ID-ove
-		const odgovorKategorije = await KategorijeService.get();
-		const kategorije = odgovorKategorije.data;
+		const odgovorKategorije = await KategorijeServices.get();
+		const kategorije = await KategorijeServices.grt()//odgovorKategorije.data;
 
 		if (!kategorije || kategorije.length === 0) {
 			throw new Error(
@@ -59,7 +59,6 @@ export default function GeneriranjePodataka() {
 		// Popis ikona za predmete
 		const ikoneList = [
 			"auti",
-	
 			"satovi",
 			"racunala",
 			"alati",
@@ -67,9 +66,9 @@ export default function GeneriranjePodataka() {
 			"numiamatika",
 			"lp",
 			"nakit",
-      "filatelija",
-      "umjetnine",
-      "motori"
+			"filatelija",
+			"umjetnine",
+			"motori",
 		];
 
 		for (let i = 0; i < broj; i++) {
@@ -84,8 +83,8 @@ export default function GeneriranjePodataka() {
 					min: 10,
 					max: 1000,
 					fractionDigits: 2,
-        }),
-    
+				}),
+
 				datumObjave: faker.date.soon().toISOString().split("T")[0],
 				kategorija: odabranaKategorija.id, // ID kategorije
 			};
@@ -149,11 +148,11 @@ export default function GeneriranjePodataka() {
 		setPoruka(null);
 
 		try {
-			const rezultat = await KategorijeService.get();
+			const rezultat = await KategorijeServices.get();
 			const kategorije = rezultat.data;
 
 			for (const kategorija of kategorije) {
-				await KategorijeService.obrisi(kategorija.id);
+				await KategorijeServices.obrisi(kategorija.id);
 			}
 
 			setPoruka({
@@ -179,11 +178,11 @@ export default function GeneriranjePodataka() {
 		setPoruka(null);
 
 		try {
-			const rezultat = await PredmetiService.get();
+			const rezultat = await PredmetiServices.get();
 			const predmeti = rezultat.data;
 
 			for (const predmet of predmeti) {
-				await PredmetiService.obrisi(predmet.id);
+				await PredmetiServices.obrisi(predmet.id);
 			}
 
 			setPoruka({

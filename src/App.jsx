@@ -27,6 +27,9 @@ import GeneriranjePodataka from "./pages/GeneriranjePodataka"
 
 import Uvjeti from "./pages/Uvjeti.jsx";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
 	return (
@@ -63,7 +66,8 @@ function App() {
 				{/* <Carousel></Carousel> */}
 			</Container>
 
-			<Footer></Footer>
+      <Footer></Footer>
+    <ToastContainer toastClassName={{position: "fixed", top:"50%", left:"50%"}}/>
 		</>
 	);
 }

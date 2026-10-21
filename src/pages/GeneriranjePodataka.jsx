@@ -33,14 +33,19 @@ export default function GeneriranjePodataka() {
 			"Stari stripovi",
 			"Stari filmovi",
 		];
-
+const ikoneList = [
+      "auti", "racunala", "motori", "nakit", "umjetnine",
+      "satovi", "filatelija", "numiamatika", "lp", "oruzje",
+      "alati", "beletristika", "stripovi", "filmovi"
+    ];
 		for (let i = 0; i < broj; i++) {
 			await KategorijeServices.dodaj({
 				naziv:
 					nazivKategorijeList[i % nazivKategorijeList.length] +
 					(i >= nazivKategorijeList.length
 						? ` ${Math.floor(i / nazivKategorijeList.length) + 1}`
-						: ""),
+            : ""),
+        ikona:ikoneList[i]
 			});
 		}
 	};
@@ -75,7 +80,7 @@ export default function GeneriranjePodataka() {
 				kategorije.data[faker.number.int({ min: 0, max: kategorije.data.length - 1 })];
 
 			const predmet = {
-				ikona: ikoneList[i % ikoneList.length],
+				ikona: odabranaKategorija.ikona || 'default-icon',//ikoneList[i % ikoneList.length],
 				naziv: faker.commerce.productName(),
 				pocetnaCijena: faker.number.float({
 					min: 10,

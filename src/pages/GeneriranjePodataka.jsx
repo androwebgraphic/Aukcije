@@ -82,7 +82,8 @@ const ikoneList = [
 				kategorije.data[faker.number.int({ min: 0, max: kategorije.data.length - 1 })];
 
 			const predmet = {
-				ikona: odabranaKategorija.ikona || 'default-icon',//ikoneList[i % ikoneList.length],
+        ikona: odabranaKategorija.ikona || 'default-icon',//ikoneList[i % ikoneList.length],
+        opis: faker.commerce.productDescription(),
 				naziv: faker.commerce.productName(),
 				pocetnaCijena: faker.number.float({
 					min: 10,
@@ -90,7 +91,8 @@ const ikoneList = [
 					fractionDigits: 2,
 				}),
 				
-				datumObjave: faker.date.soon().toISOString().split("T")[0],
+        dodano: faker.date.past().toISOString().split("T")[0],
+        zavrsava: faker.date.soon().toISOString().split("T")[0],
 				kategorija: odabranaKategorija.id, // ID kategorije
 			};
 

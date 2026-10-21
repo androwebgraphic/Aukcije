@@ -35,7 +35,7 @@ export default function GeneriranjePodataka() {
 		];
 
 		for (let i = 0; i < broj; i++) {
-			await KategorijeService.dodaj({
+			await KategorijeServices.dodaj({
 				naziv:
 					nazivKategorijeList[i % nazivKategorijeList.length] +
 					(i >= nazivKategorijeList.length
@@ -46,9 +46,7 @@ export default function GeneriranjePodataka() {
 	};
 
 	const generirajPredmete = async (broj) => {
-		// Dohvaćamo sve kategorije iz baze kako bismo dobili njihove ID-ove
-		const odgovorKategorije = await KategorijeServices.get();
-		const kategorije = await KategorijeServices.grt()//odgovorKategorije.data;
+		const kategorije = await KategorijeServices.get()//odgovorKategorije.data;
 
 		if (!kategorije || kategorije.length === 0) {
 			throw new Error(
@@ -74,7 +72,7 @@ export default function GeneriranjePodataka() {
 		for (let i = 0; i < broj; i++) {
 			// Nasumični odabir kategorije iz baze
 			const odabranaKategorija =
-				kategorije[faker.number.int({ min: 0, max: kategorije.length - 1 })];
+				kategorije.data[faker.number.int({ min: 0, max: kategorije.data.length - 1 })];
 
 			const predmet = {
 				ikona: ikoneList[i % ikoneList.length],
@@ -84,12 +82,12 @@ export default function GeneriranjePodataka() {
 					max: 1000,
 					fractionDigits: 2,
 				}),
-
+				
 				datumObjave: faker.date.soon().toISOString().split("T")[0],
 				kategorija: odabranaKategorija.id, // ID kategorije
 			};
 
-			await PredmetiService.dodaj(predmet);
+			await PredmetiServices.dodaj(predmet);
 		}
 	};
 

@@ -109,15 +109,7 @@ export default function PredmetNovi() {
               </FormSelect>
             </Form.Group>
           </Col>
-        <Col sm={6} md={6}>
-            <Form.Group controlId="godinaNastanka">
-              <Form.Label>Godina nastanka</Form.Label>
-              <Form.Control
-                type="number"
-                name="godinaNastanka"
-              />
-            </Form.Group>
-          </Col>
+        
           <Col sm={6} md={6}>
             <Form.Group controlId="opis">
               <Form.Label>Opis</Form.Label>
@@ -129,7 +121,15 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-  
+  <Col xs={6} md={6}>
+            <Form.Group controlId="godinaNastanka">
+              <Form.Label>Godina nastanka</Form.Label>
+              <Form.Control
+                type="number"
+                name="godinaNastanka"
+              />
+            </Form.Group>
+          </Col>
 
           <Col xs={6} md={3}>
             <Form.Group controlId="stanje">
@@ -184,13 +184,13 @@ export default function PredmetNovi() {
 
         <Row className="mt-4 ">
           <Col xs={6} md={6}>
-            <Button type="submit" variant="success" size="sm" className="w-100">
+            <Button type="submit" variant="success" size="sm" className="w-50">
               Dodaj
             </Button>
           </Col>
           <Col xs={6} md={6} >
             <Link to={RouteNames.PREDMETI}  >
-              <Button variant="danger" size="sm" className="w-100 " >Odustani</Button>
+              <Button variant="danger" size="sm" className="w-50 " >Odustani</Button>
             </Link>
           </Col>
         </Row>

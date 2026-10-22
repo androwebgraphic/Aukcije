@@ -149,7 +149,7 @@ export default function PredmetiPromijena() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={12}>
+          <Col sm={12} md={6}>
             <Form.Group controlId="opis">
               <FormLabel>Opis</FormLabel>
               <FormControl
@@ -161,7 +161,7 @@ export default function PredmetiPromijena() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col xs={12} md={6}>
             <Form.Group controlId="godinaNastanka">
               <FormLabel>Godina nastanka</FormLabel>
               <FormControl
@@ -172,7 +172,7 @@ export default function PredmetiPromijena() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col xs={6} md={3}>
             <Form.Group controlId="stanje">
               <FormLabel>Stanje</FormLabel>
               <FormControl
@@ -183,7 +183,7 @@ export default function PredmetiPromijena() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col xs={12} md={3}>
             <Form.Group controlId="pocetnaCijena">
               <FormLabel>Početna cijena</FormLabel>
               <FormControl
@@ -195,9 +195,9 @@ export default function PredmetiPromijena() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col xs={6} md={3}>
             <Form.Group controlId="dodano">
-              <FormLabel>Datum i sat dodavanja</FormLabel>
+              <FormLabel>Dodano</FormLabel>
               <FormControl
                 type="datetime-local"
                 step="1"
@@ -207,9 +207,9 @@ export default function PredmetiPromijena() {
             </Form.Group>
           </Col>
 
-          <Col sm={12} md={6}>
+          <Col xs={12} md={3}>
             <Form.Group controlId="zavrsava">
-              <FormLabel>Datum i sat završetka</FormLabel>
+              <FormLabel>završava</FormLabel>
               <FormControl
                 type="datetime-local"
                 step="1"

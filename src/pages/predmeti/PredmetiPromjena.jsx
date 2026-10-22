@@ -117,6 +117,19 @@ export default function PredmetiPromijena() {
 
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
+          
+
+          <Col sm={12} md={6}>
+            <Form.Group controlId="naziv">
+              <FormLabel>Naziv</FormLabel>
+              <FormControl
+                type="text"
+                name="naziv"
+                required
+                defaultValue={predmet.naziv || ""}
+              />
+            </Form.Group>
+          </Col>
           <Col sm={6} md={6}>
             <Form.Group controlId="kategorija">
               <Form.Label>Kategorija</Form.Label>
@@ -133,18 +146,6 @@ export default function PredmetiPromijena() {
                   </option>
                 ))}
               </FormSelect>
-            </Form.Group>
-          </Col>
-
-          <Col sm={12} md={6}>
-            <Form.Group controlId="naziv">
-              <FormLabel>Naziv</FormLabel>
-              <FormControl
-                type="text"
-                name="naziv"
-                required
-                defaultValue={predmet.naziv || ""}
-              />
             </Form.Group>
           </Col>
 

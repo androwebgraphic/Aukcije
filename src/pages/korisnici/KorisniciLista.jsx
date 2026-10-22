@@ -106,14 +106,21 @@ export default function KorisniciList() {
                       <FaRegUser size={ 32} color="#1a3580"/>
                     </div>
                     <div>
-                      <Card.Title className="mb-0 fw-bold">{c.ime}</Card.Title>
+                      <Card.Title className="mb-0 fw-bold"><strong><small className="text-muted d-block">Ime:</small></strong>{c.ime}</Card.Title>
                    
                     </div>
                   </div>
 
+                    <div className="border-top pt-2 mt-1">
+                      <small className="text-muted d-block">
+                        <strong>email:</strong> {c.email}
+                      </small>
+                     
+                    </div>
+
                 <div className="border-top pt-2 mt-1">
                       <small className="text-muted d-block">
-                        <strong>Kreirano:</strong> <DateFormat date={c.dodano} />
+                        <strong>Dodano:</strong> <DateFormat date={c.dodano} />
                       </small>
                      
                     </div>

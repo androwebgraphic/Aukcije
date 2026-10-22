@@ -8,6 +8,7 @@ export default function GeneriranjePodataka() {
 	const [brojKategorije, setBrojKategorije] = useState(5);
 	const [brojPredmeta, setBrojPredmeta] = useState(20);
 
+  
 	const [poruka, setPoruka] = useState(null);
 	const [loading, setLoading] = useState(false);
 

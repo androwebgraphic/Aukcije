@@ -44,7 +44,7 @@ export default function KorisnikoNovi() {
                     <Col sm={12} md={6}>
                       <Form.Group controlId="ime">
                           <Form.Label>Ime</Form.Label>
-                          <Form.Control type="text" name="naziv" required placeholder="Upiši ime ili korisničko ime"/>
+                          <Form.Control type="text" name="ime" required placeholder="Upiši ime ili korisničko ime"/>
                       </Form.Group>
                     </Col>
                     <Col sm={12} md={6}>

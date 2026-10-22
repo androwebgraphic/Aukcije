@@ -137,7 +137,7 @@ export default function KategorijePromijena() {
 
       <Form onSubmit={handleSubmit} key={kategorija.id || params.id} noValidate>
         <Row>
-          <Col sm={12} md={6}>
+          <Col xs={12} md={6}>
             <Form.Group controlId="naziv" className="mb-3">
               <FormLabel>Naziv</FormLabel>
               <FormControl
@@ -176,12 +176,12 @@ export default function KategorijePromijena() {
         <hr />
         <Row>
           <Col xs={6} md={3} className="mb-2">
-            <Button type="submit" variant="warning" className="w-50">
+            <Button type="submit" className="btn btn-warning w-100" size="sm">
               Promijeni
             </Button>
           </Col>
           <Col xs={6} md={3}>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger w-50">
+            <Link to={RouteNames.KATEGORIJE} size="sm" className="btn btn-danger ">
               Odustani
             </Link>
           </Col>

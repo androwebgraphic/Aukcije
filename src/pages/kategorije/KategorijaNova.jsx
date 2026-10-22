@@ -113,7 +113,7 @@ export default function KategorijaNova() {
 
       <Form onSubmit={handleSubmit} noValidate>
         <Row>
-          <Col sm={12} md={6}>
+          <Col xs={12} md={6}>
             <Form.Group controlId="naziv">
               <FormLabel>Naziv</FormLabel>
               <FormControl 
@@ -148,13 +148,13 @@ export default function KategorijaNova() {
 
         <hr />
         <Row>
-          <Col>
-            <Button type="submit" className="btn btn-success" size="small">
+          <Col xs={6} md={3} className="mb-2">
+            <Button type="submit" className="btn btn-success w-100" size="sm">
               Dodaj
             </Button>
           </Col>
           <Col>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger">
+            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" size="sm">
               Odustani
             </Link>
           </Col>

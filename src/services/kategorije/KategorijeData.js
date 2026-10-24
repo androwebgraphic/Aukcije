@@ -77,4 +77,11 @@ export const kategorije = [
     naziv: 'Motocikli',
     opis: 'Ako ste ljubitelj starih motocikala a ne trazite brzinu od 200km/h, ovdje cete naci takav',
   },
+    
+   {
+    id:11,
+    ikona: 'starinsko oruzje',
+    naziv: 'Oruzje',
+    opis: 'ovdje. cete naci primjerke starinskog oruzja za. svoju kolekciju',
+  },
 ]

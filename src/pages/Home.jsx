@@ -3,8 +3,8 @@ import { APP_NAME } from "../constants";
 import MenHighFive from '../assets/lottiefiles/Men High Five.json';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Link } from "react-router-dom";
-import ControlledCarousel from "../components/ControlledCarousel";
 import Heading from "../components/UI/Heading";
+import {Row,Col} from "react-bootstrap"
 import {motion} from 'framer-motion'
 
 
@@ -17,27 +17,38 @@ export default function Home() {
   return (
     <>
 
-        <Container>
+        <Container >
      
-          <Heading as='h1' className='display-1'> Dobro došli na {APP_NAME}</Heading>
+          <Heading as='h1'> Dobro došli na {APP_NAME}</Heading>
           
   
           
          
-        <Heading as='h1' className="display-4" > O nama</Heading>
+        <Heading as='h2'> O nama</Heading>
                   <p>Ova aplikacija "{APP_NAME}" je namijenjena kolekcionarima  koji nešto žele kupiti ili prodati</p>
-            <p className='warn'><strong>Pažljivo pročitajte <Link to="/Uvjeti"> Uvjete korištenja </Link> potvrdite <cite>"Prihvaćam</cite> kako ne bi došlo do neželjenih komplikacija</strong></p>
-     
-            <p className='warn'>Isključivo je zabranjen bilo kakav oblik vrijeđanja na rasnoj, vjerskoj i nacionalnoj osnovi.<br></br>
-              Svatko tko se ne bude pridžavao "Uvjeta korištenja" bit će mu blokiran a potom i uklonjen račun s Aukcija.
-            </p>
-          <p>Sretno svima 😀</p>
-     <DotLottieReact
-          data={MenHighFive}
-          loop
-          autoplay
-          style={{ width: '200px', height: '200px',marginLeft:'20%' }}
-        />
+            <div className="upute">
+              <p className='warn text-left'><strong>Pažljivo pročitajte <Link to="/Uvjeti"> Uvjete korištenja </Link> potvrdite <cite>"Prihvaćam</cite> kako ne bi došlo do neželjenih komplikacija</strong></p>
+              <p className='warn text-left'>Isključivo je zabranjen bilo kakav oblik vrijeđanja na rasnoj, vjerskoj i nacionalnoj osnovi.<br></br>
+                Svatko tko se ne bude pridžavao "Uvjeta korištenja" bit će mu blokiran a potom i uklonjen račun s Aukcija.
+                      </p>
+            </div>
+        <Row>
+
+          <Col xs={12} md={6}>
+          
+              <DotLottieReact
+              data={MenHighFive}
+              loop
+              autoplay
+              style={{ width: '13rem', height: '13rem', margin:'-5rem 0 0 30%', padding:"0", textAlign:"center"}}
+              />
+           
+            
+          </Col>
+          <Col xs={12} md={6}>
+            <p className="text-center" stylee={{margin:0}}>Sretno svima 😀</p>
+          </Col>
+</Row>
             </Container>
      
 

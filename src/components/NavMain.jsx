@@ -32,7 +32,7 @@ function NavMain() {
   return (
     <>
       <Navbar expand="sm" data-bs-theme="dark" expanded={expanded} onToggle={(isOpen) => setExpanded(isOpen)}>
-        <Navbar.Brand>{APP_NAME}</Navbar.Brand>
+        <Navbar.Brand><Link style={{ textDecoration:"none"} } to="/" >{APP_NAME}</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">

@@ -10,7 +10,9 @@ import { Card } from "react-bootstrap";
 
 import  KategorijeServices  from "../services/kategorije/KategorijeServices"
 import  PredmetiServices  from "../services/predmeti/PredmetiServices"
-   import KorisniciServices from "../services/korisnici/KorisniciServices"
+import KorisniciServices from "../services/korisnici/KorisniciServices"
+import { FaArrowTurnUp } from "react-icons/fa6";
+import { FaArrowTurnDown } from "react-icons/fa6";
 
 
 // import {motion} from 'framer-motion'
@@ -30,6 +32,22 @@ export default function Home() {
   const [animatedsPredmeti, setAnimatedPredmeti] = useState(0)
   const [animatedKorisnici, setAnimatedKorisnici] = useState(0)
 
+//   function infoToggle() {
+    
+//     const [isOpen, setIsOpen] = useState(false)
+
+//     return (
+      
+
+//       <FaArrowTurnDownown onClick={ () => setIsOpen(!isOpen)} />
+// { isOpen ? 'Sakrij' : 'Prikazi' }
+    
+//     isOpen
+//     )
+
+
+
+//   }
 
   useEffect(() => {
     
@@ -105,14 +123,16 @@ fetchData()
     <>
 
       <Container >
-         <Heading as='h1'> Dobro došli na {APP_NAME}</Heading>
+        
+          <Row>
+     
+          <Col xs={12} md={8}>
+            <Heading as='h1'> Dobro došli na {APP_NAME}</Heading>
+  
             
             
                      
                     <Heading as='h2'> O nama</Heading>
-          <Row>
-     
-          <Col xs={12} md={8}>
            
                     <p>Ova aplikacija "{APP_NAME}" je namijenjena kolekcionarima  koji nešto žele kupiti ili prodati</p>
               <div className="upute">
@@ -123,9 +143,9 @@ fetchData()
               </div>
           </Col>
           <Col  xs={12} md={3}>
- <Card className="mb-3 shadow-lg border-0 info" >
+ <Card className="info">
 
-               <Heading as='h2'>Info</Heading>
+               <Heading as='h2' >Info</Heading>
                         <Card.Body className="text-center">
                        <Heading as='h3'>Kategorije</Heading>
                             <div className="entitet">

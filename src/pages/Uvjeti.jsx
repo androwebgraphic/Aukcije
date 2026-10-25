@@ -12,7 +12,7 @@ return(
 
     <p>Dobrodošli u aplikaciju <strong>Aukcije</strong> (u daljnjem tekstu: „Aplikacija”). Molimo vas da pažljivo pročitate ove Uvjete korištenja (u daljnjem tekstu: „Uvjeti”) prije početka korištenja Aplikacije.</p>
 
-    <div className="highlight-box">
+    <div className=" upute">
       Pristupanjem ili korištenjem Aplikacije potvrđujete da ste pročitali, razumjeli i prihvatili ove Uvjete u cijelosti. Ako se ne slažete s bilo kojim dijelom ovih Uvjeta, nemojte koristiti Aplikaciju.
     </div>
 
@@ -96,14 +96,14 @@ return(
     <p>Za sva pitanja, podršku ili prigovore u vezi s korištenjem Aplikacije, možete nas kontaktirati putem:</p>
 
     <ul>
-      <li><strong>E-mail:</strong> podrska@vasa-domena.hr</li>
-      <li><strong>Adresa:</strong> [Adresa tvrtke]</li>
+      <li><strong>E-mail:</strong>andreassklizovic@gmail.com</li>
+      <li><strong>Adresa:</strong> I.Gundulića 12, 31540 Donji Miholjac</li>
     </ul>
   </div>
 
-      <Row>
-        <Col sm={12} md={6}><Button variant="success" type="submit" id='accept' >Prihvaćam</Button></Col>
-        <Col sm={12 } md={6}><Button variant="danger" type="submit" id='deny'>Odbijam</Button></Col>
+      <Row >
+        <Col className="btn mb-3" xs={6} md={6} ><Button variant="success" size="sm" type="submit" id='accept' >Prihvaćam</Button></Col>
+        <Col className="btn mb-3"xs={6 } md={6}><Button variant="danger" size="sm" type="submit" id='deny'>Odbijam</Button></Col>
       </Row>
 
 </Container>

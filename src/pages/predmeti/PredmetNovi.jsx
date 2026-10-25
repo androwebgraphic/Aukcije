@@ -68,7 +68,7 @@ export default function PredmetNovi() {
       kategorija: parseInt(podatci.get('kategorije')) || 0,
       godinaNastanka: parseInt(podatci.get("godinaNastanka")) || 0,
       opis:(podatci.get('opis')) || 0,
-      stanje: podatci.get("stanje") || "očuvan",
+      stanje: podatci.get('stanje'),
       pocetnaCijena: parseFloat(podatci.get("cijena")) || 0,
       dodano: trenutakDodavanja.toISOString(),
       zavrsava: trenutakZavrsetka.toISOString(),

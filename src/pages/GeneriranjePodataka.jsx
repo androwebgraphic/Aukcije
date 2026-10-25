@@ -85,7 +85,8 @@ const ikoneList = [
 			const predmet = {
         ikona: odabranaKategorija.ikona || 'default-icon',//ikoneList[i % ikoneList.length],
         opis: faker.commerce.productDescription(),
-				naziv: faker.commerce.productName(),
+        naziv: faker.commerce.productName(),
+  
 				pocetnaCijena: faker.number.float({
 					min: 10,
 					max: 1000,

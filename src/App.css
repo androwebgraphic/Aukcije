@@ -254,7 +254,7 @@ a.nav-link{
 .card-body{
 
   margin: 0;
-  padding: 0;
+  padding: 1rem;
 }
 
 .card-body p {

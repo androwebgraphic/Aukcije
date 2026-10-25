@@ -93,7 +93,7 @@ export default function KorisniciList() {
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
         {korisnici&&
           korisnici.map((c, index) => (
-            <Col key={c.id ?? index}>
+            <Col key={c.id ?? index} sm={6} md={6}>
               <Card className="h-100 shadow-sm border-0">
                 <Card.Body className="d-flex flex-column">
                   
@@ -127,22 +127,30 @@ export default function KorisniciList() {
              
 
                   {/* Akcijski gumbi */}
-                  <div className="d-flex gap-2 mt-auto pt-2 border-top">
-                    <Button
-                      variant="warning"
-                      className="w-50"
-                      onClick={() => navigate(`/korisnici/${c.id}`)}
-                    >
-                      Promijeni
-                    </Button>
-                    <Button
-                      variant="danger"
-                      className="w-50"
-                      onClick={() => obrisi(c.id)}
-                    >
-                      Obriši
-                    </Button>
-                  </div>
+            
+                    <Row>
+                      <Col xs={6} md={6}>
+                        <Button
+                          variant="warning"
+                          className="w-100"
+                          size="sm"
+                          onClick={() => navigate(`/korisnici/${c.id}`)}
+                        >
+                    
+                        Promijeni
+                      </Button>
+                        </Col>
+                      <Col xs={6} md={6}>
+                        <Button
+                          variant="danger"
+                          className="w-100"
+                          size="sm"
+                          onClick={() => obrisi(c.id)}
+                        >
+                          Obriši
+                        </Button>
+                      </Col>
+                    </Row>
 
                 </Card.Body>
               </Card>

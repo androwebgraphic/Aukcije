@@ -126,7 +126,7 @@ fetchData()
         
           <Row>
      
-          <Col xs={12} md={8}>
+          <Col xs={12} sm={8} md={8}>
             <Heading as='h1'> Dobro došli na {APP_NAME}</Heading>
   
             
@@ -142,30 +142,30 @@ fetchData()
                         </p>
               </div>
           </Col>
-          <Col  xs={12} md={3}>
+          <Col xs={12} sm={4} md={4}>
  <Card className="info">
 
                <Heading as='h2' >Info</Heading>
                         <Card.Body className="text-center">
                        <Heading as='h3'>Kategorije</Heading>
                             <div className="entitet">
-                                <p>{animatedKategorije}</p>
+                                <p  style={{borderBottom:".1rem solid  #3561da"}}>{animatedKategorije}</p>
                             </div>
-                   <hr />
+        
          
 
                
                      
                        <Heading as='h3'>Predmeti</Heading>
                             <div className="entitet">
-                  <p>{animatedsPredmeti}</p>
-                  <hr />
+                  <p style={{borderBottom:".1rem solid  #3561da"}}>{animatedsPredmeti}</p>
+             
                     <Heading as='h3'>Korisnici</Heading>
                             <div className="entitet">
-                                <p>{animatedKorisnici}</p>
+                                <p  style={{borderBottom:".1rem solid  #3561da"}}>{animatedKorisnici}</p>
                             </div>
                 </div>
-                <hr />
+          
                         </Card.Body>
             </Card>
             </Col>

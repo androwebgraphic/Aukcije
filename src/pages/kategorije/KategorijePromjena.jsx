@@ -173,19 +173,22 @@ export default function KategorijePromijena() {
           
         </Row>
 
-        <hr />
-        <Row>
-          <Col xs={6} md={3} className="mb-2">
+  
+  
+                                <div className="d-flex gap-2 mt-predmet pt-2 ">
+
             <Button type="submit" className="btn btn-warning w-100" size="sm">
               Promijeni
             </Button>
-          </Col>
-          <Col xs={6} md={3}>
-            <Link to={RouteNames.KATEGORIJE} size="sm" className="btn btn-danger ">
+      
+   
+           <Button size="sm" className="btn btn-danger w-100 "> <Link to={RouteNames.KATEGORIJE} >
               Odustani
-            </Link>
-          </Col>
-        </Row>
+          </Link>
+            </Button>
+            </div>
+     
+     
       </Form>
     </>
   );

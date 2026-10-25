@@ -149,13 +149,14 @@ export default function KategorijaNova() {
         <hr />
         <Row>
           <Col xs={6} md={3} className="mb-2">
-            <Button type="submit" className="btn btn-success w-100" size="sm">
+            <Button type="submit"  variant="success" className="w-50" size="sm">
               Dodaj
             </Button>
           </Col>
           <Col>
-            <Link to={RouteNames.KATEGORIJE} className="btn btn-danger" size="sm">
-              Odustani
+            <Link to={RouteNames.KATEGORIJE}  className="w-50" size="sm">
+              <Button  variant="danger"className="w-50" size="sm">
+             Odustani</Button>
             </Link>
           </Col>
         </Row>

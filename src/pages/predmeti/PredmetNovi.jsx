@@ -183,15 +183,16 @@ export default function PredmetNovi() {
         </Row>
 
         <Row className="mt-4 ">
-          <Col xs={6} md={6}>
+          <Col sm={6} md={6}>
             <Button type="submit" variant="success" size="sm" className="w-50">
               Dodaj
             </Button>
           </Col>
-          <Col xs={6} md={6} >
-            <Link to={RouteNames.PREDMETI}  >
-              <Button variant="danger" size="sm" className="w-50 " >Odustani</Button>
-            </Link>
+          <Col sm={6} md={6} >
+             <Button variant="danger" size="sm" className="w-50 " >
+            <Link to={RouteNames.PREDMETI}  >     Odustani   </Link>
+            </Button>
+     
           </Col>
         </Row>
       </Form>

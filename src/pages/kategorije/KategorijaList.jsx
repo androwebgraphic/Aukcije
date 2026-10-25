@@ -111,7 +111,7 @@ export default function KategorijaList() {
             const jedinstveniKey = c.id ? `${c.id}-${index}` : index;
 
             return (
-              <Col key={jedinstveniKey} className="h-100">
+              <Col key={jedinstveniKey} className="h-100" xs={12} sm={6}>
                 <motion.div
                   initial={{ opacity: 0, x: -100 }} 
                   animate={{ opacity: 1, x: 0 }}     
@@ -147,25 +147,30 @@ export default function KategorijaList() {
                       </div>
 
                       {/* Akcijski gumbi */}
-                      <div className="d-flex gap-2 mt-auto pt-2 border-top">
-                        <Button 
-                          variant="warning" 
-                          className="w-50"
-                          size="sm"
-                          onClick={() => navigate(`/kategorije/${c.id}`)}
-                        >
-                          Promijeni
-                        </Button>
+                   
+                                            <div className="d-flex gap-2 mt-predmet pt-2 border-top">
+
+                      <Button
+                            variant="warning"
+                            className="w-100"
+                            size="sm"
+                            onClick={() => navigate(`/kategorije/${c.id}`)}
+                          >
+                            Promijeni
+                          </Button>
+                  
                         
+               
                         <Button 
                           variant="danger" 
-                          className="w-50"
+                          className="w-100"
                           size="sm"
                           onClick={() => obrisi(c.id)}
                         >
                           Obriši
                         </Button>
-                      </div>
+                        </div>
+         
 
                     </Card.Body>
                   </Card>

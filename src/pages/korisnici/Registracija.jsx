@@ -69,15 +69,15 @@ export default function KorisnikoNovi() {
              
 
                   <Row className="mt-4">
-                    <Col sm={6} md={6}>
-                        <Button type="submit" variant="success" className="w-100">
+                    <Col sm={6}  md={6}>
+                        <Button type="submit" variant="success" size="sm" className="w-50">
                             Registriraj se
                         </Button>
                     </Col>
-                    <Col sm={6} md={6}>
-                        <Link to={RouteNames.KORISNICI} className="btn btn-danger w-100">
-                            Odustani
-                        </Link>
+                    <Col sm={6}  md={6}>
+                        <Button variant="danger" size="sm" className="w-50">
+                          <Link to={RouteNames.KORISNICI}>Odustani </Link>
+                        </Button>
                     </Col>
                   </Row>
               </Form>

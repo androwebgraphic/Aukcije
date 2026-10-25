@@ -33,10 +33,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 	return (
-		<>
+    <>
+      			<Container>
 			<Header />
 
-			<Container>
+
 				<Routes>
           <Route path={RouteNames.HOME} element={<Home />} />
           <Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />

@@ -1,28 +1,10 @@
 :root {
 
   /* Baza */
-  --font-p: 1rem;
-  /* 16px */
-
-  /* Naslovi bazirani na Zlatnom rezu (1.618) */
-  --font-h6: 1.236rem;
-  /* ~19.8px */
-  --font-h5: 1.618rem;
-  /* ~25.9px */
-  --font-h4: 2.02rem;
-  /* ~32.3px */
-  --font-h3: 2.618rem;
-  /* ~41.9px */
-  --font-h2: 3.236rem;
-  /* ~51.8px */
-  --font-h1: 4.236rem;
-  /* ~67.8px */
-
-  /* Preporučeni line-height prema Zlatnom rezu */
-  --lh-body: 1.618;
-  --lh-heading: 1.2;
+ 
 
   --main-color: #1A3580;
+  --primary-txt: azure;
 }
 
 @font-face {
@@ -42,12 +24,7 @@
   background: linear-gradient(180deg, #4058cf 0.000%, #b940c9 50.000%, #ffd36b 100.000%);
 }
 
-html {
 
-  /* height: auto;  */
-  /* min-height: 100vh;  */
-
-}
 
 .container {
 
@@ -67,7 +44,7 @@ html {
 
 pre {
 
-  color: azure;
+  color: var(--primary-txt);
 }
 
 header {
@@ -95,11 +72,19 @@ header {
 }
 
 .container h1,
-h2 {
+h2,h3 {
   text-align: center;
   color: #f9f9fa;
   word-spacing: .1rem;
 
+}
+h2{
+
+  font-size: 1.8rem;
+}
+h3{
+
+  font-size: 1rem;
 }
 
 .h {
@@ -110,7 +95,8 @@ h2 {
 
 p {
 
-  color: azure;
+  color: var(--primary-txt);
+  font-size: 2rem;
 }
 
 .container h1 {
@@ -125,6 +111,18 @@ p.warn {
 
 
 }
+.info{
+
+  background-color: var(--main-color);
+  margin: .3rem 0 .3rem 0;
+
+}
+
+.info h2{
+
+  background-color: #2d4790;
+}
+
 .upute{
 
   background-color:orange;
@@ -154,7 +152,7 @@ p.storage span {
   filter: opacity(0.9);
 
   /* box-shadow: .1rem .1rem 1rem; */
-  background-color: azure;
+  background-color: var(--primary-txt);
 
 }
 
@@ -174,14 +172,14 @@ p.storage span {
 .navbar-toggler,
 .navbar-toggler-collapsed {
   border: none
-    /* background-color:azure; */
+    /* background-color:var(--primary-txt); */
 
 }
 
 .navbar a {
 
 
-  color: azure;
+  color: var(--primary-txt);
 
   text-align: left;
 }
@@ -194,7 +192,7 @@ p.storage span {
 
 a.dropdown-item {
   color: var(--main-color);
-  background-color: azure;
+  background-color: var(--primary-txt);
 }
 
 .moj-sub-item {
@@ -249,10 +247,20 @@ a.nav-link{
   text-align:center;
 
 }
+.card{
+
+  border-radius:.7rem;
+}
+.card-body{
+
+  margin: 0;
+  padding: 0;
+}
 
 .card-body p {
 
-  font-size: .9rem;
+  font-size: 1rem;
+  color:orange
 }
 
 form {
@@ -262,7 +270,7 @@ form {
 
 label {
 
-  color: azure;
+  color: var(--primary-txt);
   font-size: .9rem;
 }
 
@@ -309,7 +317,7 @@ padding:0;
 
 footer {
 
-  background-color: #122f78;
+  background-color: var(--main-color);
 }
 
 .copy,
@@ -317,8 +325,25 @@ footer {
   text-align: center;
   color: white;
 }
+/* @media (max-width: 640px) {
+  p{
 
-@media screen and (max-width:600px) {
+       font-size: .6rem;
+  }
+
+  h1 {
+    font-size: 1.32em;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+  h3{
+    font-size: 1rem;
+  }
+} */
+
+@media screen and (max-width:576px) {
 
   .logo {
 
@@ -330,7 +355,7 @@ footer {
     width: 2rem;
     height: auto;
     float: left;
-    background-color: azure;
+    background-color: var(--primary-txt);
   }
 
 }
@@ -355,20 +380,24 @@ footer {
 
 
 /* uvjeti css */
-/* .container {
-      max-width: 800px;
+.container {
+      max-width: 1200px;
       margin: 0 auto;
       background: var(--card-bg);
-      padding: 2.5rem;
+      /* padding: 2.5rem; */
       border-radius: 8px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    } */
+    }
 
 
 p {
   margin-top: 0;
-  margin-bottom: .8rem;
-  color: azure;
+  margin-bottom: .3rem;
+  color: var(--primary-txt);
+    
+
+       font-size: .8rem;
+  
 }
 
 ul,
@@ -376,7 +405,7 @@ ol {
   margin-top: 0;
   margin-bottom: 1rem;
   padding-left: 1.5rem;
-  color: azure;
+  color: var(--primary-txt);
 }
 
 li {
@@ -399,19 +428,10 @@ li {
 
 .card {
 
-  height: 100%;
+  /* height: 100%; */
   /* min-height: 100%; */
 }
 
-@media (max-width: 640px) {
 
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-}
 
 

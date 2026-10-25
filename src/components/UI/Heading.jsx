@@ -10,7 +10,7 @@
   // Spajamo proslijeđene style objekte sa custom color i size propovima
   const combinedStyle = {
     ...(color && { color }),
-    ...(size && { fontSize: typeof size === 'number' ? `${size}px` : size }),
+    ...(size && { fontSize: typeof size === 'number' ? `${size}rem` : size }),
     ...style,
   };
 

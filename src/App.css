@@ -11,17 +11,7 @@
   font-family: 'BerkshireSwash-Regular';
   src: url('./fonts/BerkshireSwash-Regular.ttf') format('truetype');
 }
-#root {
 
-  /* https://grabient.com/_gRJgKdgELgRTgJ_gGtgBmgBngBfgG8gIUgLa */
-
-  /* https://grabient.com/_gAAgIXgL3gAAgPPgEIgBlgBmgIngAAgK8gJG */
-
-  /* background: linear-gradient(180deg, #003c87 0.000%, #005aaa 20.000%, #007ad7 40.000%, #009afb 60.000%, #00b9ff 80.000%, #00d8ef 100.000%); */
-  /* https://grabient.com/_gKdgHPgKkgGhgFxgD_gJkgL8gLOgXRgEsgNKf9voufgA */
-
-  /* background: linear-gradient(180deg, #4058cf 0.000%, #b940c9 50.000%, #ffd36b 100.000%); */
-}
 
 
 
@@ -318,7 +308,8 @@ padding:0;
 
 
 footer {
-
+  padding: 0;
+  margin: 0;
   background-color: var(--main-color);
 }
 

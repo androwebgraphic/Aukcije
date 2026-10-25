@@ -105,7 +105,7 @@ fetchData()
   return (
     <>
 
-      <Container >
+  
          <Heading as='h1'> Dobro došli na {APP_NAME}</Heading>
             
             
@@ -158,7 +158,7 @@ fetchData()
               data={MenHighFive}
               loop
               autoplay
-              style={{ width: '13rem', height: '13rem', margin:'-5.6rem 0 0 30%', padding:"0", textAlign:"center", zIndex:"9999"}}
+              style={{ width: '13rem', height: '13rem', margin:'-5.5rem 0 0 30%', padding:"0", textAlign:"center", zIndex:"9999"}}
               />
            
       
@@ -168,7 +168,7 @@ fetchData()
 
         
 </Row>
-            </Container>
+          
      
 
       

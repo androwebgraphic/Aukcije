@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
 
 
-import ScrollToTopButton from "./ScrollToTopButton";
+
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -24,7 +24,7 @@ function Footer() {
       
 
  <p className="storage"><span>Koristi se:</span>{DATA_SOURCE}</p> 
-      <ScrollToTopButton></ScrollToTopButton>
+     
 
        
     </footer >

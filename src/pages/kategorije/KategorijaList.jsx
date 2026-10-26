@@ -130,21 +130,21 @@ export default function KategorijaList() {
                           <IkonaKategorije nazivIkona={c.ikona} />
                         </div>
                         <div>
-                          <Card.Title style={{ color: "#1a3580" }}>{c.naziv}</Card.Title>
+                          <Card.Title style={{ color: "#1a3580" }}>{c.naziv} ({brojPredmeta }) oglasa</Card.Title>
                         </div>
                       </div>
 
                       {/* Opis kategorije */}
                       <Card.Text className="text-secondary flex-grow-1">
-                          <ExpandableText text={c.opis} maxLength={60} />
+                        <strong>Opis:</strong>  <ExpandableText text={c.opis} maxLength={60} />
                       </Card.Text>
 
                       {/* Broj predmeta badge */}
-                      <div className="mb-3">
+                      {/* <div className="mb-3">
                         <Badge bg="secondary" className="text-light px-2 py-2">
                           Broj predmeta: {brojPredmeta}
                         </Badge>
-                      </div>
+                      </div> */}
 
                       {/* Akcijski gumbi */}
                    

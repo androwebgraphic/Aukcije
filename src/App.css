@@ -17,8 +17,8 @@
 
 .container {
   background: linear-gradient(180deg, #4058cf 0.000%, #b940c9 50.000%, #ffd36b 100.000%);
-
-  /* position: relative; */
+  padding: 0 1.7rem;
+  /* positpaddion: relative; */
 
   /* width: 100%; */
   /* border-radius: .7rem; */
@@ -308,6 +308,7 @@ padding:0;
 
 
 footer {
+  width: 100%;
   padding: 0;
   margin: 0;
   background-color: var(--main-color);
@@ -353,7 +354,10 @@ footer {
 
 }
 
-
+.container{
+margin: 0;
+  padding: 1rem;
+}
 
 .navbar-toggler:focus {
   box-shadow: none;

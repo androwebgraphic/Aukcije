@@ -65,8 +65,8 @@ export default function KorisniciList() {
   }
 
   return (
+<>
 
-    <Container className="my-4">
           <motion.div
     
     
@@ -159,6 +159,7 @@ export default function KorisniciList() {
           ))}
         </Row>
         </motion.div>
-    </Container>
+   
+      </>
   );
 }

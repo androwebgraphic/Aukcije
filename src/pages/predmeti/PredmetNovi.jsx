@@ -77,7 +77,8 @@ export default function PredmetNovi() {
   }
 
   return (
-    <Container className="mt-3">
+    <>
+
       <Heading as="h2" color="azure" >
         Dodaj predmet
       </Heading>
@@ -196,6 +197,7 @@ export default function PredmetNovi() {
           </Col>
         </Row>
       </Form>
-    </Container>
+
+      </>
   );
 }

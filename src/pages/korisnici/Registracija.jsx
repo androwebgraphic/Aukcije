@@ -35,7 +35,7 @@ export default function KorisnikoNovi() {
 
     return (
       <>
-        <Container>
+     
            <Heading as='h2' color='azure' >Registracija</Heading>
      
             <Row>
@@ -70,19 +70,19 @@ export default function KorisnikoNovi() {
 
                   <Row className="mt-4">
                     <Col sm={6}  md={6}>
-                        <Button type="submit" variant="success" size="sm" className="w-50">
+                        <Button type="submit" variant="success" size="sm" >
                             Registriraj se
                         </Button>
                     </Col>
                     <Col sm={6}  md={6}>
-                        <Button variant="danger" size="sm" className="w-50">
+                        <Button variant="danger" size="sm">
                           <Link to={RouteNames.KORISNICI}>Odustani </Link>
                         </Button>
                     </Col>
                   </Row>
               </Form>
           </Row>
-          </Container>
+
         </>
     );
 }

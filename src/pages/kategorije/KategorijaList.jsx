@@ -77,7 +77,7 @@ export default function KategorijaList() {
 
   return (
     <>
-      <Container className="my-4">
+   
         <motion.div 
           initial={{ opacity: 0, x: -100 }} 
           animate={{ opacity: 1, x: 0 }}     
@@ -179,7 +179,7 @@ export default function KategorijaList() {
             );
           })}
         </Row>
-      </Container>
+    
     </>
   )
 }

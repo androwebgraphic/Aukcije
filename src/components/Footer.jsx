@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
 
-
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 
 function Footer() {
@@ -13,7 +13,7 @@ function Footer() {
 
   return (
     <>
-    <footer>
+    <footer >
           <Nav>
               <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); }}>
                  Uvjeti korištenja
@@ -25,7 +25,7 @@ function Footer() {
 
  <p className="storage"><span>Koristi se:</span>{DATA_SOURCE}</p> 
      
-
+ <ScrollToTopButton />
        
     </footer >
   </>

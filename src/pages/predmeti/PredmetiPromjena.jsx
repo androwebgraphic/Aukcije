@@ -110,7 +110,8 @@ export default function PredmetiPromijena() {
   }
 
   return (
-    <Container className="my-4">
+    <>
+   
       <Heading as="h2" color="azure">
         Promjena predmeta: {predmet.naziv}
       </Heading>
@@ -234,6 +235,7 @@ export default function PredmetiPromijena() {
           </Col>
         </Row>
       </Form>
-    </Container>
+  
+      </>
   );
 }

@@ -11,8 +11,8 @@ export default function Login() {
     
     <>
 
-   <Heading as='h1' className='display-1'>Logiranje</Heading>
-        <Container>
+   <Heading as='h2' >Logiranje</Heading>
+     
           
      
           
@@ -33,14 +33,14 @@ export default function Login() {
                                       </Col>
                    </Row>
                   <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Zapamti me" />
+              {/* <Form.Check type="checkbox" label="Zapamti me" /> */}
                        </Form.Group>
-              <Button variant="primary" type="submit">
+              <Button variant="success" type="submit" size="sm">
                        Logiraj se
                        </Button>
               </Form>
            </Row>
-        </Container>
+      
      
   
     </>

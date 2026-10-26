@@ -127,7 +127,8 @@ export default function PredmetiList() {
   }
 
   return (
-    <Container className="my-4">
+    <>
+  
  
       <motion.div
         initial={{ opacity: 0, x: -1000 }}
@@ -241,6 +242,7 @@ export default function PredmetiList() {
             ))}
         </Row>
       </motion.div>
-    </Container>
+  
+      </>
   );
 }

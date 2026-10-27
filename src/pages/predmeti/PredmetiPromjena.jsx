@@ -13,7 +13,6 @@ import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
-import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading"
 
 export default function PredmetiPromijena() {
@@ -22,18 +21,16 @@ export default function PredmetiPromijena() {
   const [predmet, setPredmet] = useState(null);
   const [kategorije, setKategorije] = useState([]);
   const [odabranaKategorija, setOdabranaKategorija] = useState("");
-  const [oznaka, setOznake] = useState("")
+
   useEffect(() => {
     ucitajPodatke();
-    ucitajOznake()
   }, [params.id]);
 
   async function ucitajPodatke() {
     try {
-      const [resKategorije, resPredmet, resOznake] = await Promise.all([
+      const [resKategorije, resPredmet] = await Promise.all([
         KategorijeServices.get(),
-        PredmetiServices.getByID(params.id),
-        OznakeServices.get()
+        PredmetiServices.getByID(params.id)
       ]);
 
       const katLista = resKategorije.data || resKategorije || [];
@@ -71,14 +68,7 @@ export default function PredmetiPromijena() {
       console.error("Greška kod učitavanja podataka za promjenu:", error);
     }
   }
-  async function ucitajOznake() {
-    try {
-      const odgovor = await OznakeServices.get();
-      setOznake(odgovor.data);
-    } catch (error) {
-      console.error("Greška pri dohvaćanju oznaka:", error);
-    }
-  }
+
   async function promijeni(predmetPodaci) {
     try {
       await PredmetiServices.promijeni(params.id, predmetPodaci);
@@ -104,7 +94,6 @@ export default function PredmetiPromijena() {
       opis: dataNew.get("opis"),
       godinaNastanka: Number(dataNew.get("godinaNastanka")),
       stanje: dataNew.get("stanje"),
-      oznaka:dataNew.get('oznaka'),
       pocetnaCijena: Number(dataNew.get("pocetnaCijena")),
       dodano: formatDatum(dataNew.get("dodano")),
       zavrsava: formatDatum(dataNew.get("zavrsava")),
@@ -194,22 +183,7 @@ export default function PredmetiPromijena() {
               />
             </Form.Group>
           </Col>
-<Col sm={6} md={6}>
-            <Form.Group controlId="oznaka">
-              <Form.Label>Oznaka</Form.Label>
-              <Form.Select
-                value={oznaka}
-                onChange={(e) => setOdabranaOznaka(e.target.value)}
-              >
-                <option value="">Odaberi oznaku...</option>
-                {oznake.map((c) => (
-                  <option key={c.id} value={String(c.id)}>
-                    {c.naziv}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col> 
+
           <Col xs={12} md={3}>
             <Form.Group controlId="pocetnaCijena">
               <FormLabel>Početna cijena</FormLabel>

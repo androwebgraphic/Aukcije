@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
+import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
 import { useEffect, useState } from "react";
-import OznakeServices from "../../services/oznake/OznakeServices";
+
 
 export default function PredmetNovi() {
   const [kategorije, setKategorije] = useState([]);
-  const [oznake, setOznake] = useState([]); // Stanje za oznake
+  const [oznaka, setOznaka] = useState([]); // Stanje za oznake
   const navigate = useNavigate();
 
   // Pomoćna funkcija za formatiranje datuma u YYYY-MM-DDTHH:mm:ss (uključujući sekunde)
@@ -40,7 +41,8 @@ export default function PredmetNovi() {
 
   useEffect(() => {
     ucitajKategorije();
-    ucitajOznake(); // <-- Poziv funkcije za učitavanje oznaka
+    ucitajOznake()
+
   }, []);
 
   async function ucitajKategorije() {
@@ -52,15 +54,16 @@ export default function PredmetNovi() {
     }
   }
 
-  // Funkcija za dohvaćanje oznaka sa servera
   async function ucitajOznake() {
     try {
-      const odgovor = await OznakeServices.get(); // Provjeri je li metoda u OznakeServices.get() ili drugačije nazvana (npr. getOznake)
-      setOznake(odgovor.data);
+      const odgovor = await OznakeServices.get();
+      setOznaka(odgovor.data);
     } catch (error) {
       console.error("Greška kod učitavanja oznaka:", error);
     }
   }
+
+
 
   async function dodaj(predmet) {
     try {
@@ -84,7 +87,9 @@ export default function PredmetNovi() {
       pocetnaCijena: parseFloat(podatci.get("cijena")) || 0,
       dodano: trenutakDodavanja.toISOString(),
       zavrsava: trenutakZavrsetka.toISOString(),
-      oznaka: parseInt(podatci.get('oznake')) || 0
+      oznaka:podatci.get("oznaka")
+
+    
     });
   }
 
@@ -121,19 +126,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={6} md={6}>
-            <Form.Group controlId="oznake">
-              <Form.Label>Oznake</Form.Label>
-              <FormSelect name="oznake" required>
-                <option value="">Odaberi oznaku...</option>
-                {oznake && oznake.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.naziv}
-                  </option>
-                ))}
-              </FormSelect>
-            </Form.Group>
-          </Col>
+
         
           <Col sm={6} md={6}>
             <Form.Group controlId="opis">
@@ -144,8 +137,21 @@ export default function PredmetNovi() {
               />
             </Form.Group>
           </Col>
+                    <Col sm={6} md={6}>
+            <Form.Group controlId="oznake">
+              <Form.Label>Oznake</Form.Label>
+              <FormSelect name="oznake" required>
+                <option value="">Odaberi oznaku...</option>
+                {oznaka && oznaka.map((o) => (
+                  <option key={c.id} value={c.id}>
+                    {c.naziv}
+                  </option>
+                ))}
+              </FormSelect>
+            </Form.Group>
+          </Col>
 
-          <Col xs={6} md={6}>
+          <Col xs={6} md={3}>
             <Form.Group controlId="godinaNastanka">
               <Form.Label>Godina nastanka</Form.Label>
               <Form.Control
@@ -165,6 +171,16 @@ export default function PredmetNovi() {
               />
             </Form.Group>
           </Col>
+          {/* <Col xs={6} md={3}>
+            <Form.Group controlId="oznake">
+              <Form.Label>Oznake</Form.Label>
+              <Form.Control
+                type="text"
+                name="oznake"
+                defaultValue=""
+              />
+            </Form.Group>
+          </Col> */}
 
           <Col xs={6} md={3}>
             <Form.Group controlId="cijena">

@@ -85,7 +85,7 @@ export default function OznakePromijena() {
             </Form.Group>
           </Col>
 
-          <Col sm={6} md={6}>
+          {/* <Col sm={6} md={6}>
             <Form.Group controlId="oznaka">
               <Form.Label>Oznaka</Form.Label>
               <Form.Select
@@ -100,7 +100,7 @@ export default function OznakePromijena() {
                 ))}
               </Form.Select>
             </Form.Group>
-          </Col>
+          </Col> */}
         </Row>
 
         <hr className="my-4" />

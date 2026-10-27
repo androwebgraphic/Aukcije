@@ -5,9 +5,11 @@ import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import Heading from "../../components/UI/Heading";
 import { useEffect, useState } from "react";
+import OznakeServices from "../../services/oznake/OznakeServices";
 
 export default function PredmetNovi() {
   const [kategorije, setKategorije] = useState([]);
+  const [oznake, setOznake] = useState([]); // Stanje za oznake
   const navigate = useNavigate();
 
   // Pomoćna funkcija za formatiranje datuma u YYYY-MM-DDTHH:mm:ss (uključujući sekunde)
@@ -38,6 +40,7 @@ export default function PredmetNovi() {
 
   useEffect(() => {
     ucitajKategorije();
+    ucitajOznake(); // <-- Poziv funkcije za učitavanje oznaka
   }, []);
 
   async function ucitajKategorije() {
@@ -49,6 +52,16 @@ export default function PredmetNovi() {
     }
   }
 
+  // Funkcija za dohvaćanje oznaka sa servera
+  async function ucitajOznake() {
+    try {
+      const odgovor = await OznakeServices.get(); // Provjeri je li metoda u OznakeServices.get() ili drugačije nazvana (npr. getOznake)
+      setOznake(odgovor.data);
+    } catch (error) {
+      console.error("Greška kod učitavanja oznaka:", error);
+    }
+  }
+
   async function dodaj(predmet) {
     try {
       await PredmetiServices.dodaj(predmet);
@@ -57,28 +70,26 @@ export default function PredmetNovi() {
       console.error("Greška prilikom dodavanja predmeta:", error);
     }
   }
-  
+
   function handleSubmit(e) {
     e.preventDefault();
     const podatci = new FormData(e.target);
-   
 
     dodaj({
       naziv: podatci.get("naziv") || "",
       kategorija: parseInt(podatci.get('kategorije')) || 0,
       godinaNastanka: parseInt(podatci.get("godinaNastanka")) || 0,
-      opis:(podatci.get('opis')) || 0,
+      opis: podatci.get('opis') || "",
       stanje: podatci.get('stanje'),
       pocetnaCijena: parseFloat(podatci.get("cijena")) || 0,
       dodano: trenutakDodavanja.toISOString(),
       zavrsava: trenutakZavrsetka.toISOString(),
-    
+      oznaka: parseInt(podatci.get('oznake')) || 0
     });
   }
 
   return (
     <>
-
       <Heading as="h2" color="azure" >
         Dodaj predmet
       </Heading>
@@ -100,11 +111,24 @@ export default function PredmetNovi() {
             <Form.Group controlId="kategorije">
               <Form.Label>Kategorija</Form.Label>
               <FormSelect name="kategorije" required>
-                
                 <option value="">Odaberi kategoriju...</option>
                 {kategorije && kategorije.map((k) => (
                   <option key={k.id} value={k.id}>
                     {k.naziv}
+                  </option>
+                ))}
+              </FormSelect>
+            </Form.Group>
+          </Col>
+
+          <Col sm={6} md={6}>
+            <Form.Group controlId="oznake">
+              <Form.Label>Oznake</Form.Label>
+              <FormSelect name="oznake" required>
+                <option value="">Odaberi oznaku...</option>
+                {oznake && oznake.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.naziv}
                   </option>
                 ))}
               </FormSelect>
@@ -117,12 +141,11 @@ export default function PredmetNovi() {
               <Form.Control
                 as="textarea"
                 name="opis"
-                // rows={3}
               />
             </Form.Group>
           </Col>
 
-  <Col xs={6} md={6}>
+          <Col xs={6} md={6}>
             <Form.Group controlId="godinaNastanka">
               <Form.Label>Godina nastanka</Form.Label>
               <Form.Control
@@ -191,13 +214,11 @@ export default function PredmetNovi() {
           </Col>
           <Col sm={6} md={6} >
              <Button variant="danger" size="sm" className="w-50 " >
-            <Link to={RouteNames.PREDMETI}  >     Odustani   </Link>
+              <Link to={RouteNames.PREDMETI} style={{ color: 'white', textDecoration: 'none' }}>Odustani</Link>
             </Button>
-     
           </Col>
         </Row>
       </Form>
-
-      </>
+    </>
   );
 }

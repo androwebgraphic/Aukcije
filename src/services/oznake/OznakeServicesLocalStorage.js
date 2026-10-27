@@ -16,7 +16,7 @@ async function get() {
 
 async function getByID(id) {
   const oznake = dohvatiSveIzStorage()
-  const oznaka = oznake.find(c=> o.id === parseInt(id))
+  const oznaka = oznake.find(c=> c.id === parseInt(id))
   return { data: oznaka }
 }
 
@@ -25,7 +25,7 @@ async function dodaj(oznaka) {
   if (oznake.length === 0) {
     oznaka.id = 1
   } else {
-    const maxId = Math.max(...oznake.map(o => c.id))
+    const maxId = Math.max(...oznake.map(c => c.id))
     oznaka.id = maxId + 1
   }
 
@@ -35,7 +35,7 @@ async function dodaj(oznaka) {
 
 async function promijeni(id, oznaka) {
   const oznake = dohvatiSveIzStorage()
-  const index = oznake.findIndex(c => o.id === parseInt(id))
+  const index = oznake.findIndex(c => c.id === parseInt(id))
 
   if (index !== -1) {
     oznake[index] = { ...oznake[index], ...oznaka }

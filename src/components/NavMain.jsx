@@ -55,7 +55,7 @@ function NavMain() {
 
               </NavDropdown>
 
-
+     <NavDropdown.Item href={RouteNames.OZNAKE}>Oznake</NavDropdown.Item>
              
 
 

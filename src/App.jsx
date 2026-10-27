@@ -25,6 +25,10 @@ import KorisniciPromijena from "./pages/korisnici/KorisniciPromjena.jsx";
 
 import GeneriranjePodataka from "./pages/GeneriranjePodataka"
 
+import OznakeLista from './pages/oznake/OznakeLista.jsx'
+import OznakaNova from './pages/oznake/OznakaNova.jsx'
+import OznakePromjena from './pages/oznake/OznakePromjena.jsx'
+
 import Uvjeti from "./pages/Uvjeti.jsx";
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -60,6 +64,10 @@ function App() {
           <Route path={RouteNames.KORISNIK_PROMJENA} element={ <KorisniciPromijena />} />
 
           <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
+
+                  <Route path={RouteNames.OZNAKE} element={<OznakeLista />} />
+          <Route path={RouteNames.OZNAKA_NOVA} element={<OznakaNova />} />
+          <Route path={RouteNames.OZNAKE_PROMJENA} element={ <OznakePromjena />} />
           
 
 					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />

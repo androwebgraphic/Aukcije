@@ -275,7 +275,7 @@ const ikoneList = [
 				</Col>
 			</Row>
 
-			<Alert variant="warning" className="mt-3">
+			<Alert className="mt-3 " style={{backgroundColor:"orange"}}>
 				<strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u
 				postojeće. Najprije generirajte kategorije, a zatim predmete.
 			</Alert>
@@ -308,7 +308,7 @@ const ikoneList = [
 				</Col>
 			</Row>
 
-			<Alert variant="danger" className="mt-3">
+			<Alert variant="danger" className="mt-3"  style={{backgroundColor:"#dc3545"}}>
 				<strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se
 				poništiti.
 			</Alert>

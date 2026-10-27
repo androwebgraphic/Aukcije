@@ -36,7 +36,13 @@ export const RouteNames = {
   
 
   //generiranje. podataka
-   GENERIRANJE_PODATAKA: '/generiraj-podatke'
+  GENERIRANJE_PODATAKA: '/generiraj-podatke',
+   
+  //oznake
+
+  OZNAKE_PROMJENA: '/oznake/:id',
+  OZNAKA_NOVA: '/dodajoznaku',
+  OZNAKE: '/oznake',
    
 }
 

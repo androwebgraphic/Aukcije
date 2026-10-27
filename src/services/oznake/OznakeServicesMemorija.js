@@ -9,7 +9,7 @@ async function get() {
 
 async function getByID(id) {
   
-  return { data: oznake.find( o => o.id === parseInt(id))}
+  return { data: oznake.find( c => c.id === parseInt(id))}
 
 }
 //2/4  Crud CREATE
@@ -35,7 +35,7 @@ async function promijeni(id, oznaka) {
 
 function nadiIndex(id) {
   
-  return oznake.findIndex(s => o.id===parseInt(id))
+  return oznake.findIndex(c => c.id===parseInt(id))
 }
 
 async function obrisi(id) {

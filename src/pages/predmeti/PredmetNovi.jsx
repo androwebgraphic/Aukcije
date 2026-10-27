@@ -11,7 +11,12 @@ import { useEffect, useState } from "react";
 export default function PredmetNovi() {
   const [kategorije, setKategorije] = useState([]);
   const [oznaka, setOznaka] = useState([]); // Stanje za oznake
-  const navigate = useNavigate();
+  const [odabraniPredmeti, setOdabraniPredmeti] = useState([])
+  const [odabranaOznaka, setOdabranaOznaka] = useState('')
+  const [pretragaOznaka, setPretragaOznaka] = useState('')
+  const [prikazAutoComplete, setAutocomplete] = useState(false)
+  const [odabraniIndex,setOdabraniIndex] = useState(-1)
+  const navigate = useNavigate(); 
 
   // Pomoćna funkcija za formatiranje datuma u YYYY-MM-DDTHH:mm:ss (uključujući sekunde)
   const formatirajZaInput = (d) => {
@@ -40,7 +45,8 @@ export default function PredmetNovi() {
   const zavrsavaStr = formatirajZaInput(trenutakZavrsetka);
 
   useEffect(() => {
-    ucitajKategorije();
+    ucitajKategorije()
+
     ucitajOznake()
 
   }, []);

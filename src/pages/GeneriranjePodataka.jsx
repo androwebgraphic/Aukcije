@@ -7,7 +7,7 @@ import OznakeServices from "../services/oznake/OznakeServices";
 import KorisniciServices from "../services/korisnici/KorisniciServices";
 
 export default function GeneriranjePodataka() {
-  const [brojKategorije, setBrojKategorije] = useState(5);
+  const [brojKategorije, setBrojKategorije] = useState(12);
   const [brojPredmeta, setBrojPredmeta] = useState(20);
   const [brojOznaka, setBrojOznaka] = useState(5);
   const [brojKorisnika, setBrojKorisnika] = useState(10);

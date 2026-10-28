@@ -4,11 +4,13 @@ import { Faker, hr, en } from "@faker-js/faker";
 import KategorijeServices from "../services/kategorije/KategorijeServices";
 import PredmetiServices from "../services/predmeti/PredmetiServices";
 import OznakeServices from "../services/oznake/OznakeServices";
+import KorisniciServices from "../services/korisnici/KorisniciServices";
 
 export default function GeneriranjePodataka() {
   const [brojKategorije, setBrojKategorije] = useState(5);
   const [brojPredmeta, setBrojPredmeta] = useState(20);
   const [brojOznaka, setBrojOznaka] = useState(5);
+  const [brojKorisnika, setBrojKorisnika] = useState(10);
 
   const [poruka, setPoruka] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,7 @@ export default function GeneriranjePodataka() {
             ? ` ${Math.floor(i / nazivKategorijeList.length) + 1}`
             : ""),
         ikona: ikoneList[i % ikoneList.length],
-        opis: faker.commerce.productDescription()
+        opis: faker.commerce.productDescription(),
       });
     }
   };
@@ -73,11 +75,20 @@ export default function GeneriranjePodataka() {
     }
   };
   
-  // Ovdje možete dodati pravu logiku za generiranje oznaka prema vašem servisu
   const izvrsiGeneriranjeOznaka = async (broj) => {
     for (let i = 0; i < broj; i++) {
       await OznakeServices.dodaj({
         naziv: faker.word.sample(),
+      });
+    }
+  };
+
+  const generirajKorisnike = async (broj) => {
+    for (let i = 0; i < broj; i++) {
+      await KorisniciServices.dodaj({
+        ime: faker.person.firstName(),
+        prezime: faker.person.lastName(),
+        email: faker.internet.email(),
       });
     }
   };
@@ -119,6 +130,27 @@ export default function GeneriranjePodataka() {
       setPoruka({
         tip: "danger",
         tekst: "Greška pri generiranju predmeta: " + error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerirajKorisnike = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setPoruka(null);
+
+    try {
+      await generirajKorisnike(brojKorisnika);
+      setPoruka({
+        tip: "success",
+        tekst: `Uspješno generirano ${brojKorisnika} korisnika!`,
+      });
+    } catch (error) {
+      setPoruka({
+        tip: "danger",
+        tekst: "Greška pri generiranju korisnika: " + error.message,
       });
     } finally {
       setLoading(false);
@@ -215,8 +247,8 @@ export default function GeneriranjePodataka() {
     setPoruka(null);
 
     try {
-      const rezultat = await OznakeServices.get();
-      const listaOznaka = rezultat.data;
+      const rezultat = OznakeServices.get ? await OznakeServices.get() : { data: [] };
+      const listaOznaka = rezultat.data || rezultat;
 
       for (const oznaka of listaOznaka) {
         await OznakeServices.obrisi(oznaka.id);
@@ -230,6 +262,36 @@ export default function GeneriranjePodataka() {
       setPoruka({
         tip: "danger",
         tekst: "Greška pri brisanju oznaka: " + error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleObrisiKorisnike = async () => {
+    if (!window.confirm("Jeste li sigurni da želite obrisati sve korisnike?")) {
+      return;
+    }
+
+    setLoading(true);
+    setPoruka(null);
+
+    try {
+      const rezultat = await KorisniciServices.get();
+      const korisnici = rezultat.data;
+
+      for (const korisnik of korisnici) {
+        await KorisniciServices.obrisi(korisnik.id);
+      }
+
+      setPoruka({
+        tip: "success",
+        tekst: `Uspješno obrisano ${korisnici.length} korisnika!`,
+      });
+    } catch (error) {
+      setPoruka({
+        tip: "danger",
+        tekst: "Greška pri brisanju korisnika: " + error.message,
       });
     } finally {
       setLoading(false);
@@ -251,7 +313,7 @@ export default function GeneriranjePodataka() {
       )}
 
       <Row>
-        <Col md={4} className="mb-3">
+        <Col md={3} className="mb-3">
           <Form onSubmit={handleGenerirajKategorije}>
             <Form.Group className="mb-3">
               <Form.Label>Broj kategorija</Form.Label>
@@ -270,7 +332,7 @@ export default function GeneriranjePodataka() {
           </Form>
         </Col>
 
-        <Col md={4} className="mb-3">
+        <Col md={3} className="mb-3">
           <Form onSubmit={handleGenerirajOznake}>
             <Form.Group className="mb-3">
               <Form.Label>Broj oznaka</Form.Label>
@@ -289,7 +351,7 @@ export default function GeneriranjePodataka() {
           </Form>
         </Col>
 
-        <Col md={4} className="mb-3">
+        <Col md={3} className="mb-3">
           <Form onSubmit={handleGenerirajPredmete}>
             <Form.Group className="mb-3">
               <Form.Label>Broj predmeta</Form.Label>
@@ -304,6 +366,25 @@ export default function GeneriranjePodataka() {
             </Form.Group>
             <Button variant="primary" type="submit" disabled={loading} className="w-100">
               {loading ? "Generiranje..." : "Generiraj predmete"}
+            </Button>
+          </Form>
+        </Col>
+
+        <Col md={3} className="mb-3">
+          <Form onSubmit={handleGenerirajKorisnike}>
+            <Form.Group className="mb-3">
+              <Form.Label>Broj korisnika</Form.Label>
+              <Form.Control
+                type="number"
+                min="1"
+                max="50"
+                value={brojKorisnika}
+                onChange={(e) => setBrojKorisnika(parseInt(e.target.value))}
+                disabled={loading}
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit" disabled={loading} className="w-100">
+              {loading ? "Generiranje..." : "Generiraj korisnike"}
             </Button>
           </Form>
         </Col>
@@ -322,7 +403,7 @@ export default function GeneriranjePodataka() {
       </p>
 
       <Row className="mt-3">
-        <Col md={4}>
+        <Col md={3}>
           <Button
             variant="danger"
             onClick={handleObrisiKategorije}
@@ -331,7 +412,7 @@ export default function GeneriranjePodataka() {
             {loading ? "Brisanje..." : "Obriši sve kategorije"}
           </Button>
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <Button
             variant="danger"
             onClick={handleObrisiOznake}
@@ -340,13 +421,22 @@ export default function GeneriranjePodataka() {
             {loading ? "Brisanje..." : "Obriši sve oznake"}
           </Button>
         </Col>
-        <Col md={4}>
+        <Col md={3}>
           <Button
             variant="danger"
             onClick={handleObrisiPredmete}
             disabled={loading}
             className="w-100 mb-2">
             {loading ? "Brisanje..." : "Obriši sve predmete"}
+          </Button>
+        </Col>
+        <Col md={3}>
+          <Button
+            variant="danger"
+            onClick={handleObrisiKorisnike}
+            disabled={loading}
+            className="w-100 mb-2">
+            {loading ? "Brisanje..." : "Obriši sve korisnike"}
           </Button>
         </Col>
       </Row>

@@ -47,7 +47,7 @@ export default function PredmetNovi() {
   useEffect(() => {
     ucitajKategorije()
 
-    ucitajOznake()
+
 
   }, []);
 
@@ -60,14 +60,7 @@ export default function PredmetNovi() {
     }
   }
 
-  async function ucitajOznake() {
-    try {
-      const odgovor = await OznakeServices.get();
-      setOznaka(odgovor.data);
-    } catch (error) {
-      console.error("Greška kod učitavanja oznaka:", error);
-    }
-  }
+
 
 
 
@@ -143,19 +136,7 @@ export default function PredmetNovi() {
               />
             </Form.Group>
           </Col>
-                    <Col sm={6} md={6}>
-            <Form.Group controlId="oznake">
-              <Form.Label>Oznake</Form.Label>
-              <FormSelect name="oznake" required>
-                <option value="">Odaberi oznaku...</option>
-                {oznaka && oznaka.map((o) => (
-                  <option key={c.id} value={c.id}>
-                    {c.naziv}
-                  </option>
-                ))}
-              </FormSelect>
-            </Form.Group>
-          </Col>
+  
 
           <Col xs={6} md={3}>
             <Form.Group controlId="godinaNastanka">

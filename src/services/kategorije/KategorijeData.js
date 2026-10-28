@@ -79,7 +79,7 @@ export const kategorije = [
   },
     
    {
-    id:11,
+    id:12,
     ikona: 'starinsko oruzje',
     naziv: 'Oruzje',
     opis: 'ovdje. cete naci primjerke starinskog oruzja za. svoju kolekciju',

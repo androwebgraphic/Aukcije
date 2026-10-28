@@ -69,6 +69,7 @@ export default function GeneriranjePodataka() {
         dodano: faker.date.past().toISOString().split("T")[0],
         zavrsava: faker.date.soon().toISOString().split("T")[0],
         kategorija: odabranaKategorija.id,
+        // ovdje još postavi oznake
       };
 
       await PredmetiServices.dodaj(predmet);

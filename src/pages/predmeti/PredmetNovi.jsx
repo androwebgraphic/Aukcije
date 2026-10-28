@@ -86,12 +86,11 @@ export default function PredmetNovi() {
   function filtrirajOznake() {
     if (!pretragaOznaka) return [];
     return oznake.filter(o =>
-      !odabraneOznake.find(op => op.sifra === o.sifra) &&
+      !odabraneOznake.find(op => op.id === o.id) &&
       o.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())
     );
   }
 
-  const filtriraneOznake = filtrirajOznake();
 
   function dodajOznaku(oznaka) {
     setOdabraneOznake([...odabraneOznake, oznaka]);
@@ -105,7 +104,8 @@ export default function PredmetNovi() {
   }
 
   function handleKeyDown(e) {
-    if (!prikaziAutoComplete || filtriraneOznake.length === 0) return;
+    const filtriraneOznake = filtrirajOznake()
+    //if (!prikaziAutoComplete || filtriraneOznake.length === 0) return;
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -115,7 +115,7 @@ export default function PredmetNovi() {
       setOdabraniIndex(prev => (prev > 0 ? prev - 1 : filtriraneOznake.length - 1));
     } else if (e.key === 'Enter' && odabraniIndex >= 0 && filtriraneOznake.length > 0) {
       e.preventDefault();
-      dodajOznaku(filtriraneOznake[odabraniIndex]);
+      dodajOznaku(filtrirajOznake()[odabraniIndex]);
     } else if (e.key === 'Escape') {
       setPrikaziAutoComplete(false);
       setOdabraniIndex(-1);
@@ -181,7 +181,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={6} md={6} ref={autoCompleteRef} style={{ position: 'relative' }}>
+                <Col sm={6} md={6} ref={autoCompleteRef} style={{ position: 'relative' }}>
             <Form.Group controlId="oznakePretraga">
               <Form.Label>Oznake (Pretraži i dodaj)</Form.Label>
               <Form.Control
@@ -198,11 +198,11 @@ export default function PredmetNovi() {
               />
             </Form.Group>
 
-            {prikaziAutoComplete && filtriraneOznake.length > 0 && (
+            {prikaziAutoComplete && filtrirajOznake().length > 0 && (
               <ul className="list-group position-absolute w-100 shadow" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
-                {filtriraneOznake.map((oznaka, index) => (
+                {filtrirajOznake().map((oznaka, index) => (
                   <li
-                    key={oznaka.sifra}
+                    key={oznaka.id}
                     className={`list-group-item list-group-item-action ${index === odabraniIndex ? 'active' : ''}`}
                     style={{ cursor: 'pointer' }}
                     onClick={() => dodajOznaku(oznaka)}
@@ -215,7 +215,7 @@ export default function PredmetNovi() {
 
             <div className="mt-2">
               {odabraneOznake.map((oznaka) => (
-                <span key={oznaka.sifra} className="badge bg-secondary me-1 p-2">
+                <span key={oznaka.id} className="badge bg-secondary me-1 p-2">
                   {oznaka.naziv}{" "}
                   <span 
                     style={{ cursor: 'pointer', marginLeft: '5px', fontWeight: 'bold' }} 
@@ -227,6 +227,7 @@ export default function PredmetNovi() {
               ))}
             </div>
           </Col>
+          
         
           <Col sm={6} md={6}>
             <Form.Group controlId="opis">

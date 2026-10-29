@@ -53,9 +53,24 @@ export default function GeneriranjePodataka() {
       );
     }
 
+     const rezultatOznake = await OznakeServices.get();
+        const oznake = rezultatOznake.data;
+
+        
+        if (oznake.length === 0) {
+            throw new Error('Nema dostupnih oznaka. Prvo generirajte oznake.');
+        }
+
     for (let i = 0; i < broj; i++) {
       const odabranaKategorija =
         kategorije.data[faker.number.int({ min: 0, max: kategorije.data.length - 1 })];
+
+        const brojOznakaPoPredmetu = faker.number.int({min: 1, max: 3})
+
+            const randomOznake = faker.helpers.arrayElements(
+                oznake.map(p=>p.id),
+                brojOznakaPoPredmetu
+            )
 
       const predmet = {
         ikona: odabranaKategorija.ikona || 'default-icon',
@@ -69,7 +84,7 @@ export default function GeneriranjePodataka() {
         dodano: faker.date.past().toISOString(),
         zavrsava: faker.date.soon().toISOString(),
         kategorija: odabranaKategorija.id,
-        oznake: naziv  ,//vdje još postavi oznake
+        oznake: randomOznake
       };
 
       await PredmetiServices.dodaj(predmet);

@@ -98,8 +98,13 @@ export default function PredmetiPromijena() {
     }
   }
 
-  function filtrirajOznake() {
-    if (!pretragaOznaka) return [];
+function filtrirajOznake() {
+    // Ako nema upisanog teksta, vrati sve oznake koje već nisu odabrane
+    if (!pretragaOznaka) {
+      return oznake.filter(o => !odabraneOznake.find(op => op.id === o.id));
+    }
+    
+    // Inače filtriraj prema upisanom tekstu
     return oznake.filter(o =>
       !odabraneOznake.find(op => op.id === o.id) &&
       o.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())

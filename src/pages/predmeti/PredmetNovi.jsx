@@ -59,7 +59,7 @@ export default function PredmetNovi() {
   async function ucitajKategorije() {
     try {
       const odgovor = await KategorijeServices.get();
-      setKategorije(odgovor.data);
+      setKategorije(odgovor.data || odgovor);
     } catch (error) {
       console.error("Greška kod učitavanja kategorija:", error);
     }
@@ -68,7 +68,7 @@ export default function PredmetNovi() {
   async function ucitajOznake() {
     try {
       const odgovor = await OznakeServices.get();
-      setOznake(odgovor.data);
+      setOznake(odgovor.data || odgovor);
     } catch (error) {
       console.error("Greška kod učitavanja oznaka:", error);
     }
@@ -77,7 +77,7 @@ export default function PredmetNovi() {
   async function ucitajPredmete() {
     try {
       const odgovor = await PredmetiServices.get();
-      setPredmeti(odgovor.data);
+      setPredmeti(odgovor.data || odgovor);
     } catch (error) {
       console.error("Greška kod učitavanja predmeta:", error);
     }
@@ -91,31 +91,76 @@ export default function PredmetNovi() {
     );
   }
 
-
   function dodajOznaku(oznaka) {
+    if (odabraneOznake.some(o => o.id === oznaka.id)) return;
+
     setOdabraneOznake([...odabraneOznake, oznaka]);
     setPretragaOznaka("");
     setPrikaziAutoComplete(false);
     setOdabraniid(-1);
   }
 
-  function ukloniOznaku(sifra) {
-    setOdabraneOznake(odabraneOznake.filter(o => o.sifra !== sifra));
+  async function dodajIliKreirajOznaku(nazivZaDodavanje) {
+    const nazivTrimani = nazivZaDodavanje.trim();
+    if (!nazivTrimani) return;
+
+    let postojecaOznaka = oznake.find(o => o.naziv.toLowerCase() === nazivTrimani.toLowerCase());
+
+    if (postojecaOznaka) {
+      dodajOznaku(postojecaOznaka);
+    } else {
+      try {
+        const odgovor = await OznakeServices.dodaj({ naziv: nazivTrimani });
+        let novaOznaka = odgovor && odgovor.data !== undefined ? odgovor.data : odgovor;
+
+        // Ako servis vrati undefined, osvježimo popis oznaka iz baze da pronađemo novu
+        if (!novaOznaka) {
+          const resOsvjezeno = await OznakeServices.get();
+          const svjezeOznake = resOsvjezeno.data || resOsvjezeno || [];
+          setOznake(svjezeOznake);
+          
+          novaOznaka = svjezeOznake.find(o => o.naziv.toLowerCase() === nazivTrimani.toLowerCase());
+        }
+
+        if (novaOznaka) {
+          setOznake(prev => {
+            if (prev.some(o => o.id === novaOznaka.id)) return prev;
+            return [...prev, novaOznaka];
+          });
+          dodajOznaku(novaOznaka);
+        } else {
+          console.error("Nije moguće pronaći novu oznaku nakon kreiranja.");
+        }
+      } catch (error) {
+        console.error("Greška prilikom kreiranja nove oznake:", error);
+      }
+    }
   }
 
-  function handleKeyDown(e) {
-    const filtriraneOznake = filtrirajOznake()
-    //if (!prikaziAutoComplete || filtriraneOznake.length === 0) return;
+  function ukloniOznaku(sifra) {
+    setOdabraneOznake(odabraneOznake.filter(o => o.sifra !== sifra && o.id !== sifra));
+  }
+
+  async function handleKeyDown(e) {
+    const filtriraneOznake = filtrirajOznake();
+    const trebaPrikazatiNovu = pretragaOznaka.trim() !== "" && !oznake.some(o => o.naziv.toLowerCase() === pretragaOznaka.trim().toLowerCase());
+    const ukupnoOpcija = filtriraneOznake.length + (trebaPrikazatiNovu ? 1 : 0);
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setOdabraniid(prev => (prev < filtriraneOznake.length - 1 ? prev + 1 : 0));
+      setOdabraniid(prev => (prev < ukupnoOpcija - 1 ? prev + 1 : 0));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setOdabraniid(prev => (prev > 0 ? prev - 1 : filtriraneOznake.length - 1));
-    } else if (e.key === 'Enter' && odabraniid >= 0 && filtriraneOznake.length > 0) {
+      setOdabraniid(prev => (prev > 0 ? prev - 1 : ukupnoOpcija - 1));
+    } else if (e.key === 'Enter') {
       e.preventDefault();
-      dodajOznaku(filtrirajOznake()[odabraniid]);
+      if (odabraniid >= 0 && odabraniid < filtriraneOznake.length) {
+        dodajOznaku(filtriraneOznake[odabraniid]);
+      } else if (odabraniid === filtriraneOznake.length && trebaPrikazatiNovu) {
+        await dodajIliKreirajOznaku(pretragaOznaka);
+      } else if (pretragaOznaka.trim() !== "") {
+        await dodajIliKreirajOznaku(pretragaOznaka);
+      }
     } else if (e.key === 'Escape') {
       setPrikaziAutoComplete(false);
       setOdabraniid(-1);
@@ -147,6 +192,9 @@ export default function PredmetNovi() {
       oznake: odabraneOznake.map(o => o.id) 
     });
   }
+
+  const filtriraneOznake = filtrirajOznake();
+  const trebaPrikazatiNovu = pretragaOznaka.trim() !== "" && !oznake.some(o => o.naziv.toLowerCase() === pretragaOznaka.trim().toLowerCase());
 
   return (
     <>
@@ -181,12 +229,12 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-                <Col sm={6} md={6} ref={autoCompleteRef} style={{ position: 'relative' }}>
+          <Col sm={6} md={6} ref={autoCompleteRef} style={{ position: 'relative' }}>
             <Form.Group controlId="oznakePretraga">
-              <Form.Label>Oznake (Pretraži i dodaj)</Form.Label>
+              <Form.Label>Oznake (Pretraži, dodaj ili upiši novu)</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Upišite naziv oznake..."
+                placeholder="Upišite naziv oznake i pritisnite Enter..."
                 value={pretragaOznaka}
                 onChange={(e) => {
                   setPretragaOznaka(e.target.value);
@@ -198,9 +246,9 @@ export default function PredmetNovi() {
               />
             </Form.Group>
 
-            {prikaziAutoComplete && filtrirajOznake().length > 0 && (
-              <ul className="list-group position-absolute w-100 shadow" style={{ zid: 1000, maxHeight: '200px', overflowY: 'auto' }}>
-                {filtrirajOznake().map((oznaka, id) => (
+            {prikaziAutoComplete && (filtriraneOznake.length > 0 || trebaPrikazatiNovu) && (
+              <ul className="list-group position-absolute w-100 shadow" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
+                {filtriraneOznake.map((oznaka, id) => (
                   <li
                     key={oznaka.id}
                     className={`list-group-item list-group-item-action ${id === odabraniid ? 'active' : ''}`}
@@ -210,6 +258,15 @@ export default function PredmetNovi() {
                     {oznaka.naziv}
                   </li>
                 ))}
+                {trebaPrikazatiNovu && (
+                  <li
+                    className={`list-group-item list-group-item-action text-success fw-bold ${odabraniid === filtriraneOznake.length ? 'active' : ''}`}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => dodajIliKreirajOznaku(pretragaOznaka)}
+                  >
+                    + Dodaj novu oznaku: "{pretragaOznaka}"
+                  </li>
+                )}
               </ul>
             )}
 
@@ -219,7 +276,7 @@ export default function PredmetNovi() {
                   {oznaka.naziv}{" "}
                   <span 
                     style={{ cursor: 'pointer', marginLeft: '5px', fontWeight: 'bold' }} 
-                    onClick={() => ukloniOznaku(oznaka.sifra)}
+                    onClick={() => ukloniOznaku(oznaka.sifra || oznaka.id)}
                   >
                     &times;
                   </span>
@@ -228,7 +285,6 @@ export default function PredmetNovi() {
             </div>
           </Col>
           
-        
           <Col sm={6} md={6}>
             <Form.Group controlId="opis">
               <Form.Label>Opis</Form.Label>

@@ -69,7 +69,7 @@ export default function GeneriranjePodataka() {
         dodano: faker.date.past().toISOString(),
         zavrsava: faker.date.soon().toISOString(),
         kategorija: odabranaKategorija.id,
-        // ovdje još postavi oznake
+        oznake: naziv  ,//vdje još postavi oznake
       };
 
       await PredmetiServices.dodaj(predmet);
@@ -77,13 +77,16 @@ export default function GeneriranjePodataka() {
   };
   
   const izvrsiGeneriranjeOznaka = async (broj) => {
+
+             const rezultatOznake = await OznakeServices.get();
+        const oznake = rezultatOznake.data;
     for (let i = 0; i < broj; i++) {
       await OznakeServices.dodaj({
         naziv: faker.word.sample(),
       });
     }
   };
-
+     
   const generirajKorisnike = async (broj) => {
     for (let i = 0; i < broj; i++) {
       await KorisniciServices.dodaj({

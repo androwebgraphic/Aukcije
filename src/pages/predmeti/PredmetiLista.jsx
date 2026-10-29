@@ -273,6 +273,7 @@ export default function PredmetiList() {
                             <Badge bg="secondary" className="px-2 py-1">
                               {c.stanje}
                             </Badge>
+                           
                           </div>
                         )}
 

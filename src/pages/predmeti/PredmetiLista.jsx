@@ -89,6 +89,7 @@ export default function PredmetiList() {
           }
           return p.kategorija === katId;
         });
+        console.log(filtrirano)
         setPredmeti(filtrirano);
       } else {
         setPredmeti(odgovor.data);
@@ -216,7 +217,7 @@ export default function PredmetiList() {
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
           {filtriraniPredmeti &&
             filtriraniPredmeti.map((c, index) => {
-              console.log(`Index: ${index}`)
+              // console.log(`Index: ${index}`)
               // Dohvaćamo niz oznaka bez obzira zove li se property oznake, tagovi ili oznaka
               const listaOznaka = c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
 
@@ -296,6 +297,8 @@ export default function PredmetiList() {
                           onClick={() => navigate(`/predmeti/${c.id }`)}>
                           Promijeni
                         </Button>
+
+                   
                         <Button
                           variant="danger"
                           className="w-50"

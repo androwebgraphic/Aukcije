@@ -22,7 +22,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-02T10:00:00",
     zavrsava: "2026-07-02T20:00:00",
-    kategorija: 1
+    kategorija: 1,
+    oznake:[1,2]
   },
   {
     id: 3,
@@ -33,7 +34,8 @@ export const predmeti = [
     stanje: "Očuvano",
     dodano: "2026-06-03T10:00:00",
     zavrsava: "2026-07-03T20:00:00",
-    kategorija: 1
+    kategorija: 1,
+    oznake:[2,2]
   },
 
   // --- 2. STARI AUTI I MOTOCIKLI ---
@@ -46,7 +48,8 @@ export const predmeti = [
     stanje: "Restaurirano",
     dodano: "2026-06-04T10:00:00",
     zavrsava: "2026-07-04T20:00:00",
-    kategorija: 11
+    kategorija: 11,
+    oznake:[1,4]
   },
   {
     id: 5,
@@ -57,7 +60,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-05T10:00:00",
     zavrsava: "2026-07-05T20:00:00",
-    kategorija: 11
+    kategorija: 11,
+    oznake:[1,2]
   },
   {
     id: 6,
@@ -68,7 +72,8 @@ export const predmeti = [
     stanje: "Vrlo dobro",
     dodano: "2026-06-06T10:00:00",
     zavrsava: "2026-07-06T20:00:00",
-    kategorija: 11
+    kategorija: 11,
+    oznake:[3,2]
   },
 
   // --- 3. SATOVI ---
@@ -81,7 +86,8 @@ export const predmeti = [
     stanje: "Odlično",
     dodano: "2026-06-07T10:00:00",
     zavrsava: "2026-07-07T20:00:00",
-    kategorija: 4
+    kategorija: 4,
+    oznake:[2,1]
   },
   {
     id: 8,
@@ -92,7 +98,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-08T10:00:00",
     zavrsava: "2026-07-08T20:00:00",
-    kategorija: 4
+    kategorija: 4,
+    oznake:[4,2]
   },
   {
     id: 9,
@@ -103,7 +110,8 @@ export const predmeti = [
     stanje: "Vrhunsko stanje",
     dodano: "2026-06-09T10:00:00",
     zavrsava: "2026-07-09T20:00:00",
-    kategorija: 4
+    kategorija: 4,
+    oznake:[3,5]
   },
 
   // --- 4. NUMIZMATIKA ---
@@ -116,7 +124,8 @@ export const predmeti = [
     stanje: "Odlično",
     dodano: "2026-06-10T10:00:00",
     zavrsava: "2026-07-10T20:00:00",
-    kategorija: 5
+    kategorija: 5,
+    oznake:[1,1]
   },
   {
     id: 11,
@@ -127,7 +136,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-11T10:00:00",
     zavrsava: "2026-07-11T20:00:00",
-    kategorija: 5
+    kategorija: 5,
+    oznake:[1,2]
   },
   {
     id: 12,
@@ -138,7 +148,8 @@ export const predmeti = [
     stanje: "Očuvano",
     dodano: "2026-06-12T10:00:00",
     zavrsava: "2026-07-12T20:00:00",
-    kategorija: 5
+    kategorija: 5,
+    oznake:[4,4]
   },
 
   // --- 5. FILATELIJA ---
@@ -151,7 +162,8 @@ export const predmeti = [
     stanje: "Poništeno",
     dodano: "2026-06-13T10:00:00",
     zavrsava: "2026-07-13T20:00:00",
-    kategorija: 7
+    kategorija: 7,
+    oznake:[1,2]
   },
   {
     id: 14,
@@ -162,7 +174,8 @@ export const predmeti = [
     stanje: "Neponišteno",
     dodano: "2026-06-14T10:00:00",
     zavrsava: "2026-07-14T20:00:00",
-    kategorija: 7
+    kategorija: 7,
+    oznake:[5,2]
   },
   {
     id: 15,
@@ -173,7 +186,8 @@ export const predmeti = [
     stanje: "Odlično",
     dodano: "2026-06-15T10:00:00",
     zavrsava: "2026-07-15T20:00:00",
-    kategorija: 7
+    kategorija: 7,
+    oznake:[1,2]
   },
 
   // --- 6. NAKIT ---
@@ -186,7 +200,8 @@ export const predmeti = [
     stanje: "Vrhunsko",
     dodano: "2026-06-16T10:00:00",
     zavrsava: "2026-07-16T20:00:00",
-    kategorija: 6
+    kategorija: 6,
+    oznake:[3,3]
   },
   {
     id: 17,
@@ -197,7 +212,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-17T10:00:00",
     zavrsava: "2026-07-17T20:00:00",
-    kategorija: 6
+    kategorija: 6,
+    oznake:[4,4]
   },
   {
     id: 18,
@@ -208,7 +224,8 @@ export const predmeti = [
     stanje: "Odlično",
     dodano: "2026-06-18T10:00:00",
     zavrsava: "2026-07-18T20:00:00",
-    kategorija: 6
+    kategorija: 6,
+    oznake:[1,2]
   },
 
   // --- 7. UMJETNINE ---
@@ -221,7 +238,8 @@ export const predmeti = [
     stanje: "Odlično",
     dodano: "2026-06-19T10:00:00",
     zavrsava: "2026-07-19T20:00:00",
-    kategorija: 8
+    kategorija: 8,
+    oznake:[3,1]
   },
   {
     id: 20,
@@ -232,7 +250,8 @@ export const predmeti = [
     stanje: "Očuvano",
     dodano: "2026-06-20T10:00:00",
     zavrsava: "2026-07-20T20:00:00",
-    kategorija: 8
+    kategorija: 8,
+    oznake:[1,2]
   },
   {
     id: 21,
@@ -243,7 +262,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-21T10:00:00",
     zavrsava: "2026-07-21T20:00:00",
-    kategorija: 8
+    kategorija: 8,
+    oznake:[1,2]
   },
 
   // --- 8. PLOČE (VINIL) ---
@@ -256,7 +276,8 @@ export const predmeti = [
     stanje: "Odlično",
     dodano: "2026-06-22T10:00:00",
     zavrsava: "2026-07-22T20:00:00",
-    kategorija: 9
+    kategorija: 9,
+    oznake:[5,5]
   },
   {
     id: 23,
@@ -267,7 +288,8 @@ export const predmeti = [
     stanje: "Vrlo dobro",
     dodano: "2026-06-23T10:00:00",
     zavrsava: "2026-07-23T20:00:00",
-    kategorija: 9
+    kategorija: 9,
+    oznake:[1,2]
   },
   {
     id: 24,
@@ -278,7 +300,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-24T10:00:00",
     zavrsava: "2026-07-24T20:00:00",
-    kategorija: 9
+    kategorija: 9,
+    oznake:[1,2]
   },
 
   // --- 9. STARINSKO ORUŽJE ---
@@ -291,7 +314,8 @@ export const predmeti = [
     stanje: "Kolekcionarsko",
     dodano: "2026-06-25T10:00:00",
     zavrsava: "2026-07-25T20:00:00",
-    kategorija: 9
+    kategorija: 9,
+    oznake:[1,2]
   },
   {
     id: 26,
@@ -302,7 +326,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-26T10:00:00",
     zavrsava: "2026-07-26T20:00:00",
-    kategorija: 9
+    kategorija: 9,
+    oznake:[1,2]
   },
   {
     id: 27,
@@ -313,7 +338,8 @@ export const predmeti = [
     stanje: "Očuvano",
     dodano: "2026-06-27T10:00:00",
     zavrsava: "2026-07-27T20:00:00",
-    kategorija: 9
+    kategorija: 9,
+    oznake:[1,2]
   },
 
   // --- 10. ALATI ---
@@ -326,7 +352,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-06-28T10:00:00",
     zavrsava: "2026-07-28T20:00:00",
-    kategorija: 3
+    kategorija: 3,
+    oznake:[3,5]
   },
   {
     id: 29,
@@ -337,7 +364,8 @@ export const predmeti = [
     stanje: "Radno stanje",
     dodano: "2026-06-29T10:00:00",
     zavrsava: "2026-07-29T20:00:00",
-    kategorija: 3
+    kategorija: 3,
+    oznake:[1,2]
   },
   {
     id: 30,
@@ -348,7 +376,8 @@ export const predmeti = [
     stanje: "Kolekcionarsko",
     dodano: "2026-06-30T10:00:00",
     zavrsava: "2026-07-30T20:00:00",
-    kategorija: 3
+    kategorija: 3,
+    oznake:[4,4]
   },
 
   // --- 11. BELETRISTIKA ---
@@ -361,7 +390,8 @@ export const predmeti = [
     stanje: "Dobro",
     dodano: "2026-07-01T10:00:00",
     zavrsava: "2026-08-01T20:00:00",
-    kategorija: 10
+    kategorija: 10,
+    oznake:[1,1]
   },
   {
     id: 32,
@@ -372,7 +402,8 @@ export const predmeti = [
     stanje: "Riđe korice",
     dodano: "2026-07-02T10:00:00",
     zavrsava: "2026-08-02T20:00:00",
-    kategorija: 10
+    kategorija: 10,
+    oznake:[0,2]
   },
   {
     id: 33,
@@ -383,6 +414,7 @@ export const predmeti = [
     stanje: "Staro izdanje",
     dodano: "2026-07-03T10:00:00",
     zavrsava: "2026-08-03T20:00:00",
-    kategorija: 10
+    kategorija: 10,
+    oznake:[2,2]
   }
 ];

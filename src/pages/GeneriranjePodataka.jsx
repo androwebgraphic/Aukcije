@@ -66,8 +66,8 @@ export default function GeneriranjePodataka() {
           max: 1000,
           fractionDigits: 2,
         }),
-        dodano: faker.date.past().toISOString().split("T")[0],
-        zavrsava: faker.date.soon().toISOString().split("T")[0],
+        dodano: faker.date.past().toISOString(),
+        zavrsava: faker.date.soon().toISOString(),
         kategorija: odabranaKategorija.id,
         // ovdje još postavi oznake
       };

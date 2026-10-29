@@ -15,7 +15,7 @@ export default function PredmetNovi() {
   const [pretragaOznaka, setPretragaOznaka] = useState("");
   const [odabraneOznake, setOdabraneOznake] = useState([]);
   const [prikaziAutoComplete, setPrikaziAutoComplete] = useState(false);
-  const [odabraniIndex, setOdabraniIndex] = useState(-1);
+  const [odabraniid, setOdabraniid] = useState(-1);
   
   const autoCompleteRef = useRef(null);
   const navigate = useNavigate(); 
@@ -96,7 +96,7 @@ export default function PredmetNovi() {
     setOdabraneOznake([...odabraneOznake, oznaka]);
     setPretragaOznaka("");
     setPrikaziAutoComplete(false);
-    setOdabraniIndex(-1);
+    setOdabraniid(-1);
   }
 
   function ukloniOznaku(sifra) {
@@ -109,16 +109,16 @@ export default function PredmetNovi() {
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setOdabraniIndex(prev => (prev < filtriraneOznake.length - 1 ? prev + 1 : 0));
+      setOdabraniid(prev => (prev < filtriraneOznake.length - 1 ? prev + 1 : 0));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setOdabraniIndex(prev => (prev > 0 ? prev - 1 : filtriraneOznake.length - 1));
-    } else if (e.key === 'Enter' && odabraniIndex >= 0 && filtriraneOznake.length > 0) {
+      setOdabraniid(prev => (prev > 0 ? prev - 1 : filtriraneOznake.length - 1));
+    } else if (e.key === 'Enter' && odabraniid >= 0 && filtriraneOznake.length > 0) {
       e.preventDefault();
-      dodajOznaku(filtrirajOznake()[odabraniIndex]);
+      dodajOznaku(filtrirajOznake()[odabraniid]);
     } else if (e.key === 'Escape') {
       setPrikaziAutoComplete(false);
-      setOdabraniIndex(-1);
+      setOdabraniid(-1);
     }
   }
 
@@ -191,7 +191,7 @@ export default function PredmetNovi() {
                 onChange={(e) => {
                   setPretragaOznaka(e.target.value);
                   setPrikaziAutoComplete(true);
-                  setOdabraniIndex(-1);
+                  setOdabraniid(-1);
                 }}
                 onKeyDown={handleKeyDown}
                 onFocus={() => setPrikaziAutoComplete(true)}
@@ -199,11 +199,11 @@ export default function PredmetNovi() {
             </Form.Group>
 
             {prikaziAutoComplete && filtrirajOznake().length > 0 && (
-              <ul className="list-group position-absolute w-100 shadow" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
-                {filtrirajOznake().map((oznaka, index) => (
+              <ul className="list-group position-absolute w-100 shadow" style={{ zid: 1000, maxHeight: '200px', overflowY: 'auto' }}>
+                {filtrirajOznake().map((oznaka, id) => (
                   <li
                     key={oznaka.id}
-                    className={`list-group-item list-group-item-action ${index === odabraniIndex ? 'active' : ''}`}
+                    className={`list-group-item list-group-item-action ${id === odabraniid ? 'active' : ''}`}
                     style={{ cursor: 'pointer' }}
                     onClick={() => dodajOznaku(oznaka)}
                   >

@@ -11,7 +11,7 @@ export const predmeti = [
     dodano: "2026-06-01T10:00:00",
     zavrsava: "2026-07-01T20:00:00",
     kategorija: 1,
-    oznake:[1,2]
+    // oznake:[1,2]
   },
   {
     id: 2,

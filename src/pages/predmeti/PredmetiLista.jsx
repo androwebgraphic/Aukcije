@@ -216,11 +216,12 @@ export default function PredmetiList() {
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
           {filtriraniPredmeti &&
             filtriraniPredmeti.map((c, index) => {
+              console.log(`Index: ${index}`)
               // Dohvaćamo niz oznaka bez obzira zove li se property oznake, tagovi ili oznaka
               const listaOznaka = c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
 
               return (
-                <Col key={c.id ?? c.sifra ?? index} >
+                <Col key={c.id} >
                   <Card className="h-100 shadow-sm border-0">
                     <Card.Body className="d-flex flex-column">
                       <div className="d-flex align-items-center gap-3 mb-3">
@@ -292,14 +293,14 @@ export default function PredmetiList() {
                           variant="warning"
                           className="w-50"
                           size="sm"
-                          onClick={() => navigate(`/predmeti/${c.id ?? c.sifra}`)}>
+                          onClick={() => navigate(`/predmeti/${c.id }`)}>
                           Promijeni
                         </Button>
                         <Button
                           variant="danger"
                           className="w-50"
                           size="sm"
-                          onClick={() => obrisi(c.id ?? c.sifra)}>
+                          onClick={() => obrisi(c.id)}>
                           Obriši
                         </Button>
                       </div>

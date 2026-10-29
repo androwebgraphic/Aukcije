@@ -27,9 +27,9 @@ switch (DATA_SOURCE ){
 const PrazanServis = {
 
   get: async () => ({ data: [] }),
-  dodaj: async (auto) => { console.log('Smjer nije implementiran') },
+  dodaj: async (predmet) => { console.log('Smjer nije implementiran') },
   getByID: async (id) => ({ data: {} }),
-  promijeni: async (id, auti) => { console.error('Servis nije  implmentiran') },
+  promijeni: async (id, predmett) => { console.error('Servis nije  implmentiran') },
   obrisi: async (id) => {console.error('Servis nije  implementiran')}
 }
 

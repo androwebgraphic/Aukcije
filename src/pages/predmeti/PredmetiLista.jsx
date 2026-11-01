@@ -374,7 +374,7 @@ export default function PredmetiList() {
         {/* Paginacija na dnu */}
         {ukupnoStranica > 1 && (
           <div className="d-flex justify-content-center mt-4">
-            <Pagination>
+            <Pagination style={{padding:"1rem"}}>
               <Pagination.First 
                 onClick={() => setStranica(1)} 
                 disabled={stranica === 1} 

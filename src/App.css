@@ -319,6 +319,15 @@ footer {
   text-align: center;
   color: white;
 }
+.pagination{
+
+  /* width:90%; */
+  padding: 2rem;
+  flex-wrap: wrap;
+width: 100%;
+
+  
+}
 
 /* @media (max-width: 640px) {
   p{

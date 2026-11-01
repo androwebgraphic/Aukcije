@@ -53,14 +53,16 @@ function App() {
           <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijePromijena/> } />
 
           
-
-  {/* 1. Prvo ide specifična ruta za promjenu */}
+{/* 1. Specifična ruta za promjenu */}
   <Route path={RouteNames.PREDMETI_PROMJENA} element={<PredmetiPromjena />} />
   
-  {/* 2. Zatim ruta za novi predmet */}
+  {/* 2. Ruta za novi predmet */}
   <Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
   
-  {/* 3. Tek na kraju ide općenita ruta za listu */}
+  {/* 3. Ruta za prikaz predmeta po kategoriji (OVO JE NEDOSTAJALO!) */}
+  <Route path={RouteNames.PREDMETI_KATEGORIJA} element={<PredmetiLista />} />
+
+  {/* 4. Općenita ruta za listu svih predmeta */}
   <Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
 
 

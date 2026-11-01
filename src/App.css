@@ -437,29 +437,3 @@ li {
 
 
 
-/* Pravilo za responzivno prilagođavanje svih slika unutar karusela i kartica */
-.carousel-item img,
-.card-img-top,
-.product-img {
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  object-fit: cover; /* Sprečava izobličenje slike i popunjava prostor */
-  aspect-ratio: 4 / 3; /* Održava stabilan omjer stranica na svim uređajima */
-  border-radius: 0.6rem;
-}
-
-/* Prilagodba visine i proporcija slika na manjim ekranima (mobitelima) */
-@media (max-width: 576px) {
-  .carousel-item img,
-  .card-img-top {
-    aspect-ratio: 1 / 1; /* Na mobitelima koristi kvadratni prikaz radi uštede prostora */
-  }
-}
-
-/* Prilagodba za veće ekrane (desktopy) */
-@media (min-width: 992px) {
-  .carousel-item img {
-    aspect-ratio: 16 / 9; /* Na većim ekranima širi prikaz */
-  }
-}

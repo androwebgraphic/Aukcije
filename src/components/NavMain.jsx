@@ -46,14 +46,20 @@ function NavMain() {
               <NavDropdown.Item href={RouteNames.KATEGORIJE}>Kategorije</NavDropdown.Item>
 
               <NavDropdown title="Predmeti" id="predmeti">
-                <NavDropdown.Item href={RouteNames.PREDMETI}>Svi</NavDropdown.Item>
-                {kategorije && kategorije.map((k) => (
-                  <NavDropdown.Item href={`/predmeti/kategorija/${k.id}`} key={k.id}>
-                    {k.naziv}
-                  </NavDropdown.Item>
-                ))}
+  <NavDropdown.Item as={Link} to={RouteNames.PREDMETI}>
+    Svi
+  </NavDropdown.Item>
 
-              </NavDropdown>
+  {kategorije && kategorije.map((k) => (
+    <NavDropdown.Item 
+      key={k.id} 
+      as={Link} 
+      to={`/predmeti/kategorija/${k.id}`}
+    >
+      {k.naziv}
+    </NavDropdown.Item>
+  ))}
+</NavDropdown>
 
      <NavDropdown.Item href={RouteNames.OZNAKE}>Oznake</NavDropdown.Item>
              

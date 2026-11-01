@@ -61,12 +61,13 @@ function dohvatiIzvorSlike(slikaItem) {
 }
 
 export default function PredmetiList() {
+  // 1. Svi hookovi moraju biti na samom vrhu
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); 
   const navigate = useNavigate();
-  const params = useParams();
+  const params = useParams(); // params je definiran ovdje na vrhu
   
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
@@ -90,20 +91,7 @@ export default function PredmetiList() {
     try {
       const odgovor = await PredmetiServices.get();
       const listaPredmeta = odgovor.data || odgovor;
-
-      if(params.id){
-        const katId = parseInt(params.id);
-        const filtrirano = listaPredmeta.filter(p => {
-          const kat = p.kategorija;
-          if (typeof kat === 'object' && kat !== null) {
-            return kat.id === katId;
-          }
-          return Number(kat) === katId;
-        });
-        setPredmeti(filtrirano);
-      } else {
-        setPredmeti(listaPredmeta);
-      }
+      setPredmeti(Array.isArray(listaPredmeta) ? listaPredmeta : []);
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
     }
@@ -145,11 +133,18 @@ export default function PredmetiList() {
   }
 
   function dohvatiIdKategorije(kategorijaVal) {
-    if (!kategorijaVal) return null;
-    if (typeof kategorijaVal === 'object' && kategorijaVal.id) {
-      return kategorijaVal.id;
+    if (kategorijaVal === null || kategorijaVal === undefined) return null;
+    if (typeof kategorijaVal === 'object') {
+      return Number(
+        kategorijaVal.id ?? 
+        kategorijaVal.sifra ?? 
+        kategorijaVal.kategorijaId ?? 
+        kategorijaVal.kategorija_id ?? 
+        null
+      );
     }
-    return parseInt(kategorijaVal);
+    const parsed = Number(kategorijaVal);
+    return isNaN(parsed) ? null : parsed;
   }
 
   function prikaziNazivOznake(oznakaItem) {
@@ -164,14 +159,25 @@ export default function PredmetiList() {
     return o ? o.naziv : `Oznaka ID: ${oznakaItem}`;
   }
 
+  // 2. Varijable koje koriste params definiraju se nakon inicijalizacije
   const aktivnaKategorijaNaziv = params.id 
     ? prikaziNazivKategorije(parseInt(params.id)) 
     : kategorijaFilter;
 
   const filtriraniPredmeti = predmeti.filter((c) => {
-    const nazivKat = prikaziNazivKategorije(c.kategorija);
-    const zadovoljavaKategoriju = !kategorijaFilter || nazivKat.toLowerCase() === kategorijaFilter.toLowerCase();
-    const zadovoljavaPretragu = c.naziv && c.naziv.toLowerCase().includes(searchTerm.toLowerCase());
+    let zadovoljavaKategoriju = true;
+    if (params.id) {
+      const katIdIzUrl = parseInt(params.id);
+      const predmetKatId = dohvatiIdKategorije(c.kategorija);
+      zadovoljavaKategoriju = predmetKatId === katIdIzUrl;
+    } else if (kategorijaFilter) {
+      const nazivKat = prikaziNazivKategorije(c.kategorija);
+      zadovoljavaKategoriju = nazivKat.toLowerCase() === kategorijaFilter.toLowerCase();
+    }
+
+    const zadovoljavaPretragu = searchTerm 
+      ? c.naziv && c.naziv.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
 
     return zadovoljavaKategoriju && zadovoljavaPretragu;
   });
@@ -215,7 +221,7 @@ export default function PredmetiList() {
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
       >
         <Row xs={1} sm={1} md={2} lg={3} className="g-3">
-          {filtriraniPredmeti &&
+          {filtriraniPredmeti && filtriraniPredmeti.length > 0 ? (
             filtriraniPredmeti.map((c) => {
               const listaOznaka = c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
               const listaSlika = c.slike || c.slikaUrls || [];
@@ -224,7 +230,6 @@ export default function PredmetiList() {
                 <Col key={c.id}>
                   <Card className="h-100 shadow-sm border-0 overflow-hidden">
                     
-                    {/* PRIKAZ SLIKA: Ako ima više slika, koristi se Carousel. Ako ima 1, prikazuje se obična slika. Ako nema, placeholder. */}
                     {listaSlika.length > 1 ? (
                       <Carousel data-bs-theme="dark" interval={null} className="bg-light">
                         {listaSlika.map((slikaItem, idx) => (
@@ -325,7 +330,12 @@ export default function PredmetiList() {
                   </Card>
                 </Col>
               );
-            })}
+            })
+          ) : (
+            <Col xs={12}>
+              <p className="text-muted text-center py-4">Nema predmeta u odabranoj kategoriji.</p>
+            </Col>
+          )}
         </Row>
       </motion.div>
     </>

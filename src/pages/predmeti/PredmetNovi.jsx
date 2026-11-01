@@ -10,14 +10,21 @@ import Heading from "../../components/UI/Heading";
 export default function PredmetNovi() {
   const navigate = useNavigate();
   
+  // Pomoćna funkcija za formatiranje datuma za datetime-local input ("YYYY-MM-DDTHH:mm")
+  const formatZaDateTimeLocal = (date) => {
+    const d = new Date(date);
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
   const [predmet, setPredmet] = useState({
     naziv: "",
     opis: "",
     godinaNastanka: "",
     stanje: "",
     pocetnaCijena: "",
-    dodano: "",
-    zavrsava: ""
+    dodano: formatZaDateTimeLocal(new Date()), // Trenutni datum i vrijeme
+    zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) // 7 dana od danas
   });
   
   const [kategorije, setKategorije] = useState([]);
@@ -165,6 +172,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
+          {/* SEKCIJA ZA OZNAKE S AUTOCOMPLETE-OM */}
           <Col sm={12} ref={autoCompleteRef} style={{ position: 'relative' }}>
             <Card className="p-3 bg-light border">
               <Form.Group controlId="oznakePretraga">
@@ -179,7 +187,7 @@ export default function PredmetNovi() {
               </Form.Group>
 
               {prikaziAutoComplete && (
-                <ul className="list-group position-absolute w-100 shadow" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto', left: 0, top: '90px' }}>
+                <ul className="list-group position-absolute w-100 shadow bg-white" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto', left: 0, top: '90px' }}>
                   {filtrirajOznake().map((o) => (
                     <li key={o.id} className="list-group-item list-group-item-action" style={{cursor:'pointer'}} onClick={() => dodajOznaku(o)}>
                       {o.naziv}
@@ -247,6 +255,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
+          {/* SEKCIJA ZA UPLOAD SLIKA */}
           <Col sm={12}>
             <Card className="p-3 bg-light border">
               <Form.Group className="mb-3">

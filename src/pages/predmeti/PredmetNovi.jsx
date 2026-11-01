@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, FormSelect, FormControl, FormLabel, Row, Alert } from "react-bootstrap";
+import { Button, Col, Container, Form, FormSelect, FormControl, FormLabel, Row, Alert, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState, useRef } from "react";
@@ -7,7 +7,7 @@ import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
 
-export default function PredmetiNovi() {
+export default function PredmetNovi() {
   const navigate = useNavigate();
   
   const [predmet, setPredmet] = useState({
@@ -61,6 +61,10 @@ export default function PredmetiNovi() {
     setPredmet(prev => ({ ...prev, [name]: value }));
   }
 
+  function oznakaVecPostoji(naziv) {
+    return oznake.some(o => o.naziv.toLowerCase() === naziv.trim().toLowerCase());
+  }
+
   function filtrirajOznake() {
     return oznake.filter(o => 
       !odabraneOznake.some(op => String(op.id) === String(o.id)) && 
@@ -73,6 +77,28 @@ export default function PredmetiNovi() {
     setOdabraneOznake([...odabraneOznake, oznaka]); 
     setPretragaOznaka(""); 
     setPrikaziAutoComplete(false);
+  }
+
+  async function kreirajI_DodajOznaku() {
+    if (!pretragaOznaka.trim()) return;
+    try {
+      const odgovor = await OznakeServices.dodaj({ naziv: pretragaOznaka.trim() });
+      const novaOznaka = odgovor?.data !== undefined ? odgovor.data : odgovor;
+
+      if (novaOznaka && novaOznaka.id) {
+        setOznake(prev => [...prev, novaOznaka]);
+        setOdabraneOznake(prev => [...prev, novaOznaka]);
+      } else {
+        const privremenaOznaka = { id: Date.now(), naziv: pretragaOznaka.trim() };
+        setOznake(prev => [...prev, privremenaOznaka]);
+        setOdabraneOznake(prev => [...prev, privremenaOznaka]);
+      }
+
+      setPretragaOznaka("");
+      setPrikaziAutoComplete(false);
+    } catch (error) {
+      console.error("Greška pri kreiranju nove oznake:", error);
+    }
   }
 
   function handleImageChange(e) {
@@ -119,20 +145,19 @@ export default function PredmetiNovi() {
   return (
     <Container className="mt-4">
       <Heading as="h2" color="azure" className="mb-4">Dodavanje novog predmeta</Heading>
+      
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
-          {/* Naziv */}
           <Col sm={12} md={6}>
             <Form.Group controlId="naziv">
-              <FormLabel>Naziv</FormLabel>
+              <FormLabel><strong>Naziv</strong></FormLabel>
               <FormControl type="text" name="naziv" required value={predmet.naziv} onChange={handleChange} placeholder="Unesite naziv predmeta" />
             </Form.Group>
           </Col>
 
-          {/* Kategorija */}
           <Col sm={6} md={6}>
             <Form.Group controlId="kategorija">
-              <FormLabel>Kategorija</FormLabel>
+              <FormLabel><strong>Kategorija</strong></FormLabel>
               <FormSelect value={odabranaKategorija} onChange={(e) => setOdabranaKategorija(e.target.value)} required>
                 <option value="">Odaberi kategoriju</option>
                 {kategorije.map(k => <option key={k.id} value={String(k.id)}>{k.naziv}</option>)}
@@ -140,46 +165,53 @@ export default function PredmetiNovi() {
             </Form.Group>
           </Col>
 
-          {/* OZNAKE (Autocomplete) */}
-          <Col sm={12} md={6} ref={autoCompleteRef} style={{ position: 'relative' }}>
-            <Form.Group controlId="oznakePretraga">
-              <FormLabel>Oznake</FormLabel>
-              <FormControl 
-                type="text" 
-                value={pretragaOznaka} 
-                placeholder="Pretraži i dodaj oznake..." 
-                onChange={(e) => { setPretragaOznaka(e.target.value); setPrikaziAutoComplete(true); }} 
-                onFocus={() => setPrikaziAutoComplete(true)}
-              />
-            </Form.Group>
-            {prikaziAutoComplete && filtrirajOznake().length > 0 && (
-              <ul className="list-group position-absolute w-100 shadow" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
-                {filtrirajOznake().map((o) => (
-                  <li key={o.id} className="list-group-item list-group-item-action" style={{cursor:'pointer'}} onClick={() => dodajOznaku(o)}>
-                    {o.naziv}
-                  </li>
+          <Col sm={12} ref={autoCompleteRef} style={{ position: 'relative' }}>
+            <Card className="p-3 bg-light border">
+              <Form.Group controlId="oznakePretraga">
+                <FormLabel><strong>Oznake (Pretraži ili dodaj novu)</strong></FormLabel>
+                <FormControl 
+                  type="text" 
+                  value={pretragaOznaka} 
+                  placeholder="Upišite naziv oznake..." 
+                  onChange={(e) => { setPretragaOznaka(e.target.value); setPrikaziAutoComplete(true); }} 
+                  onFocus={() => setPrikaziAutoComplete(true)}
+                />
+              </Form.Group>
+
+              {prikaziAutoComplete && (
+                <ul className="list-group position-absolute w-100 shadow" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto', left: 0, top: '90px' }}>
+                  {filtrirajOznake().map((o) => (
+                    <li key={o.id} className="list-group-item list-group-item-action" style={{cursor:'pointer'}} onClick={() => dodajOznaku(o)}>
+                      {o.naziv}
+                    </li>
+                  ))}
+                  {pretragaOznaka.trim() !== "" && !oznakaVecPostoji(pretragaOznaka) && (
+                    <li className="list-group-item list-group-item-success fw-bold" style={{ cursor: 'pointer' }} onClick={kreirajI_DodajOznaku}>
+                      ➕ Dodaj novu oznaku: "{pretragaOznaka}"
+                    </li>
+                  )}
+                </ul>
+              )}
+
+              <div className="mt-3 d-flex flex-wrap gap-1">
+                {odabraneOznake.length === 0 && <small className="text-muted">Nema odabranih oznaka.</small>}
+                {odabraneOznake.map(o => (
+                  <span key={o.id} className="badge bg-secondary p-2 d-flex align-items-center gap-1">
+                    {o.naziv} 
+                    <span style={{cursor:'pointer', fontWeight: 'bold', marginLeft: '5px'}} onClick={() => setOdabraneOznake(odabraneOznake.filter(x => String(x.id) !== String(o.id)))}>&times;</span>
+                  </span>
                 ))}
-              </ul>
-            )}
-            <div className="mt-2 d-flex flex-wrap gap-1">
-              {odabraneOznake.map(o => (
-                <span key={o.id} className="badge bg-secondary p-2 d-flex align-items-center gap-1">
-                  {o.naziv} 
-                  <span style={{cursor:'pointer', fontWeight: 'bold'}} onClick={() => setOdabraneOznake(odabraneOznake.filter(x => x.id !== o.id))}>&times;</span>
-                </span>
-              ))}
-            </div>
+              </div>
+            </Card>
           </Col>
 
-          {/* Opis */}
-          <Col sm={12} md={6}>
+          <Col sm={12}>
             <Form.Group controlId="opis">
-              <FormLabel>Opis</FormLabel>
+              <FormLabel><strong>Opis</strong></FormLabel>
               <FormControl as="textarea" name="opis" rows={3} value={predmet.opis} onChange={handleChange} placeholder="Unesite opis predmeta" />
             </Form.Group>
           </Col>
 
-          {/* Godina nastanka */}
           <Col xs={6} md={3}>
             <Form.Group controlId="godinaNastanka">
               <FormLabel>Godina nastanka</FormLabel>
@@ -187,7 +219,6 @@ export default function PredmetiNovi() {
             </Form.Group>
           </Col>
 
-          {/* Stanje */}
           <Col xs={6} md={3}>
             <Form.Group controlId="stanje">
               <FormLabel>Stanje</FormLabel>
@@ -195,7 +226,6 @@ export default function PredmetiNovi() {
             </Form.Group>
           </Col>
 
-          {/* Početna cijena */}
           <Col xs={6} md={3}>
             <Form.Group controlId="pocetnaCijena">
               <FormLabel>Početna cijena (€)</FormLabel>
@@ -203,7 +233,6 @@ export default function PredmetiNovi() {
             </Form.Group>
           </Col>
 
-          {/* Dodano */}
           <Col xs={6} md={3}>
             <Form.Group controlId="dodano">
               <FormLabel>Dodano</FormLabel>
@@ -211,7 +240,6 @@ export default function PredmetiNovi() {
             </Form.Group>
           </Col>
 
-          {/* Završava */}
           <Col xs={6} md={3}>
             <Form.Group controlId="zavrsava">
               <FormLabel>Završava</FormLabel>
@@ -219,31 +247,31 @@ export default function PredmetiNovi() {
             </Form.Group>
           </Col>
 
-          {/* SLIKE (Upload i Pregled) */}
           <Col sm={12}>
-            <Form.Group className="mb-3">
-              <Form.Label>Slike predmeta (maksimalno 5)</Form.Label>
-              <FormControl type="file" multiple accept="image/*" onChange={handleImageChange} />
-              {slikeError && <Alert variant="danger" className="mt-2">{slikeError}</Alert>}
-            </Form.Group>
+            <Card className="p-3 bg-light border">
+              <Form.Group className="mb-3">
+                <Form.Label><strong>Slike predmeta (maksimalno 5)</strong></Form.Label>
+                <FormControl type="file" multiple accept="image/*" onChange={handleImageChange} />
+                {slikeError && <Alert variant="danger" className="mt-2">{slikeError}</Alert>}
+              </Form.Group>
 
-            {slike.length > 0 && (
-              <div className="mb-3">
-                <Form.Label className="text-muted small">Pregled odabranih slika:</Form.Label>
-                <div className="d-flex flex-wrap gap-2">
-                  {slike.map((s, i) => (
-                    <div key={i} className="position-relative">
-                      <img src={s} alt={`Upload ${i}`} style={{ width: '100px', height: '100px', objectFit: 'cover' }} className="rounded border shadow-sm" />
-                      <Button variant="danger" size="sm" className="position-absolute top-0 end-0 p-0 px-1 rounded-circle" onClick={() => setSlike(slike.filter((_, idx) => idx !== i))}>&times;</Button>
-                    </div>
-                  ))}
+              {slike.length > 0 && (
+                <div>
+                  <Form.Label className="text-muted small">Pregled odabranih slika:</Form.Label>
+                  <div className="d-flex flex-wrap gap-2">
+                    {slike.map((s, i) => (
+                      <div key={i} className="position-relative">
+                        <img src={s} alt={`Upload ${i}`} style={{ width: '100px', height: '100px', objectFit: 'cover' }} className="rounded border shadow-sm" />
+                        <Button variant="danger" size="sm" className="position-absolute top-0 end-0 p-0 px-1 rounded-circle" onClick={() => setSlike(slike.filter((_, idx) => idx !== i))}>&times;</Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </Card>
           </Col>
         </Row>
 
-        {/* Gumbi */}
         <Row className="mt-4 mb-4">
           <Col xs={6}><Button type="submit" variant="success" className="w-50">Dodaj</Button></Col>
           <Col xs={6}><Button variant="danger" className="w-50" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>

@@ -1,4 +1,4 @@
-import { Button, Col, Form, FormSelect, Row } from "react-bootstrap";
+import { Button, Col, Form, FormSelect, Row, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
@@ -17,23 +17,17 @@ export default function PredmetNovi() {
   const [prikaziAutoComplete, setPrikaziAutoComplete] = useState(false);
   const [odabraniid, setOdabraniid] = useState(-1);
   
+  const [slike, setSlike] = useState([]);
+  const [slikeError, setSlikeError] = useState("");
+  
   const autoCompleteRef = useRef(null);
   const navigate = useNavigate(); 
 
   const formatirajZaInput = (d) => {
     const pad = (n) => (n < 10 ? "0" + n : n);
     return (
-      d.getFullYear() +
-      "-" +
-      pad(d.getMonth() + 1) +
-      "-" +
-      pad(d.getDate()) +
-      "T" +
-      pad(d.getHours()) +
-      ":" +
-      pad(d.getMinutes()) +
-      ":" +
-      pad(d.getSeconds())
+      d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+      "T" + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds())
     );
   };
 
@@ -43,10 +37,7 @@ export default function PredmetNovi() {
   const zavrsavaStr = formatirajZaInput(trenutakZavrsetka);
 
   useEffect(() => {
-    ucitajKategorije();
-    ucitajOznake();
-    ucitajPredmete();
-
+    ucitajKategorije(); ucitajOznake(); ucitajPredmete();
     function handleClickOutside(event) {
       if (autoCompleteRef.current && !autoCompleteRef.current.contains(event.target)) {
         setPrikaziAutoComplete(false);
@@ -56,49 +47,18 @@ export default function PredmetNovi() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  async function ucitajKategorije() {
-    try {
-      const odgovor = await KategorijeServices.get();
-      setKategorije(odgovor.data || odgovor);
-    } catch (error) {
-      console.error("Greška kod učitavanja kategorija:", error);
-    }
-  }
+  async function ucitajKategorije() { try { const o = await KategorijeServices.get(); setKategorije(o.data || o); } catch (e) { console.error(e); } }
+  async function ucitajOznake() { try { const o = await OznakeServices.get(); setOznake(o.data || o); } catch (e) { console.error(e); } }
+  async function ucitajPredmete() { try { const o = await PredmetiServices.get(); setPredmeti(o.data || o); } catch (e) { console.error(e); } }
 
-  async function ucitajOznake() {
-    try {
-      const odgovor = await OznakeServices.get();
-      setOznake(odgovor.data || odgovor);
-    } catch (error) {
-      console.error("Greška kod učitavanja oznaka:", error);
-    }
-  }
-
-  async function ucitajPredmete() {
-    try {
-      const odgovor = await PredmetiServices.get();
-      setPredmeti(odgovor.data || odgovor);
-    } catch (error) {
-      console.error("Greška kod učitavanja predmeta:", error);
-    }
-  }
-
-function filtrirajOznake() {
-    // Ako nema upisanog teksta, vrati sve oznake koje već nisu odabrane
-    if (!pretragaOznaka) {
-      return oznake.filter(o => !odabraneOznake.find(op => op.id === o.id));
-    }
-    
-    // Inače filtriraj prema upisanom tekstu
-    return oznake.filter(o =>
-      !odabraneOznake.find(op => op.id === o.id) &&
-      o.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase())
-    );
+  function filtrirajOznake() {
+    if (!pretragaOznaka) return oznake.filter(o => !odabraneOznake.find(op => op.id === o.id));
+    return oznake.filter(o => !odabraneOznake.find(op => op.id === o.id) && o.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase()));
   }
 
   function dodajOznaku(oznaka) {
-    if (odabraneOznake.some(o => o.id === oznaka.id)) return;
-
+    if (odabraneOznake.some(o => o.id === oznaka.id) )
+      return;
     setOdabraneOznake([...odabraneOznake, oznaka]);
     setPretragaOznaka("");
     setPrikaziAutoComplete(false);
@@ -108,93 +68,73 @@ function filtrirajOznake() {
   async function dodajIliKreirajOznaku(nazivZaDodavanje) {
     const nazivTrimani = nazivZaDodavanje.trim();
     if (!nazivTrimani) return;
+    let postojeca = oznake.find(o => o.naziv.toLowerCase() === nazivTrimani.toLowerCase());
 
-    let postojecaOznaka = oznake.find(o => o.naziv.toLowerCase() === nazivTrimani.toLowerCase());
-
-    if (postojecaOznaka) {
-      dodajOznaku(postojecaOznaka);
+    if (postojeca) {
+      dodajOznaku(postojeca);
     } else {
       try {
         const odgovor = await OznakeServices.dodaj({ naziv: nazivTrimani });
-        let novaOznaka = odgovor && odgovor.data !== undefined ? odgovor.data : odgovor;
-
-        // Ako servis vrati undefined, osvježimo popis oznaka iz baze da pronađemo novu
-        if (!novaOznaka) {
-          const resOsvjezeno = await OznakeServices.get();
-          const svjezeOznake = resOsvjezeno.data || resOsvjezeno || [];
-          setOznake(svjezeOznake);
-          
-          novaOznaka = svjezeOznake.find(o => o.naziv.toLowerCase() === nazivTrimani.toLowerCase());
+        let nova = odgovor && odgovor.data !== undefined ? odgovor.data : odgovor;
+        if (!nova) {
+          const osvjezeno = await OznakeServices.get();
+          setOznake(osvjezeno.data || osvjezeno || []);
+          nova = (osvjezeno.data || osvjezeno).find(o => o.naziv.toLowerCase() === nazivTrimani.toLowerCase());
         }
-
-        if (novaOznaka) {
-          setOznake(prev => {
-            if (prev.some(o => o.id === novaOznaka.id)) return prev;
-            return [...prev, novaOznaka];
-          });
-          dodajOznaku(novaOznaka);
-        } else {
-          console.error("Nije moguće pronaći novu oznaku nakon kreiranja.");
+        if (nova) {
+          setOznake(prev => prev.some(o =>o.id === nova.id) ? prev : [...prev, nova]);
+          dodajOznaku(nova);
         }
-      } catch (error) {
-        console.error("Greška prilikom kreiranja nove oznake:", error);
-      }
+      } catch (e) { console.error(e); }
     }
   }
 
-  function ukloniOznaku(sifra) {
-    setOdabraneOznake(odabraneOznake.filter(o => o.sifra !== sifra && o.id !== sifra));
+  function ukloniOznaku(id) {
+    setOdabraneOznake(odabraneOznake.filter(o => o.id!== id));
   }
 
   async function handleKeyDown(e) {
-    const filtriraneOznake = filtrirajOznake();
-    const trebaPrikazatiNovu = pretragaOznaka.trim() !== "" && !oznake.some(o => o.naziv.toLowerCase() === pretragaOznaka.trim().toLowerCase());
-    const ukupnoOpcija = filtriraneOznake.length + (trebaPrikazatiNovu ? 1 : 0);
+    const filtrirane = filtrirajOznake();
+    const prikaziNovu = pretragaOznaka.trim() !== "" && !oznake.some(o => o.naziv.toLowerCase() === pretragaOznaka.trim().toLowerCase());
+    const ukupno = filtrirane.length + (prikaziNovu ? 1 : 0);
 
-    if (e.key === 'ArrowDown') {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setOdabraniid(prev => (prev < ukupno - 1 ? prev + 1 : 0)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setOdabraniid(prev => (prev > 0 ? prev - 1 : ukupno - 1)); }
+    else if (e.key === 'Enter') {
       e.preventDefault();
-      setOdabraniid(prev => (prev < ukupnoOpcija - 1 ? prev + 1 : 0));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setOdabraniid(prev => (prev > 0 ? prev - 1 : ukupnoOpcija - 1));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (odabraniid >= 0 && odabraniid < filtriraneOznake.length) {
-        dodajOznaku(filtriraneOznake[odabraniid]);
-      } else if (odabraniid === filtriraneOznake.length && trebaPrikazatiNovu) {
-        await dodajIliKreirajOznaku(pretragaOznaka);
-      } else if (pretragaOznaka.trim() !== "") {
-        await dodajIliKreirajOznaku(pretragaOznaka);
-      }
-    } else if (e.key === 'Escape') {
-      setPrikaziAutoComplete(false);
-      setOdabraniid(-1);
+      if (odabraniid >= 0 && odabraniid < filtrirane.length) dodajOznaku(filtrirane[odabraniid]);
+      else if (odabraniid === filtrirane.length && prikaziNovu) await dodajIliKreirajOznaku(pretragaOznaka);
+      else if (pretragaOznaka.trim() !== "") await dodajIliKreirajOznaku(pretragaOznaka);
     }
   }
 
-  async function dodajPredmet(predmet) {
-    try {
-      await PredmetiServices.dodaj(predmet);
-      navigate(RouteNames.PREDMETI); 
-    } catch (error) {
-      console.error("Greška prilikom dodavanja predmeta:", error);
-    }
+  function handleImageChange(e) {
+    const odabrane = Array.from(e.target.files);
+    if (odabrane.length > 5) { setSlikeError("Najviše 5 slika."); setSlike([]); }
+    else { setSlikeError(""); setSlike(odabrane); }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (slikeError) return;
     const podatci = new FormData(e.target);
 
-    dodajPredmet({
-      naziv: podatci.get("naziv") || "",
-      kategorija: parseInt(podatci.get("kategorije")) || 0,
-      godinaNastanka: parseInt(podatci.get("godinaNastanka")) || 0,
-      opis: podatci.get("opis") || "",
-      stanje: podatci.get("stanje") || "",
-      pocetnaCijena: parseFloat(podatci.get("cijena")) || 0,
-      dodano: trenutakDodavanja.toISOString(),
-      zavrsava: trenutakZavrsetka.toISOString(),
-      oznake: odabraneOznake.map(o => o.id) 
+    Promise.all(slike.map(f => new Promise((resolve, reject) => {
+      const r = new FileReader(); r.readAsDataURL(f); r.onload = () => resolve(r.result); r.onerror = reject;
+    }))).then(async base64Slike => {
+      await PredmetiServices.dodaj({
+        naziv: podatci.get("naziv") || "",
+        kategorija: parseInt(podatci.get("kategorije")) || 0,
+        godinaNastanka: parseInt(podatci.get("godinaNastanka")) || 0,
+        opis: podatci.get("opis") || "",
+        stanje: podatci.get("stanje") || "",
+        pocetnaCijena: parseFloat(podatci.get("cijena")) || 0,
+        dodano: trenutakDodavanja.toISOString(),
+        zavrsava: trenutakZavrsetka.toISOString(),
+        oznake: odabraneOznake.map(o => o.id),
+        slike: base64Slike,
+      });
+      navigate(RouteNames.PREDMETI);
     });
   }
 
@@ -203,176 +143,55 @@ function filtrirajOznake() {
 
   return (
     <>
-      <Heading as="h2" color="azure">
-        Dodaj predmet
-      </Heading>
-
+      <Heading as="h2" color="azure">Dodaj predmet</Heading>
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
-          <Col sm={12} md={6}>
-            <Form.Group controlId="naziv">
-              <Form.Label>Naziv</Form.Label>
-              <Form.Control
-                type="text"
-                name="naziv"
-                required
-              />
-            </Form.Group>
-          </Col>
-
-          <Col sm={6} md={6}>
-            <Form.Group controlId="kategorije">
-              <Form.Label>Kategorija</Form.Label>
-              <FormSelect name="kategorije" required>
-                <option value="">Odaberi kategoriju...</option>
-                {kategorije && kategorije.map((k) => (
-                  <option key={k.id} value={k.id}>
-                    {k.naziv}
-                  </option>
-                ))}
-              </FormSelect>
-            </Form.Group>
-          </Col>
-
+          <Col sm={12} md={6}><Form.Group controlId="naziv"><Form.Label>Naziv</Form.Label><Form.Control type="text" name="naziv" required /></Form.Group></Col>
+          <Col sm={6} md={6}><Form.Group controlId="kategorije"><Form.Label>Kategorija</Form.Label>
+            <FormSelect name="kategorije" required><option value="">Odaberi...</option>{kategorije.map(k => <option key={k.id} value={k.id}>{k.naziv}</option>)}</FormSelect>
+          </Form.Group></Col>
+          
           <Col sm={6} md={6} ref={autoCompleteRef} style={{ position: 'relative' }}>
-            <Form.Group controlId="oznakePretraga">
-              <Form.Label>Oznake (Pretraži, dodaj ili upiši novu)</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Upišite naziv oznake i pritisnite Enter..."
-                value={pretragaOznaka}
-                onChange={(e) => {
-                  setPretragaOznaka(e.target.value);
-                  setPrikaziAutoComplete(true);
-                  setOdabraniid(-1);
-                }}
-                onKeyDown={handleKeyDown}
-                onFocus={() => setPrikaziAutoComplete(true)}
-              />
+            <Form.Group controlId="oznakePretraga"><Form.Label>Oznake</Form.Label>
+              <Form.Control type="text" value={pretragaOznaka} onChange={(e) => { setPretragaOznaka(e.target.value); setPrikaziAutoComplete(true); }} onKeyDown={handleKeyDown} onFocus={() => setPrikaziAutoComplete(true)} />
             </Form.Group>
-
+            
             {prikaziAutoComplete && (filtriraneOznake.length > 0 || trebaPrikazatiNovu) && (
               <ul className="list-group position-absolute w-100 shadow" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
-                {filtriraneOznake.map((oznaka, id) => (
-                  <li
-                    key={oznaka.id}
-                    className={`list-group-item list-group-item-action ${id === odabraniid ? 'active' : ''}`}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => dodajOznaku(oznaka)}
-                  >
-                    {oznaka.naziv}
-                  </li>
+                {filtriraneOznake.map((o, id) => (
+                  <li key={`oznaka-${o.id || id}`} className={`list-group-item list-group-item-action ${id === odabraniid ? 'active' : ''}`} style={{ cursor: 'pointer' }} onMouseDown={() => dodajOznaku(o)}>{o.naziv}</li>
                 ))}
                 {trebaPrikazatiNovu && (
-                  <li
-                    className={`list-group-item list-group-item-action text-success fw-bold ${odabraniid === filtriraneOznake.length ? 'active' : ''}`}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => dodajIliKreirajOznaku(pretragaOznaka)}
-                  >
-                    + Dodaj novu oznaku: "{pretragaOznaka}"
+                  <li key="nova-oznaka" className={`list-group-item list-group-item-action text-success fw-bold ${odabraniid === filtriraneOznake.length ? 'active' : ''}`} style={{ cursor: 'pointer' }} onMouseDown={() => dodajIliKreirajOznaku(pretragaOznaka)}>
+                    + Dodaj novu: "{pretragaOznaka}"
                   </li>
                 )}
               </ul>
             )}
 
             <div className="mt-2">
-              {odabraneOznake.map((oznaka) => (
-                <span key={oznaka.id} className="badge bg-secondary me-1 p-2">
-                  {oznaka.naziv}{" "}
-                  <span 
-                    style={{ cursor: 'pointer', marginLeft: '5px', fontWeight: 'bold' }} 
-                    onClick={() => ukloniOznaku(oznaka.sifra || oznaka.id)}
-                  >
-                    &times;
-                  </span>
-                </span>
+              {odabraneOznake.map((o, i) => (
+                <span key={`odabrana-${o.id || i}`} className="badge bg-secondary me-1 p-2">{o.naziv}{" "}<span style={{ cursor: 'pointer' }} onClick={() => ukloniOznaku(o.id)}>&times;</span></span>
               ))}
             </div>
           </Col>
+
+          <Col sm={6} md={6}><Form.Group controlId="opis"><Form.Label>Opis</Form.Label><Form.Control as="textarea" name="opis" rows={3} /></Form.Group></Col>
+          <Col xs={6} md={3}><Form.Group controlId="godinaNastanka"><Form.Label>Godina</Form.Label><Form.Control type="number" name="godinaNastanka" /></Form.Group></Col>
+          <Col xs={6} md={3}><Form.Group controlId="stanje"><Form.Label>Stanje</Form.Label><Form.Control type="text" name="stanje" /></Form.Group></Col>
+          <Col xs={6} md={3}><Form.Group controlId="cijena"><Form.Label>Cijena</Form.Label><Form.Control type="number" step="0.01" name="cijena" /></Form.Group></Col>
           
-          <Col sm={6} md={6}>
-            <Form.Group controlId="opis">
-              <Form.Label>Opis</Form.Label>
-              <Form.Control
-                as="textarea"
-                name="opis"
-                rows={3}
-              />
-            </Form.Group>
-          </Col>
-  
-          <Col xs={6} md={3}>
-            <Form.Group controlId="godinaNastanka">
-              <Form.Label>Godina nastanka</Form.Label>
-              <Form.Control
-                type="number"
-                name="godinaNastanka"
-              />
-            </Form.Group>
-          </Col>
-
-          <Col xs={6} md={3}>
-            <Form.Group controlId="stanje">
-              <Form.Label>Stanje</Form.Label>
-              <Form.Control
-                type="text"
-                name="stanje"
-                defaultValue=""
-              />
-            </Form.Group>
-          </Col>
-
-          <Col xs={6} md={3}>
-            <Form.Group controlId="cijena">
-              <Form.Label>Početna cijena</Form.Label>
-              <Form.Control
-                type="number"
-                step="0.01"
-                name="cijena"
-              />
-            </Form.Group>
-          </Col>
-
           <Col sm={6} md={3}>
-            <Form.Group controlId="dodano">
-              <Form.Label>Dodano</Form.Label>
-              <Form.Control
-                type="datetime-local"
-                step="1"
-                name="dodano"
-                defaultValue={dodanoStr}
-                readOnly
-                style={{ backgroundColor: "#e9ecef" }}
-              />
-            </Form.Group>
-          </Col>
-              
-          <Col sm={6} md={3}>
-            <Form.Group controlId="zavrsava">
-              <Form.Label>Završava (+7 dana)</Form.Label>
-              <Form.Control
-                type="datetime-local"
-                step="1"
-                name="zavrsava"
-                defaultValue={zavrsavaStr}
-                readOnly
-                style={{ backgroundColor: "#e9ecef" }}
-              />
+            <Form.Group controlId="slike">
+              <Form.Label>Učitaj slike (max 5)</Form.Label>
+              <Form.Control type="file" multiple accept="image/*" onChange={handleImageChange} />
+              {slikeError && <Alert variant="danger" className="mt-2">{slikeError}</Alert>}
             </Form.Group>
           </Col>
         </Row>
-
         <Row className="mt-4">
-          <Col sm={6} md={6}>
-            <Button type="submit" variant="success" size="sm" className="w-50">
-              Dodaj
-            </Button>
-          </Col>
-          <Col sm={6} md={6}>
-             <Button variant="danger" size="sm" className="w-50">
-              <Link to={RouteNames.PREDMETI} style={{ color: 'white', textDecoration: 'none' }}>Odustani</Link>
-            </Button>
-          </Col>
+          <Col sm={6}><Button type="submit" variant="success" className="w-50">Dodaj</Button></Col>
+          <Col sm={6}><Button variant="danger" className="w-50"><Link to={RouteNames.PREDMETI} style={{ color: 'white' }}>Odustani</Link></Button></Col>
         </Row>
       </Form>
     </>

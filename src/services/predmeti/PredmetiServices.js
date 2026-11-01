@@ -28,7 +28,13 @@ const PrazanServis = {
 
   get: async () => ({ data: [] }),
   dodaj: async (predmet) => { console.log('Smjer nije implementiran') },
-  getByID: async (id) => ({ data: {} }),
+  // Primjer kako getByID mora izgledati u PredmetiServicesLocalStorage.js
+async getByID(id) {
+  const predmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
+  // Pronađi predmet čiji id odgovara (pazi na tip podatka, zato koristimo == ili String())
+  const predmet = predmeti.find(p => String(p.id) === String(id));
+  return { data: predmet || null };
+},
   promijeni: async (id, predmett) => { console.error('Servis nije  implmentiran') },
   obrisi: async (id) => {console.error('Servis nije  implementiran')}
 }

@@ -14,7 +14,7 @@ import KategorijaList from "./pages/kategorije/KategorijaList.jsx";
 import KategorijaNova from "./pages/kategorije/KategorijaNova.jsx";
 import KategorijePromijena from "./pages/kategorije/KategorijePromjena.jsx";
 
-import PredmetiList from "./pages/predmeti/PredmetiLista.jsx";
+import PredmetiLista from "./pages/predmeti/PredmetiLista.jsx";
 import PredmetNovi from "./pages/predmeti/PredmetNovi.jsx";
 import PredmetiPromjena from "./pages/predmeti/PredmetiPromjena.jsx";
 
@@ -53,10 +53,16 @@ function App() {
           <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijePromijena/> } />
 
           
-					<Route path={RouteNames.PREDMETI} element={<PredmetiList />} />
-					<Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
-					<Route path={RouteNames.PREDMETI_KATEGORIJA} element={<PredmetiList />} />
-					<Route path={RouteNames.PREDMETI_PROMJENA} element={<PredmetiPromjena />} />
+
+  {/* 1. Prvo ide specifična ruta za promjenu */}
+  <Route path={RouteNames.PREDMETI_PROMJENA} element={<PredmetiPromjena />} />
+  
+  {/* 2. Zatim ruta za novi predmet */}
+  <Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
+  
+  {/* 3. Tek na kraju ide općenita ruta za listu */}
+  <Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
+
 
 				
           <Route path={RouteNames.KORISNICI} element={<KorisniciLista />} />

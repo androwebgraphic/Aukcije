@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
-import { Row, Col, Card, Button, Badge, Form } from "react-bootstrap";
+import { Row, Col, Card, Button, Badge, Form, Carousel } from "react-bootstrap";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
@@ -50,6 +50,16 @@ function formatirajDatum(datumVrijednost) {
   });
 }
 
+function dohvatiIzvorSlike(slikaItem) {
+  if (!slikaItem) return "";
+  const slika = typeof slikaItem === 'object' ? (slikaItem.url || slikaItem.putanja || slikaItem.slika) : slikaItem;
+  
+  if (typeof slika !== 'string') return "";
+  if (slika.startsWith("data:") || slika.startsWith("http")) return slika;
+  
+  return `data:image/jpeg;base64,${slika}`;
+}
+
 export default function PredmetiList() {
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
@@ -79,20 +89,20 @@ export default function PredmetiList() {
   async function ucitajPredmete() {
     try {
       const odgovor = await PredmetiServices.get();
-      console.log("Dohvaćeni predmeti:", odgovor.data); // Pomoć za provjeru u konzoli
-      
+      const listaPredmeta = odgovor.data || odgovor;
+
       if(params.id){
         const katId = parseInt(params.id);
-        const filtrirano = odgovor.data.filter(p => {
-          if (typeof p.kategorija === 'object' && p.kategorija !== null) {
-            return p.kategorija.id === katId;
+        const filtrirano = listaPredmeta.filter(p => {
+          const kat = p.kategorija;
+          if (typeof kat === 'object' && kat !== null) {
+            return kat.id === katId;
           }
-          return p.kategorija === katId;
+          return Number(kat) === katId;
         });
-        console.log(filtrirano)
         setPredmeti(filtrirano);
       } else {
-        setPredmeti(odgovor.data);
+        setPredmeti(listaPredmeta);
       }
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
@@ -102,7 +112,7 @@ export default function PredmetiList() {
   async function ucitajKategorije() {
     try {
       const odgovor = await KategorijeServices.get();
-      setKategorije(odgovor.data);
+      setKategorije(odgovor.data || odgovor);
     } catch (error) {
       console.error("Greška pri dohvaćanju kategorija:", error);
     }
@@ -111,7 +121,6 @@ export default function PredmetiList() {
   async function ucitajOznake() {
     try {
       const odgovor = await OznakeServices.get();
-      console.log("Dohvaćene oznake iz servisa:", odgovor.data || odgovor);
       setOznake(odgovor.data || odgovor);
     } catch (error) {
       console.error("Greška pri dohvaćanju oznaka:", error);
@@ -143,25 +152,16 @@ export default function PredmetiList() {
     return parseInt(kategorijaVal);
   }
 
-  // ULTRA ROBUSTNA FUNKCIJA ZA PRIKAZ NAZIVA OZNAKE
   function prikaziNazivOznake(oznakaItem) {
     if (!oznakaItem) return "Nepoznato";
-    
-    // Ako je oznaka već objekt s nazivom
     if (typeof oznakaItem === 'object') {
       return oznakaItem.naziv || oznakaItem.name || JSON.stringify(oznakaItem);
     }
-    
-    // Tražimo u globalnoj listi oznaka
     const o = oznake.find((item) => 
       String(item.id) === String(oznakaItem) || 
       String(item.sifra) === String(oznakaItem)
     );
-    
-    if (o) return o.naziv;
-    
-    // Ako ne nađemo u listi, vrati barem ID/vrijednost da vidimo ispis na ekranu
-    return `Oznaka ID: ${oznakaItem}`;
+    return o ? o.naziv : `Oznaka ID: ${oznakaItem}`;
   }
 
   const aktivnaKategorijaNaziv = params.id 
@@ -214,16 +214,45 @@ export default function PredmetiList() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
       >
-        <Row xs={1} sm={1} md={2} lg={3} className="g-2">
+        <Row xs={1} sm={1} md={2} lg={3} className="g-3">
           {filtriraniPredmeti &&
-            filtriraniPredmeti.map((c, index) => {
-              // console.log(`Index: ${index}`)
-              // Dohvaćamo niz oznaka bez obzira zove li se property oznake, tagovi ili oznaka
+            filtriraniPredmeti.map((c) => {
               const listaOznaka = c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
+              const listaSlika = c.slike || c.slikaUrls || [];
 
               return (
-                <Col key={c.id} >
-                  <Card className="h-100 shadow-sm border-0">
+                <Col key={c.id}>
+                  <Card className="h-100 shadow-sm border-0 overflow-hidden">
+                    
+                    {/* PRIKAZ SLIKA: Ako ima više slika, koristi se Carousel. Ako ima 1, prikazuje se obična slika. Ako nema, placeholder. */}
+                    {listaSlika.length > 1 ? (
+                      <Carousel data-bs-theme="dark" interval={null} className="bg-light">
+                        {listaSlika.map((slikaItem, idx) => (
+                          <Carousel.Item key={idx}>
+                            <img
+                              className="d-block w-100"
+                              src={dohvatiIzvorSlike(slikaItem)}
+                              alt={`Slika ${idx + 1}`}
+                              style={{ height: '180px', objectFit: 'cover' }}
+                            />
+                          </Carousel.Item>
+                        ))}
+                      </Carousel>
+                    ) : listaSlika.length === 1 ? (
+                      <div style={{ width: '100%', height: '180px', backgroundColor: '#f8f9fa' }}>
+                        <Card.Img 
+                          variant="top" 
+                          src={dohvatiIzvorSlike(listaSlika[0])} 
+                          alt={c.naziv} 
+                          style={{ width: '100%', height: '180px', objectFit: 'cover' }} 
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-muted d-flex align-items-center justify-content-center bg-light" style={{ height: '180px' }}>
+                        <small>Nema slike</small>
+                      </div>
+                    )}
+
                     <Card.Body className="d-flex flex-column">
                       <div className="d-flex align-items-center gap-3 mb-3">
                         <div
@@ -232,7 +261,7 @@ export default function PredmetiList() {
                           <IkonaKategorije nazivIkona={dohvatiIkonaKategorije(c.kategorija)} />
                         </div>
                         <div>
-                          <Card.Title className="mb-0 " style={{color:'#1a3580'}}>
+                          <Card.Title className="mb-0" style={{color:'#1a3580'}}>
                             {c.naziv}
                           </Card.Title>
                           {c.godinaNastanka && (
@@ -255,7 +284,6 @@ export default function PredmetiList() {
                           </Badge>
                         </div>
 
-                        {/* SIGURAN PRIKAZ OZNAKA (Podržava više mogućih naziva polja u objektu) */}
                         {Array.isArray(listaOznaka) && listaOznaka.length > 0 && (
                           <div className="d-flex align-items-center gap-1 flex-wrap">
                             <span className="text-muted fs-7 me-1">Oznake:</span>
@@ -273,7 +301,6 @@ export default function PredmetiList() {
                             <Badge bg="secondary" className="px-2 py-1">
                               {c.stanje}
                             </Badge>
-                           
                           </div>
                         )}
 
@@ -290,23 +317,9 @@ export default function PredmetiList() {
                         </div>
                       </div>
 
-                      <div className="d-flex gap-2 mt-predmet pt-2 border-top">
-                        <Button
-                          variant="warning"
-                          className="w-50"
-                          size="sm"
-                          onClick={() => navigate(`/predmeti/${c.id }`)}>
-                          Promijeni
-                        </Button>
-
-                   
-                        <Button
-                          variant="danger"
-                          className="w-50"
-                          size="sm"
-                          onClick={() => obrisi(c.id)}>
-                          Obriši
-                        </Button>
+                      <div className="d-flex gap-2 pt-2 border-top">
+                        <Button variant="warning" className="w-50" size="sm" onClick={() => navigate(`/predmeti/promijeni/${c.id}`)}>Promijeni</Button>
+                        <Button variant="danger" className="w-50" size="sm" onClick={() => obrisi(c.id)}>Obriši</Button>
                       </div>
                     </Card.Body>
                   </Card>

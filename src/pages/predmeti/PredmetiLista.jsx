@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
-import { Row, Col, Card, Button, Badge, Form, Carousel } from "react-bootstrap";
+import { Row, Col, Card, Button, Badge, Form, Carousel, Pagination } from "react-bootstrap";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
@@ -41,7 +41,6 @@ function ExpandableText({ text, maxLength = 100 }) {
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
   const datum = new Date(datumVrijednost);
-  
   if (isNaN(datum.getTime())) return "-";
 
   return datum.toLocaleString("hr-HR", {
@@ -61,14 +60,18 @@ function dohvatiIzvorSlike(slikaItem) {
 }
 
 export default function PredmetiList() {
-  // 1. Svi hookovi moraju biti na samom vrhu
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); 
-  const navigate = useNavigate();
-  const params = useParams(); // params je definiran ovdje na vrhu
   
+  // State za paginaciju i veličinu stranice
+  const [stranica, setStranica] = useState(1);
+  const [ukupnoStranica, setUkupnoStranica] = useState(1);
+  const [velicinaStranice, setVelicinaStranice] = useState(6); // Početno 6 predmeta po stranici
+
+  const navigate = useNavigate();
+  const params = useParams();
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
 
@@ -79,19 +82,19 @@ export default function PredmetiList() {
           ucitajKategorije(),
           ucitajOznake()
         ]);
-        await ucitajPredmete();
+        await ucitajPredmete(stranica, velicinaStranice);
       } catch (error) {
         console.error("Greška pri inicijalnom učitavanju:", error);
       }
     }
     ucitajSve();
-  }, [params.id]);
+  }, [params.id, stranica, velicinaStranice]);
 
-  async function ucitajPredmete() {
+  async function ucitajPredmete(currentStranica = 1, currentVelicina = 6) {
     try {
-      const odgovor = await PredmetiServices.get();
-      const listaPredmeta = odgovor.data || odgovor;
-      setPredmeti(Array.isArray(listaPredmeta) ? listaPredmeta : []);
+      const odgovor = await PredmetiServices.dohvatiStranicu(currentStranica, currentVelicina);
+      setPredmeti(odgovor.data || []);
+      setUkupnoStranica(odgovor.ukupnoStranica || 1);
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
     }
@@ -120,7 +123,7 @@ export default function PredmetiList() {
       return;
     }
     await PredmetiServices.obrisi(id);
-    ucitajPredmete();
+    ucitajPredmete(stranica, velicinaStranice);
   }
 
   function prikaziNazivKategorije(kategorijaVal) {
@@ -159,7 +162,6 @@ export default function PredmetiList() {
     return o ? o.naziv : `Oznaka ID: ${oznakaItem}`;
   }
 
-  // 2. Varijable koje koriste params definiraju se nakon inicijalizacije
   const aktivnaKategorijaNaziv = params.id 
     ? prikaziNazivKategorije(parseInt(params.id)) 
     : kategorijaFilter;
@@ -188,6 +190,20 @@ export default function PredmetiList() {
     return kat ? kat.ikona : "";
   }
 
+  // Generiranje itema za paginaciju
+  let items = [];
+  for (let number = 1; number <= ukupnoStranica; number++) {
+    items.push(
+      <Pagination.Item 
+        key={number} 
+        active={number === stranica}
+        onClick={() => setStranica(number)}
+      >
+        {number}
+      </Pagination.Item>
+    );
+  }
+
   return (
     <>
       <motion.div
@@ -204,14 +220,32 @@ export default function PredmetiList() {
             <Button variant="success" size="sm">Dodaj predmet</Button>
           </Link>
 
-          <Form.Control
-            type="text"
-            placeholder="Pretraži predmete..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ maxWidth: '300px' }}
-            size="sm"
-          />
+          <div className="d-flex align-items-center gap-2">
+            <span className="text-secondary fs-7" style={{ whiteSpace: 'nowrap' }}>Prikaz:</span>
+            <Form.Select
+              size="sm"
+              value={velicinaStranice}
+              onChange={(e) => {
+                setVelicinaStranice(parseInt(e.target.value));
+                setStranica(1); // Vraćamo se na prvu stranicu kod promjene broja stavki
+              }}
+              style={{ width: '80px' }}
+            >
+              <option value="3">3</option>
+              <option value="6">6</option>
+              <option value="9">9</option>
+              <option value="12">12</option>
+            </Form.Select>
+
+            <Form.Control
+              type="text"
+              placeholder="Pretraži predmete..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ maxWidth: '250px' }}
+              size="sm"
+            />
+          </div>
         </div>
       </motion.div>
 
@@ -229,7 +263,6 @@ export default function PredmetiList() {
               return (
                 <Col key={c.id}>
                   <Card className="h-100 shadow-sm border-0 overflow-hidden">
-                    
                     {listaSlika.length > 1 ? (
                       <Carousel data-bs-theme="dark" interval={null} className="bg-light">
                         {listaSlika.map((slikaItem, idx) => (
@@ -337,6 +370,33 @@ export default function PredmetiList() {
             </Col>
           )}
         </Row>
+
+        {/* Paginacija na dnu */}
+        {ukupnoStranica > 1 && (
+          <div className="d-flex justify-content-center mt-4">
+            <Pagination>
+              <Pagination.First 
+                onClick={() => setStranica(1)} 
+                disabled={stranica === 1} 
+              />
+              <Pagination.Prev 
+                onClick={() => setStranica(prev => Math.max(prev - 1, 1))} 
+                disabled={stranica === 1} 
+              />
+              
+              {items}
+
+              <Pagination.Next 
+                onClick={() => setStranica(prev => Math.min(prev + 1, ukupnoStranica))} 
+                disabled={stranica === ukupnoStranica} 
+              />
+              <Pagination.Last 
+                onClick={() => setStranica(ukupnoStranica)} 
+                disabled={stranica === ukupnoStranica} 
+              />
+            </Pagination>
+          </div>
+        )}
       </motion.div>
     </>
   );

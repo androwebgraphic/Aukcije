@@ -178,14 +178,14 @@ export default function PredmetiPromjena() {
       
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
-          <Col sm={12} md={6}>
+          <Col xs={6} md={6}>
             <Form.Group controlId="naziv">
               <FormLabel>Naziv</FormLabel>
               <FormControl type="text" name="naziv" required value={predmet?.naziv || ""} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col sm={6} md={6}>
+          <Col xs={6} md={6}>
             <Form.Group controlId="kategorija">
               <FormLabel>Kategorija</FormLabel>
               <FormSelect value={odabranaKategorija} onChange={(e) => setOdabranaKategorija(e.target.value)} required>
@@ -236,42 +236,42 @@ export default function PredmetiPromjena() {
             </Card>
           </Col>
 
-          <Col sm={6}>
+          <Col xs={12} sm={12}>
             <Form.Group controlId="opis">
               <FormLabel>Opis</FormLabel>
               <FormControl as="textarea" name="opis" rows={3} value={predmet?.opis || ""} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={3} md={3}>
+          <Col xs={4} md={4}>
             <Form.Group controlId="godinaNastanka">
               <FormLabel>Godina</FormLabel>
               <FormControl type="number" name="godinaNastanka" value={predmet?.godinaNastanka || ""} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={3} md={3}>
+          <Col xs={4} md={4}>
             <Form.Group controlId="stanje">
               <FormLabel>Stanje</FormLabel>
               <FormControl type="text" name="stanje" value={predmet?.stanje || ""} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col xs={4} md={4}>
             <Form.Group controlId="pocetnaCijena">
               <FormLabel>Cijena (€)</FormLabel>
               <FormControl type="number" step="0.01" name="pocetnaCijena" value={predmet?.pocetnaCijena || ""} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col xs={6} md={6}>
             <Form.Group controlId="dodano">
               <FormLabel>Dodano</FormLabel>
               <FormControl type="datetime-local" name="dodano" value={predmet?.dodano || ""} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col xs={6} md={6}>
             <Form.Group controlId="zavrsava">
               <FormLabel>Završava</FormLabel>
               <FormControl type="datetime-local" name="zavrsava" value={predmet?.zavrsava || ""} onChange={handleChange} />
@@ -279,7 +279,7 @@ export default function PredmetiPromjena() {
           </Col>
 
           {/* Slike */}
-          <Col sm={12}>
+          <Col sm={8}>
             <Card className="p-3 bg-light border">
               <Form.Group className="mb-3">
                 <Form.Label>Slike predmeta (maksimalno 5)</Form.Label>
@@ -305,8 +305,8 @@ export default function PredmetiPromjena() {
         </Row>
 
         <Row className="mt-4 mb-4">
-          <Col xs={6}><Button type="submit" variant="warning" className="w-50">Promijeni</Button></Col>
-          <Col xs={6}><Button variant="danger" className="w-50" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
+          <Col xs={4} ><Button type="submit" variant="warning" className="w-100" size="sm">Promijeni</Button></Col>
+          <Col xs={4} ><Button variant="danger" className="w-100" size="sm" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
         </Row>
       </Form>
     </Container>

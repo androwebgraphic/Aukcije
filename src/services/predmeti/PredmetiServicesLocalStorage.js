@@ -49,10 +49,26 @@ async function obrisi(id) {
   spremiUStorage(predmeti)
 }
 
+async function dohvatiStranicu(stranica = 1, velicinaStranice = 8) {
+  const predmeti = dohvatiSveIzStorage()
+  const pocetniIndex = (stranica - 1) * velicinaStranice
+  const zavrsniIndex = pocetniIndex + velicinaStranice // Ispravljeno
+  const stranicenjePodatci = predmeti.slice(pocetniIndex, zavrsniIndex) // Ispravljeno iz predmet u predmeti
+  const ukupnoStavki = predmeti.length
+  const ukupnoStranica = Math.ceil(ukupnoStavki / velicinaStranice)
+  
+  return {
+    data: stranicenjePodatci,
+    ukupnoStranica: ukupnoStranica,
+    ukupnoStavki: ukupnoStavki,
+  }
+}
+
 export default {
   get,
   dodaj,
   getByID,
   promijeni,
-  obrisi
+  obrisi,
+  dohvatiStranicu,
 }

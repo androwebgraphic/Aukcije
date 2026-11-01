@@ -1,56 +1,75 @@
-import { predmeti } from './PredmetiData'
+const STORAGE_KEY = 'predmeti'
 
+function dohvatiSveIzStorage() {
+  const podatci = localStorage.getItem(STORAGE_KEY)
+  return podatci ? JSON.parse(podatci) : []
+}
 
-//1/4 cRud READ
+function spremiUStorage(podatci) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(podatci))
+}
+
 async function get() {
-  
-  return {data: [...predmeti]}
+  const predmeti = dohvatiSveIzStorage()
+  return { data: [...predmeti] }
 }
 
 async function getByID(id) {
-  
-  return { data: predmeti.find( s => s.id === parseInt(id))}
-
+  const predmeti = dohvatiSveIzStorage()
+  const predmet = predmeti.find(c=> c.id === parseInt(id))
+  return { data: predmet }
 }
-//2/4  Crud CREATE
 
 async function dodaj(predmet) {
- 
+  const predmeti = dohvatiSveIzStorage()
   if (predmeti.length === 0) {
-    
     predmet.id = 1
   } else {
-    
-    predmet.id = predmeti[predmeti.length-1].id +1
+    const maxId = Math.max(...predmeti.map(c=> c.id))
+    predmet.id = maxId + 1
   }
-predmeti.push(predmet)
+
+  predmeti.push(predmet)
+  spremiUStorage(predmeti)
 }
-//3/4 crUd UPDATE
 
 async function promijeni(id, predmet) {
-  
-  const index = nadiIndex(id)
-  predmeti[index] = {...predmeti[index], ...predmet}
-}
+  const predmeti = dohvatiSveIzStorage()
+  const index = predmeti.findIndex(c => c.id === parseInt(id))
 
-function nadiIndex(id) {
-  
-  return predmeti.findIndex(s => s.id===parseInt(id))
+  if (index !== -1) {
+    predmeti[index] = { ...predmeti[index], ...predmet }
+    spremiUStorage(predmeti)
+  }
 }
 
 async function obrisi(id) {
-  
-  const index = nadiIndex(id)
-  predmeti.splice(index,1)
+  let predmeti = dohvatiSveIzStorage()
+  predmeti = predmeti.filter(c=> c.id !== parseInt(id))
+  spremiUStorage(predmeti)
 }
 
-//4/4 cruD DELETE
-export default {
+async function dohvatiStranicu(stranica = 1, velicinaStranice = 12) {
+  const predmeti = dohvatiSveIzStorage()
+  const pocetniIndex = (stranica - 1) * velicinaStranice
+  const zavrsniIndex = pocetniIndex + velicinaStranice // Ispravljeno
+  const stranicenjePodatci = predmeti.slice(pocetniIndex, zavrsniIndex) // Ispravljeno iz predmet u predmeti
+  const ukupnoStavki = predmeti.length
+  const ukupnoStranica = Math.ceil(ukupnoStavki / velicinaStranice)
+  
+  return {
+    data: stranicenjePodatci,
+    ukupnoStranica: ukupnoStranica,
+    ukupnoStavki: ukupnoStavki,
+    
+  }
+}
 
+export default {
   get,
   dodaj,
   getByID,
   promijeni,
-  obrisi
-
+  obrisi,
+  dohvatiStranicu,
 }

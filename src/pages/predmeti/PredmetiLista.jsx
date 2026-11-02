@@ -74,10 +74,19 @@ export default function PredmetiList() {
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
 
-// Resetiramo stranicu na 1 kad god se promijeni kategorija (kroz URL parametre ili filter)
+  // Resetiramo stranicu na 1 kad god se promijeni kategorija
   useEffect(() => {
     setStranica(1);
   }, [params.id, kategorijaFilter]);
+
+  // Pouzdano vraćanje na vrh stranice nakon što se DOM i animacije renderiraju
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+    });
+  }, [stranica]);
 
   useEffect(() => {
     async function ucitajSve() {
@@ -92,12 +101,11 @@ export default function PredmetiList() {
       }
     }
     ucitajSve();
-  }, []); // Ovdje više ne stavljamo params.id jer ga zasebno hvata gornji useEffect koji vraća na 1. stranicu
+  }, []);
 
-  // Dohvaćamo sve predmete (ili prilagodi ako tvoj servis podržava slanje filtera)
   async function ucitajPredmete() {
     try {
-      const odgovor = await PredmetiServices.dohvatiStranicu(1, 1000); // Dohvaćamo veći skup za klijentsko filtriranje i paginaciju
+      const odgovor = await PredmetiServices.dohvatiStranicu(1, 1000); 
       setPredmeti(odgovor.data || odgovor || []);
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
@@ -170,7 +178,7 @@ export default function PredmetiList() {
     ? prikaziNazivKategorije(parseInt(params.id)) 
     : kategorijaFilter;
 
-  // 1. Filtriranje predmeta
+  // Filtriranje predmeta
   const filtriraniPredmeti = predmeti.filter((c) => {
     let zadovoljavaKategoriju = true;
     if (params.id) {
@@ -189,18 +197,15 @@ export default function PredmetiList() {
     return zadovoljavaKategoriju && zadovoljavaPretragu;
   });
 
-  // Izračun ukupno stavki i stranica na temelju filtriranih podataka
   const ukupnoStavki = filtriraniPredmeti.length;
   const ukupnoStranica = Math.ceil(ukupnoStavki / velicinaStranice) || 1;
 
-  // Osiguraj da trenutna stranica nije veća od ukupnog broja stranica
   useEffect(() => {
     if (stranica > ukupnoStranica) {
       setStranica(1);
     }
   }, [ukupnoStranica, stranica]);
 
-  // Dohvat predmeta koji se prikazuju na trenutnoj stranici
   const zadnjiIndeks = stranica * velicinaStranice;
   const prviIndeks = zadnjiIndeks - velicinaStranice;
   const predmetiNaStranici = filtriraniPredmeti.slice(prviIndeks, zadnjiIndeks);
@@ -211,7 +216,7 @@ export default function PredmetiList() {
     return kat ? kat.ikona : "";
   }
 
-  // Generiranje itema za paginaciju
+  // Generiranje itema za desktop paginaciju
   let items = [];
   for (let number = 1; number <= ukupnoStranica; number++) {
     items.push(
@@ -264,7 +269,7 @@ export default function PredmetiList() {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setStranica(1); // Vraćamo na 1. stranicu kod pretrage
+                setStranica(1); 
               }}
               style={{ maxWidth: '250px' }}
               size="sm"
@@ -395,30 +400,76 @@ export default function PredmetiList() {
           )}
         </Row>
 
-        {/* Paginacija na dnu */}
+        {/* Responzivna paginacija na dnu */}
         {ukupnoStranica > 1 && (
           <div className="d-flex justify-content-center mt-4">
-            <Pagination style={{padding:"1rem"}}>
-              <Pagination.First 
+            
+            {/* 1. Mobilna verzija paginacije (vidljiva samo na mobitelima) */}
+            <div className="d-flex d-sm-none align-items-center gap-2">
+              <Button 
+                variant="secondary" 
+                size="sm" 
                 onClick={() => setStranica(1)} 
-                disabled={stranica === 1} 
-              />
-              <Pagination.Prev 
+                disabled={stranica === 1}
+              >
+                &laquo;&laquo;
+              </Button>
+              <Button 
+                variant="secondary" 
+                size="sm" 
                 onClick={() => setStranica(prev => Math.max(prev - 1, 1))} 
-                disabled={stranica === 1} 
-              />
+                disabled={stranica === 1}
+              >
+                &lsaquo; Prethodna
+              </Button>
               
-              {items}
+              <span className="text-muted small px-2" style={{ whiteSpace: 'nowrap' }}>
+                <strong>{stranica}</strong> / {ukupnoStranica}
+              </span>
 
-              <Pagination.Next 
+              <Button 
+                variant="secondary" 
+                size="sm" 
                 onClick={() => setStranica(prev => Math.min(prev + 1, ukupnoStranica))} 
-                disabled={stranica === ukupnoStranica} 
-              />
-              <Pagination.Last 
+                disabled={stranica === ukupnoStranica}
+              >
+                Sljedeća &rsaquo;
+              </Button>
+              <Button 
+                variant="secondary" 
+                size="sm" 
                 onClick={() => setStranica(ukupnoStranica)} 
-                disabled={stranica === ukupnoStranica} 
-              />
-            </Pagination>
+                disabled={stranica === ukupnoStranica}
+              >
+                &raquo;&raquo;
+              </Button>
+            </div>
+
+            {/* 2. Desktop verzija paginacije (skrivena na mobitelu, vidljiva od 'sm' nadalje) */}
+            <div className="d-none d-sm-block">
+              <Pagination style={{ padding: "1rem" }}>
+                <Pagination.First 
+                  onClick={() => setStranica(1)} 
+                  disabled={stranica === 1} 
+                />
+                <Pagination.Prev 
+                  onClick={() => setStranica(prev => Math.max(prev - 1, 1))} 
+                  disabled={stranica === 1} 
+                />
+                
+                {items}
+
+                <Pagination.Next 
+                  onClick={() => setStranica(prev => Math.min(prev + 1, ukupnoStranica))} 
+                  disabled={stranica === ukupnoStranica} 
+                />
+                <Pagination.Last 
+                  onClick={() => setStranica(ukupnoStranica)} 
+                  disabled={stranica === ukupnoStranica} 
+                />
+              </Pagination>
+            </div>
+
           </div>
         )}
       </motion.div>

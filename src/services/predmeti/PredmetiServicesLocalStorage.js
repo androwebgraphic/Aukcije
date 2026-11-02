@@ -49,7 +49,7 @@ async function obrisi(id) {
   spremiUStorage(predmeti)
 }
 
-async function dohvatiStranicu(stranica = 1, velicinaStranice = 8) {
+async function dohvatiStranicu(stranica = 1, velicinaStranice = 12) {
   const predmeti = dohvatiSveIzStorage()
   const pocetniIndex = (stranica - 1) * velicinaStranice
   const zavrsniIndex = pocetniIndex + velicinaStranice // Ispravljeno

@@ -13,7 +13,8 @@ function Footer() {
 
   return (
     <>
-    <footer >
+      <footer >
+        {/* <ScrollToTopButton style={{}} /> */}
           <Nav>
               <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); }}>
                  Uvjeti korištenja
@@ -25,9 +26,10 @@ function Footer() {
 
  <p className="storage"><span>Koristi se:</span>{DATA_SOURCE}</p> 
      
- <ScrollToTopButton />
+
        
-    </footer >
+      </footer >
+       <ScrollToTopButton />
   </>
   );
 }

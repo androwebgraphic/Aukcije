@@ -84,10 +84,12 @@ h3{
   grid-template-columns: .5fr 2fr;
 }
 
-p {
+.card-body p.text-secondary{
 
   color: var(--primary-txt);
-  font-size: 2rem;
+  font-size: .8rem;
+  margin: 0;
+  padding: 0;
 }
 
 .container h1 {
@@ -231,7 +233,7 @@ a.nav-link{
 
 }
 .card{
- background-color: azure;
+ background-color: white;
 
   border-radius:.7rem;
 }
@@ -313,7 +315,13 @@ footer {
   margin: 0;
   background-color: var(--main-color);
 }
+footer button{
 
+  background-color: azure; 
+  border-radius: 50%; 
+  border: medium; 
+  float: right;
+}
 .copy,
 .copy a {
   text-align: center;

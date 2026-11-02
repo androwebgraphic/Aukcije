@@ -1,7 +1,8 @@
 import { MdOutlineVerticalAlignTop } from "react-icons/md";
 
 function ScrollToTopButton() {
-  const scrollToTop = () => {
+  const scrollToTop = (e) => {
+    preventDefault()
     window.scrollTo({
       top: 0,
       behavior: 'smooth' // Omogućuje glatko klizanje prema vrhu
@@ -9,7 +10,7 @@ function ScrollToTopButton() {
   };
 
   return (
-    <button onClick={scrollToTop} style={{backgroundColor:'azure', borderRadius:'50%', border:'none',float:"right", position:"fixed"}}>
+    <button type="button" onClick={scrollToTop} >
       <MdOutlineVerticalAlignTop
         size={35}
         color={'blue'}

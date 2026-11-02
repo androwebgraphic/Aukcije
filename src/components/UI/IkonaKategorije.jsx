@@ -12,6 +12,7 @@ import { IoImagesOutline } from "react-icons/io5";
 import { LiaMotorcycleSolid } from "react-icons/lia";
 import { PiVinylRecord } from "react-icons/pi";
 import { VscWorkspaceUnknown } from "react-icons/vsc";
+
 import { FaGun } from "react-icons/fa6";
 
 export default function IkonaKategorije({nazivIkona}){

@@ -310,18 +310,18 @@ export default function PredmetiList() {
                         </div>
                       </div>
 
-                      <Card.Text className="text-secondary flex-grow-1">
+                      <Card.Text className="text-secondary flex-grow-1 mb-4 " style={{fontSize:".9rem"}}>
                         <ExpandableText text={c.opis} maxLength={60} />
                       </Card.Text>
 
-                      <div className="d-flex flex-column gap-2 mb-3">
-                        <div className="d-flex justify-content-between align-items-center">
-                          <span className="text-muted fs-7">Početna cijena:</span>
-                          <Badge bg="success" className="fs-6 px-2 py-1">
+                      <div className="d-flex flex-column gap-1 mb-3">
+                        <div className="d-flex justify-content-start">
+                          <span className="text-muted" style={{fontSize:".9rem"}}>Početna cijena:</span>
+                          <Badge bg="success" className=" mx-2 mb-3">
                             {c.pocetnaCijena} €
                           </Badge>
                         </div>
-
+<hr />
                         {Array.isArray(listaOznaka) && listaOznaka.length > 0 && (
                           <div className="d-flex align-items-center gap-1 flex-wrap">
                             <span className="text-muted fs-7 me-1">Oznake:</span>
@@ -336,7 +336,7 @@ export default function PredmetiList() {
                         {c.stanje && (
                           <div className="d-flex justify-content-between align-items-center">
                             <span className="text-muted fs-7">Stanje:</span>
-                            <Badge bg="secondary" className="px-2 py-1">
+                            <Badge bg="secondary" className="px-2 py-1 mx-2">
                               {c.stanje}
                             </Badge>
                           </div>

@@ -67,14 +67,17 @@ export default function PredmetiList() {
   
   // State za paginaciju i veličinu stranice
   const [stranica, setStranica] = useState(1);
-  const [ukupnoStranica, setUkupnoStranica] = useState(1);
-  const [ukupnoStavki, setUkupnoStavki] = useState(0);
-  const [velicinaStranice, setVelicinaStranice] = useState(6); // Početno 6 predmeta po stranici
+  const [velicinaStranice, setVelicinaStranice] = useState(6);
 
   const navigate = useNavigate();
   const params = useParams();
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
+
+// Resetiramo stranicu na 1 kad god se promijeni kategorija (kroz URL parametre ili filter)
+  useEffect(() => {
+    setStranica(1);
+  }, [params.id, kategorijaFilter]);
 
   useEffect(() => {
     async function ucitajSve() {
@@ -83,20 +86,19 @@ export default function PredmetiList() {
           ucitajKategorije(),
           ucitajOznake()
         ]);
-        await ucitajPredmete(stranica, velicinaStranice);
+        await ucitajPredmete();
       } catch (error) {
         console.error("Greška pri inicijalnom učitavanju:", error);
       }
     }
     ucitajSve();
-  }, [params.id, stranica, velicinaStranice]);
+  }, []); // Ovdje više ne stavljamo params.id jer ga zasebno hvata gornji useEffect koji vraća na 1. stranicu
 
-  async function ucitajPredmete(currentStranica = 1, currentVelicina = 6) {
+  // Dohvaćamo sve predmete (ili prilagodi ako tvoj servis podržava slanje filtera)
+  async function ucitajPredmete() {
     try {
-      const odgovor = await PredmetiServices.dohvatiStranicu(currentStranica, currentVelicina);
-      setPredmeti(odgovor.data || []);
-      setUkupnoStranica(odgovor.ukupnoStranica || 1);
-      setUkupnoStavki(odgovor.ukupnoStavki)
+      const odgovor = await PredmetiServices.dohvatiStranicu(1, 1000); // Dohvaćamo veći skup za klijentsko filtriranje i paginaciju
+      setPredmeti(odgovor.data || odgovor || []);
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
     }
@@ -125,7 +127,7 @@ export default function PredmetiList() {
       return;
     }
     await PredmetiServices.obrisi(id);
-    ucitajPredmete(stranica, velicinaStranice);
+    ucitajPredmete();
   }
 
   function prikaziNazivKategorije(kategorijaVal) {
@@ -168,6 +170,7 @@ export default function PredmetiList() {
     ? prikaziNazivKategorije(parseInt(params.id)) 
     : kategorijaFilter;
 
+  // 1. Filtriranje predmeta
   const filtriraniPredmeti = predmeti.filter((c) => {
     let zadovoljavaKategoriju = true;
     if (params.id) {
@@ -185,6 +188,22 @@ export default function PredmetiList() {
 
     return zadovoljavaKategoriju && zadovoljavaPretragu;
   });
+
+  // Izračun ukupno stavki i stranica na temelju filtriranih podataka
+  const ukupnoStavki = filtriraniPredmeti.length;
+  const ukupnoStranica = Math.ceil(ukupnoStavki / velicinaStranice) || 1;
+
+  // Osiguraj da trenutna stranica nije veća od ukupnog broja stranica
+  useEffect(() => {
+    if (stranica > ukupnoStranica) {
+      setStranica(1);
+    }
+  }, [ukupnoStranica, stranica]);
+
+  // Dohvat predmeta koji se prikazuju na trenutnoj stranici
+  const zadnjiIndeks = stranica * velicinaStranice;
+  const prviIndeks = zadnjiIndeks - velicinaStranice;
+  const predmetiNaStranici = filtriraniPredmeti.slice(prviIndeks, zadnjiIndeks);
 
   function dohvatiIkonaKategorije(kategorijaVal){
     const katId = dohvatiIdKategorije(kategorijaVal);
@@ -229,7 +248,7 @@ export default function PredmetiList() {
               value={velicinaStranice}
               onChange={(e) => {
                 setVelicinaStranice(parseInt(e.target.value));
-                setStranica(1); // Vraćamo se na prvu stranicu kod promjene broja stavki
+                setStranica(1); 
               }}
               style={{ width: '80px' }}
             >
@@ -243,7 +262,10 @@ export default function PredmetiList() {
               type="text"
               placeholder="Pretraži predmete..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setStranica(1); // Vraćamo na 1. stranicu kod pretrage
+              }}
               style={{ maxWidth: '250px' }}
               size="sm"
             />
@@ -257,8 +279,8 @@ export default function PredmetiList() {
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
       >
         <Row xs={1} sm={1} md={2} lg={3} className="g-3">
-          {filtriraniPredmeti && filtriraniPredmeti.length > 0 ? (
-            filtriraniPredmeti.map((c) => {
+          {predmetiNaStranici && predmetiNaStranici.length > 0 ? (
+            predmetiNaStranici.map((c) => {
               const listaOznaka = c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
               const listaSlika = c.slike || c.slikaUrls || [];
 
@@ -323,7 +345,7 @@ export default function PredmetiList() {
                             {c.pocetnaCijena} €
                           </Badge>
                         </div>
-<hr />
+                        <hr />
                         {Array.isArray(listaOznaka) && listaOznaka.length > 0 && (
                           <div className="d-flex align-items-center gap-1 flex-wrap">
                             <span className="text-muted fs-7 me-1">Oznake:</span>

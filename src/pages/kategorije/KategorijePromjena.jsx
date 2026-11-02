@@ -182,9 +182,8 @@ export default function KategorijePromijena() {
             </Button>
       
    
-           <Button size="sm" className="btn btn-danger w-100 "> <Link to={RouteNames.KATEGORIJE} >
-              Odustani
-          </Link>
+           <Button size="sm" className="btn btn-danger w-100 " onClick={() => navigate(RouteNames.KATEGORIJE)}>
+            Odustani
             </Button>
             </div>
      

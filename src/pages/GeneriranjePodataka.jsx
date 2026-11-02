@@ -28,7 +28,7 @@ export default function GeneriranjePodataka() {
     ];
     const ikoneList = [
       "auti", "racunala", "motori", "nakit", "umjetnine",
-      "satovi", "filatelija", "numiamatika", "lp", "oruzje",
+      "satovi", "filatelija", "numizmatika", "lp", "oruzje",
       "alati", "beletristika", "stripovi", "filmovi"
     ];
     for (let i = 0; i < broj; i++) {

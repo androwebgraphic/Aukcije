@@ -2,7 +2,7 @@ import { MdOutlineVerticalAlignTop } from "react-icons/md";
 
 function ScrollToTopButton() {
   const scrollToTop = (e) => {
-    preventDefault()
+    e.preventDefault()
     window.scrollTo({
       top: 0,
       behavior: 'smooth' // Omogućuje glatko klizanje prema vrhu

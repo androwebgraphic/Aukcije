@@ -68,6 +68,7 @@ export default function PredmetiList() {
   // State za paginaciju i veličinu stranice
   const [stranica, setStranica] = useState(1);
   const [ukupnoStranica, setUkupnoStranica] = useState(1);
+  const [ukupnoStavki, setUkupnoStavki] = useState(0);
   const [velicinaStranice, setVelicinaStranice] = useState(6); // Početno 6 predmeta po stranici
 
   const navigate = useNavigate();
@@ -95,6 +96,7 @@ export default function PredmetiList() {
       const odgovor = await PredmetiServices.dohvatiStranicu(currentStranica, currentVelicina);
       setPredmeti(odgovor.data || []);
       setUkupnoStranica(odgovor.ukupnoStranica || 1);
+      setUkupnoStavki(odgovor.ukupnoStavki)
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
     }
@@ -212,7 +214,7 @@ export default function PredmetiList() {
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
       >
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
-          Lista predmeta  {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({filtriraniPredmeti.length})
+          Lista predmeta  {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
         </Heading>
 
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">

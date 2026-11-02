@@ -197,7 +197,7 @@ a.dropdown-item {
 #basic-navbar-nav > div > div > div > div > div{
   overflow: auto;
   max-height: 200px;
-  margin-left:5rem;
+  margin-left:.4rem;
   margin-top:-.9rem
 }
 #basic-navbar-nav > div > div > div > div > div a:hover{

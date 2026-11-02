@@ -239,15 +239,17 @@ export default function PredmetiList() {
       >
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
           Lista predmeta  {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
+    
         </Heading>
+        <p style={{color:"orange",}}  className="m-3 text-center">trenutno ste na stranici { stranica} / {ukupnoStranica} stranica</p>
 
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-          <Link to={RouteNames.PREDMET_NOVI} className="mb-0">
+          <Link to={RouteNames.PREDMET_NOVI} className="m-3">
             <Button variant="success" size="sm">Dodaj predmet</Button>
           </Link>
 
           <div className="d-flex align-items-center gap-2">
-            <span className="text-secondary fs-7" style={{ whiteSpace: 'nowrap' }}>Prikaz:</span>
+            <span className="fs-7" style={{ whiteSpace: 'nowrap',color:'orange' }}>Prikaz:</span>
             <Form.Select
               size="sm"
               value={velicinaStranice}
@@ -261,6 +263,8 @@ export default function PredmetiList() {
               <option value="6">6</option>
               <option value="9">9</option>
               <option value="12">12</option>
+                <option value="24">24</option>
+
             </Form.Select>
 
             <Form.Control
@@ -420,7 +424,7 @@ export default function PredmetiList() {
                 onClick={() => setStranica(prev => Math.max(prev - 1, 1))} 
                 disabled={stranica === 1}
               >
-                &lsaquo; Prethodna
+                &lsaquo; 
               </Button>
               
               <span className="text-muted small px-2" style={{ whiteSpace: 'nowrap' }}>
@@ -433,7 +437,7 @@ export default function PredmetiList() {
                 onClick={() => setStranica(prev => Math.min(prev + 1, ukupnoStranica))} 
                 disabled={stranica === ukupnoStranica}
               >
-                Sljedeća &rsaquo;
+                &rsaquo;
               </Button>
               <Button 
                 variant="secondary" 

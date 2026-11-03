@@ -9,12 +9,9 @@ import { FaRegUser } from "react-icons/fa";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import { korisnici } from "../../services/korisnici/KorisniciData";
-
-// ⚠️ Ovdje ispravite putanju ili naziv ako se PDF generator drugačije zove
-import KorisniciPdfGenerator from '../../services/korisnici/KorisniciPdfGenerator'; 
+import KorisniciPdfGenerator from '../../components/KorisniciPdfGenerator'; 
 import { FaRegFilePdf } from "react-icons/fa6";
 
-// ... (ExpandableText komponenta ostaje ista)
 
 export default function KorisniciList() {
   const [korisnici, setKorisnici] = useState([]);
@@ -51,7 +48,7 @@ export default function KorisniciList() {
         );
 
         // Pozivamo pravu funkciju/komponentu za PDF
-        const generiraj = KorisniciPDFGenerator({
+        const generiraj = KorisniciPdfGenerator({
             korisnici: korisniciZaPdf
         });
 

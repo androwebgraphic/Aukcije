@@ -4,11 +4,12 @@ import { Row, Col, Card, Button } from "react-bootstrap";
 import DateFormat from "../../components/DateFormat";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { FaArrowTurnUp } from "react-icons/fa6";
 import { FaRegUser } from "react-icons/fa";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import { korisnici } from "../../services/korisnici/KorisniciData";
+
+// ⚠️ Ovdje ispravite putanju ili naziv ako se PDF generator drugačije zove
 import KorisniciPdfGenerator from '../../components/KorisniciPdfGenerator'; 
 import { FaRegFilePdf } from "react-icons/fa6";
 
@@ -52,10 +53,8 @@ export default function KorisniciList() {
             korisnici: korisniciZaPdf
         });
 
-        // Ako je KorisniciPDFGenerator funkcija koja vraća funkciju za izvršavanje:
-        if (typeof generiraj === "function") {
             await generiraj();
-        }
+
         
     } catch (error) {
         console.log("Greška pri generiranju PDF-a:", error);

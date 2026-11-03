@@ -10,7 +10,6 @@ import Heading from "../../components/UI/Heading";
 export default function PredmetNovi() {
   const navigate = useNavigate();
   
-  // Pomoćna funkcija za formatiranje datuma za datetime-local input ("YYYY-MM-DDTHH:mm")
   const formatZaDateTimeLocal = (date) => {
     const d = new Date(date);
     const pad = (n) => String(n).padStart(2, '0');
@@ -23,8 +22,8 @@ export default function PredmetNovi() {
     godinaNastanka: "",
     stanje: "",
     pocetnaCijena: "",
-    dodano: formatZaDateTimeLocal(new Date()), // Trenutni datum i vrijeme
-    zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) // 7 dana od danas
+    dodano: formatZaDateTimeLocal(new Date()),
+    zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
   });
   
   const [kategorije, setKategorije] = useState([]);
@@ -48,7 +47,11 @@ export default function PredmetNovi() {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   async function ucitajPodatke() {
@@ -150,19 +153,19 @@ export default function PredmetNovi() {
   }
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 mb-5">
       <Heading as="h2" color="azure" className="mb-4">Dodavanje novog predmeta</Heading>
       
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
-          <Col sm={12} md={6}>
+          <Col sm={6}>
             <Form.Group controlId="naziv">
               <FormLabel><strong>Naziv</strong></FormLabel>
               <FormControl type="text" name="naziv" required value={predmet.naziv} onChange={handleChange} placeholder="Unesite naziv predmeta" />
             </Form.Group>
           </Col>
 
-          <Col sm={6} md={6}>
+          <Col sm={6}>
             <Form.Group controlId="kategorija">
               <FormLabel><strong>Kategorija</strong></FormLabel>
               <FormSelect value={odabranaKategorija} onChange={(e) => setOdabranaKategorija(e.target.value)} required>
@@ -173,10 +176,10 @@ export default function PredmetNovi() {
           </Col>
 
           {/* SEKCIJA ZA OZNAKE S AUTOCOMPLETE-OM */}
-          <Col sm={12} ref={autoCompleteRef} style={{ position: 'relative' }}>
-            <Card className="p-3 bg-light border">
-              <Form.Group controlId="oznakePretraga">
-                <FormLabel><strong>Oznake (Pretraži ili dodaj novu)</strong></FormLabel>
+          <Col sm={6}>
+            <Card className="p-1 bg-light border" ref={autoCompleteRef}>
+              <Form.Group controlId="oznakePretraga" className="position-relative">
+                <FormLabel><strong style={{color:"#ccc", fontSize:".6rem"}}>Oznake (Pretraži ili dodaj novu)</strong></FormLabel>
                 <FormControl 
                   type="text" 
                   value={pretragaOznaka} 
@@ -184,25 +187,25 @@ export default function PredmetNovi() {
                   onChange={(e) => { setPretragaOznaka(e.target.value); setPrikaziAutoComplete(true); }} 
                   onFocus={() => setPrikaziAutoComplete(true)}
                 />
+
+                {prikaziAutoComplete && (
+                  <ul className="list-group position-absolute w-100 shadow bg-white" style={{ zIndex: 1050, maxHeight: '200px', overflowY: 'auto', left: 0, top: '100%' }}>
+                    {filtrirajOznake().map((o) => (
+                      <li key={o.id} className="list-group-item list-group-item-action" style={{cursor:'pointer'}} onMouseDown={(e) => { e.preventDefault(); dodajOznaku(o); }}>
+                        {o.naziv}
+                      </li>
+                    ))}
+                    {pretragaOznaka.trim() !== "" && !oznakaVecPostoji(pretragaOznaka) && (
+                      <li className="list-group-item list-group-item-success fw-bold" style={{ cursor: 'pointer' }} onMouseDown={(e) => { e.preventDefault(); kreirajI_DodajOznaku(); }}>
+                        ➕ Dodaj novu oznaku: "{pretragaOznaka}"
+                      </li>
+                    )}
+                  </ul>
+                )}
               </Form.Group>
 
-              {prikaziAutoComplete && (
-                <ul className="list-group position-absolute w-100 shadow bg-white" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto', left: 0, top: '90px' }}>
-                  {filtrirajOznake().map((o) => (
-                    <li key={o.id} className="list-group-item list-group-item-action" style={{cursor:'pointer'}} onClick={() => dodajOznaku(o)}>
-                      {o.naziv}
-                    </li>
-                  ))}
-                  {pretragaOznaka.trim() !== "" && !oznakaVecPostoji(pretragaOznaka) && (
-                    <li className="list-group-item list-group-item-success fw-bold" style={{ cursor: 'pointer' }} onClick={kreirajI_DodajOznaku}>
-                      ➕ Dodaj novu oznaku: "{pretragaOznaka}"
-                    </li>
-                  )}
-                </ul>
-              )}
-
               <div className="mt-3 d-flex flex-wrap gap-1">
-                {odabraneOznake.length === 0 && <small className="text-muted">Nema odabranih oznaka.</small>}
+                {odabraneOznake.length === 0 && <small className="text-muted" style={{fontSize:".6rem"}}>Nema odabranih oznaka.</small>}
                 {odabraneOznake.map(o => (
                   <span key={o.id} className="badge bg-secondary p-2 d-flex align-items-center gap-1">
                     {o.naziv} 
@@ -213,42 +216,42 @@ export default function PredmetNovi() {
             </Card>
           </Col>
 
-          <Col sm={12}>
+          <Col sm={6}>
             <Form.Group controlId="opis">
               <FormLabel><strong>Opis</strong></FormLabel>
               <FormControl as="textarea" name="opis" rows={3} value={predmet.opis} onChange={handleChange} placeholder="Unesite opis predmeta" />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col sm={3} lg={2}>
             <Form.Group controlId="godinaNastanka">
               <FormLabel>Godina nastanka</FormLabel>
               <FormControl type="number" name="godinaNastanka" value={predmet.godinaNastanka} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col sm={3} lg={2}>
             <Form.Group controlId="stanje">
               <FormLabel>Stanje</FormLabel>
               <FormControl type="text" name="stanje" value={predmet.stanje} onChange={handleChange} placeholder="npr. Odlično" />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col sm={3} lg={2}>
             <Form.Group controlId="pocetnaCijena">
               <FormLabel>Početna cijena (€)</FormLabel>
               <FormControl type="number" step="0.01" name="pocetnaCijena" value={predmet.pocetnaCijena} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col sm={6}>
             <Form.Group controlId="dodano">
               <FormLabel>Dodano</FormLabel>
               <FormControl type="datetime-local" name="dodano" value={predmet.dodano} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col sm={6}>
             <Form.Group controlId="zavrsava">
               <FormLabel>Završava</FormLabel>
               <FormControl type="datetime-local" name="zavrsava" value={predmet.zavrsava} onChange={handleChange} />
@@ -256,7 +259,7 @@ export default function PredmetNovi() {
           </Col>
 
           {/* SEKCIJA ZA UPLOAD SLIKA */}
-          <Col sm={12}>
+          <Col sm={6}>
             <Card className="p-3 bg-light border">
               <Form.Group className="mb-3">
                 <Form.Label><strong>Slike predmeta (maksimalno 5)</strong></Form.Label>
@@ -282,8 +285,8 @@ export default function PredmetNovi() {
         </Row>
 
         <Row className="mt-4 mb-4">
-          <Col xs={6}><Button type="submit" variant="success" className="w-50">Dodaj</Button></Col>
-          <Col xs={6}><Button variant="danger" className="w-50" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
+          <Col xs={6}><Button type="submit" variant="success" className="w-100" size="sm" >Dodaj</Button></Col>
+          <Col xs={6}><Button variant="danger" className="w-100" size="sm" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
         </Row>
       </Form>
     </Container>

@@ -163,6 +163,7 @@ p.storage span {
 .navbar-expand-sm{
 
   padding: .6rem;
+
 }
 .navbar a {
 
@@ -183,25 +184,14 @@ a.dropdown-item {
   background-color: var(--primary-txt);
 }
 
-.moj-sub-item {
-  display: block;
-  width: 100%;
-  padding: 0.4rem 1rem 0.4rem 2rem;
-  clear: both;
-  font-weight: 400;
-  color: #dee2e6;
-  text-align: inherit;
-  white-space: nowrap;
-  background-color: #2144a6;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
+
 
 #basic-navbar-nav > div > div > div > div > div{
   overflow: auto;
   max-height: 200px;
   margin-left:.4rem;
-  margin-top:-.9rem
+  margin-top:-.9rem;
+  /* border-radius: 2rem; */
 }
 #basic-navbar-nav > div > div > div > div > div a:hover{
 
@@ -229,13 +219,14 @@ a.dropdown-item {
 }
 a.dropdown-toggle .nav-link{
 
-  background-color:#3e5698 ;
+  background-color:#98653e ;
 
 
 }
 a.nav-link{
 
   text-align:center;
+  background-color:#6b4fcd ;
 
 }
 .card{

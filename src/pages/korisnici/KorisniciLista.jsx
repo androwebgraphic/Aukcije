@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import KorisniciServices from "../../services/korisnici/KorisniciServices";
-import { Container, Row, Col, Card, Button} from "react-bootstrap";
+import {  Row, Col, Card, Button} from "react-bootstrap";
 import DateFormat from "../../components/DateFormat";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
-import { FaRegUser } from "react-icons/fa"; // Ikona za aute
+import { FaRegUser } from "react-icons/fa"; // Ikona za korisnika
 import Heading from "../../components/UI/Heading";
 import {motion} from "framer-motion"
 import { korisnici } from "../../services/korisnici/KorisniciData"
@@ -47,9 +47,10 @@ export default function KorisniciList() {
     ucitajKorisnike();
   }, []);
 
-  async function ucitajKorisnike() {
+async function ucitajKorisnike() {
     try {
       const odgovor = await KorisniciServices.get();
+      console.log("Podaci korisnika:", odgovor.data); // Ovdje pogledaj u konzoli (F12) kako se zove polje za datum
       setKorisnici(odgovor.data);
     } catch (error) {
       console.error("Greška pri dohvaćanju korisnika:", error);

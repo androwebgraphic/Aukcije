@@ -108,6 +108,8 @@ export default function GeneriranjePodataka() {
         ime: faker.person.firstName(),
         prezime: faker.person.lastName(),
         email: faker.internet.email(),
+        dodano: new Date().toISOString(),
+
       });
     }
   };

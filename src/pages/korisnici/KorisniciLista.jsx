@@ -67,14 +67,14 @@ export default function KorisniciList() {
     ucitajKorisnike();
   }
 
-async function generirajPDF(korisnickiIdji) {
+async function generirajPDF(korisnickiId) {
     try {
         // 1. Dohvati sve korisnike s API-ja/servisa
         const odgovorKorisnici = await KorisniciServices.get();
 
         // 2. Filtriraj samo one čiji su ID-jevi proslijeđeni
         const korisniciZaPdf = odgovorKorisnici.data.filter(p => 
-            korisnickiIdji && korisnickiIdji.includes(p.id)
+            korisnickiId && korisnickiId.includes(p.id)
         );
 
         // 3. Generiraj i pokreni PDF generator
@@ -85,7 +85,7 @@ async function generirajPDF(korisnickiIdji) {
         await generiraj();
         
     } catch (error) {
-        console.ah("Greška pri generiranju PDF-a:", error);
+        console.log("Greška pri generiranju PDF-a:", error);
     }
 }
 
@@ -134,10 +134,11 @@ async function generirajPDF(korisnickiIdji) {
                       <Card.Title className="mb-0 fw-bold"><strong><small className="text-muted d-block">Ime:</small></strong>{c.ime}</Card.Title>
                    
                     </div>
-                    <Button onClick={() => {navigate(`korisnici/${c.id}`)}}/>
+                  
                     <FaRegFilePdf
                       color="1a3580"
                       style={{ cursor: 'hand' }}
+                      size={40}
                        onClick={() => generirajPDF(korisnici)} title="Generiraj PDF"
                     
                     />

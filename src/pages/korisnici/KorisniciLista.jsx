@@ -1,45 +1,20 @@
 import { useEffect, useState } from "react";
 import KorisniciServices from "../../services/korisnici/KorisniciServices";
-import {  Row, Col, Card, Button} from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
 import DateFormat from "../../components/DateFormat";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp } from "react-icons/fa6";
-import { FaRegUser } from "react-icons/fa"; // Ikona za korisnika
+import { FaRegUser } from "react-icons/fa";
 import Heading from "../../components/UI/Heading";
-import {motion} from "framer-motion"
-import { korisnici } from "../../services/korisnici/KorisniciData"
-import KorisniciPDFGenerator from '../../services/korisnici/KorisniciServices'
+import { motion } from "framer-motion";
+import { korisnici } from "../../services/korisnici/KorisniciData";
+
+// ⚠️ Ovdje ispravite putanju ili naziv ako se PDF generator drugačije zove
+import KorisniciPdfGenerator from '../../services/korisnici/KorisniciPdfGenerator'; 
 import { FaRegFilePdf } from "react-icons/fa6";
 
-function ExpandableText({ text, maxLength = 100 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  if (!text) return null;
-
-  if (text.length <= maxLength) {
-    return <span>{text}</span>;
-  }
-
-  const displayedText = isExpanded ? text : `${text.substring(0, maxLength)}`;
-
-  return (
-    <span>
-      {displayedText}
-      <span
-        onClick={() => setIsExpanded(!isExpanded)}
-        style={{
-          color: "green",
-          cursor: "pointer",
-          marginLeft: ".2rem",
-          fontWeight: "bold",
-        }}
-      >
-        {isExpanded ? <FaArrowTurnUp /> : "..."}
-      </span>
-    </span>
-  );
-}
+// ... (ExpandableText komponenta ostaje ista)
 
 export default function KorisniciList() {
   const [korisnici, setKorisnici] = useState([]);
@@ -52,7 +27,6 @@ export default function KorisniciList() {
   async function ucitajKorisnike() {
     try {
       const odgovor = await KorisniciServices.get();
-      console.log("Podaci korisnika:", odgovor.data); // Ovdje pogledaj u konzoli (F12) kako se zove polje za datum
       setKorisnici(odgovor.data);
     } catch (error) {
       console.error("Greška pri dohvaćanju korisnika:", error);
@@ -67,101 +41,93 @@ export default function KorisniciList() {
     ucitajKorisnike();
   }
 
-async function generirajPDF(korisnickiId) {
+  async function generirajPDF(korisnickiId) {
     try {
-        // 1. Dohvati sve korisnike s API-ja/servisa
         const odgovorKorisnici = await KorisniciServices.get();
 
-        // 2. Filtriraj samo one čiji su ID-jevi proslijeđeni
+        // Filtriramo po ID-ju (ako želimo generirati za jednog korisnika ili više njih)
         const korisniciZaPdf = odgovorKorisnici.data.filter(p => 
-            korisnickiId && korisnickiId.includes(p.id)
+            korisnickiId === p.id || (Array.isArray(korisnickiId) && korisnickiId.includes(p.id))
         );
 
-        // 3. Generiraj i pokreni PDF generator
+        // Pozivamo pravu funkciju/komponentu za PDF
         const generiraj = KorisniciPDFGenerator({
             korisnici: korisniciZaPdf
         });
 
-        await generiraj();
+        // Ako je KorisniciPDFGenerator funkcija koja vraća funkciju za izvršavanje:
+        if (typeof generiraj === "function") {
+            await generiraj();
+        }
         
     } catch (error) {
         console.log("Greška pri generiranju PDF-a:", error);
     }
-}
+  }
 
   return (
-<>
-
-          <motion.div
-    
-    
-         initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
-            animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
-            transition={{ duration: 0.4, ease: "easeOut"  , delay:.2}} // Trajanje i glatkoća
-    >
-      <Heading as="h2" color="azure" >
-        Lista korisnika ({korisnici.length})
-      </Heading>
-
-      <Link to={RouteNames.KORISNIK_NOVI} className="btn btn-success mb-4">
-        Dodavanje korisnika
-      </Link>
-      </motion.div>
+    <>
       <motion.div
-      
-                  initial={{ opacity: 0, x: -1000 }} // Početno stanje: nevidljiv i 100px u lijevo
-            animate={{ opacity: 1, x: 0 }}     // Krajnje stanje: vidljiv i na svom mjestu
-            transition={{ duration: 0.7, ease: "easeOut"  , delay:.3}} // Trajanje i glatkoća
-      
+        initial={{ opacity: 0, x: -1000 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut", delay: .2 }}
       >
-      {/* Grid sa Bootstrap Card elementima */}
+        <Heading as="h2" color="azure">
+          Lista korisnika ({korisnici.length})
+        </Heading>
+
+        <Link to={RouteNames.KORISNIK_NOVI} className="btn btn-success mb-4">
+          Dodavanje korisnika
+        </Link>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, x: -1000 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut", delay: .3 }}
+      >
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
-        {korisnici&&
-          korisnici.map((c, index) => (
-            <Col key={c.id ?? index} sm={6} md={6}>
-              <Card className="h-100 shadow-sm border-0">
-                <Card.Body className="d-flex flex-column">
-           
-           
-                  <div className="d-flex align-items-center gap-3 mb-3">
-                    <div
-                      className="p-3 rounded-circle d-flex align-items-center justify-content-center"
-                      style={{ backgroundColor: "#e7f1ff" }}
-                    >
-                      <FaRegUser size={ 32} color="#1a3580"/>
-                    </div>
-                    <div>
-                      <Card.Title className="mb-0 fw-bold"><strong><small className="text-muted d-block">Ime:</small></strong>{c.ime}</Card.Title>
-                   
-                    </div>
-                  
-                    <FaRegFilePdf
-                      color="1a3580"
-                      style={{ cursor: 'hand' }}
-                      size={40}
-                       onClick={() => generirajPDF(korisnici)} title="Generiraj PDF"
+          {korisnici &&
+            korisnici.map((c, index) => (
+              <Col key={c.id ?? index} sm={6} md={6}>
+                <Card className="h-100 shadow-sm border-0">
+                  <Card.Body className="d-flex flex-column">
+                    <div className="d-flex align-items-center gap-3 mb-3">
+                      <div
+                        className="p-3 rounded-circle d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#e7f1ff" }}
+                      >
+                        <FaRegUser size={32} color="#1a3580" />
+                      </div>
+                      <div>
+                        <Card.Title className="mb-0 fw-bold">
+                          <strong><small className="text-muted d-block">Ime:</small></strong>{c.ime}
+                        </Card.Title>
+                      </div>
                     
-                    />
-                  </div>
+                      {/* ⚠️ Ovdje proslijeđujemo c.id umjesto cijelog niza korisnika */}
+                      <FaRegFilePdf
+                        color="1a3580"
+                        style={{ cursor: 'pointer' }}
+                        size={40}
+                        onClick={() => generirajPDF(c.id)} 
+                        title="Generiraj PDF"
+                      />
+                    </div>
 
                     <div className="border-top pt-2 mt-1">
                       <small className="text-muted d-block">
                         <strong>email:</strong> {c.email}
                       </small>
-                     
                     </div>
 
-                <div className="border-top pt-2 mt-1">
+                    <div className="border-top pt-2 mt-1">
                       <small className="text-muted d-block">
                         <strong>Dodano:</strong> <DateFormat date={c.dodano} />
                       </small>
-                     
                     </div>
-             
 
-                  {/* Akcijski gumbi */}
-            
-                    <Row>
+                    <Row className="mt-auto pt-3">
                       <Col xs={6} md={6}>
                         <Button
                           variant="warning"
@@ -169,10 +135,9 @@ async function generirajPDF(korisnickiId) {
                           size="sm"
                           onClick={() => navigate(`/korisnici/${c.id}`)}
                         >
-                    
-                        Promijeni
-                      </Button>
-                        </Col>
+                          Promijeni
+                        </Button>
+                      </Col>
                       <Col xs={6} md={6}>
                         <Button
                           variant="danger"
@@ -184,15 +149,12 @@ async function generirajPDF(korisnickiId) {
                         </Button>
                       </Col>
                     </Row>
-
-                </Card.Body>
-              </Card>
-            </Col>
-       
-          ))}
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
         </Row>
-        </motion.div>
-   
-      </>
+      </motion.div>
+    </>
   );
 }

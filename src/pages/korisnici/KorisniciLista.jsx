@@ -9,6 +9,8 @@ import { FaRegUser } from "react-icons/fa"; // Ikona za korisnika
 import Heading from "../../components/UI/Heading";
 import {motion} from "framer-motion"
 import { korisnici } from "../../services/korisnici/KorisniciData"
+import KorisniciPDFGenerator from '../../services/korisnici/KorisniciServices'
+import { FaRegFilePdf } from "react-icons/fa6";
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -47,7 +49,7 @@ export default function KorisniciList() {
     ucitajKorisnike();
   }, []);
 
-async function ucitajKorisnike() {
+  async function ucitajKorisnike() {
     try {
       const odgovor = await KorisniciServices.get();
       console.log("Podaci korisnika:", odgovor.data); // Ovdje pogledaj u konzoli (F12) kako se zove polje za datum
@@ -64,6 +66,28 @@ async function ucitajKorisnike() {
     await KorisniciServices.obrisi(id);
     ucitajKorisnike();
   }
+
+async function generirajPDF(korisnickiIdji) {
+    try {
+        // 1. Dohvati sve korisnike s API-ja/servisa
+        const odgovorKorisnici = await KorisniciServices.get();
+
+        // 2. Filtriraj samo one čiji su ID-jevi proslijeđeni
+        const korisniciZaPdf = odgovorKorisnici.data.filter(p => 
+            korisnickiIdji && korisnickiIdji.includes(p.id)
+        );
+
+        // 3. Generiraj i pokreni PDF generator
+        const generiraj = KorisniciPDFGenerator({
+            korisnici: korisniciZaPdf
+        });
+
+        await generiraj();
+        
+    } catch (error) {
+        console.ah("Greška pri generiranju PDF-a:", error);
+    }
+}
 
   return (
 <>
@@ -97,7 +121,7 @@ async function ucitajKorisnike() {
             <Col key={c.id ?? index} sm={6} md={6}>
               <Card className="h-100 shadow-sm border-0">
                 <Card.Body className="d-flex flex-column">
-                  
+           
            
                   <div className="d-flex align-items-center gap-3 mb-3">
                     <div
@@ -110,6 +134,13 @@ async function ucitajKorisnike() {
                       <Card.Title className="mb-0 fw-bold"><strong><small className="text-muted d-block">Ime:</small></strong>{c.ime}</Card.Title>
                    
                     </div>
+                    <Button onClick={() => {navigate(`korisnici/${c.id}`)}}/>
+                    <FaRegFilePdf
+                      color="1a3580"
+                      style={{ cursor: 'hand' }}
+                       onClick={() => generirajPDF(korisnici)} title="Generiraj PDF"
+                    
+                    />
                   </div>
 
                     <div className="border-top pt-2 mt-1">

@@ -120,8 +120,45 @@ export default function KorisniciPdfgenerator({ korisnici }) {
           2: { cellWidth: 55 },
           3: { cellWidth: 65 },
         }
+
+       
       }
+        
+        
       )
+
+      const pageCount = doc.internal.getNumberOfPages()
+      
+      for (let i = 1; i <= pageCount; i++){
+
+        doc.setPage(i)
+
+        doc.setDrawColor(226.232, 240)
+        doc.setLineWidth(0.4)
+        doc.line(15, doc.internal.pageSize.getHeight() - 15, 195, doc.internal.pageSize.getHeight() - 15)
+
+        doc.setFont('Montserrat', 'normal')
+        doc.setFontSize(8)
+        doc.setTextColor(...secondaryColor)
+
+        doc.text(
+          `generirano: ${newDate().toLocaleString('hr-HR')}`,
+          15,
+          doc.internal.pageSize.getHeight() - 8
+        )
+
+        doc.text(
+
+          `Stranica ${i} od ${pageCount}`,
+          doc.internal.pageSize.getWidth() - 15,
+          doc.internal.pageSize.getHeight() - 8,
+          {align:'right'}
+        )
+      }
+
+      const pdfBlob = doc.output('blob')
+      const pdfUrl = URL.createObjectURL(pdfBlob)
+      window.open(pdfUrl, '_blank')
     }
 
   }

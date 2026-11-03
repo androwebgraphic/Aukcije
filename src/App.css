@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'BerkshireSwash-Regular';
-  src: url('./fonts/BerkshireSwash-Regular.ttf') format('truetype');
+  src: url('/fonts/BerkshireSwash-Regular.ttf') format('truetype');
 }
 
 

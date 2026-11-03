@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf"
 import autoTable from "jspdf-autotable"
 
-export default function KorisniciPdfgenerator({ korisnici }) {
+export default function KorisniciPdfGenerator({ korisnici }) {
 
   const fetchFontAsBase64 = async (url) => {
     const response = await fetch(url)
@@ -18,7 +18,7 @@ export default function KorisniciPdfgenerator({ korisnici }) {
 
   const generirajPDF = async () => {
     const [regBase64, boldBase64] = await Promise.all([
-      fetchFontAsBase64('/fonts/Montserrat/Regular.ttf'),
+      fetchFontAsBase64('/fonts/Montserrat-Regular.ttf'),
       fetchFontAsBase64('/fonts/Montserrat-Bold.ttf')
     ])
 
@@ -47,40 +47,8 @@ export default function KorisniciPdfgenerator({ korisnici }) {
     doc.setLineWidth(0.8);
     doc.line(15, 30, 195, 30);
 
-    doc.setFont('Montserrat', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(...textColor);
-    doc.text(`Izvješće za grupu: ${korisnici?.naziv || 'N/A'}`, 15, 42);
 
     let currentY = 52
-
-    autoTable(doc, {
-      startY: currentY,
-      margin: { left: 15, right: 15 },
-      theme: 'plain',
-      styles: { font: 'Montserrat', fontSize: 9.5, textColor: textColor, cellPadding: 3 },
-      columnStyles: {
-        0: { fontStyle: 'bold', textColor: primaryColor, width: 85 },
-        1: { fontStyle: 'bold', textColor: primaryColor, width: 85 }
-      },
-      head: [['PODATCI O KORISNICIMA']],
-      body: [
-        [`Ime: ${korisnici?.ime || 'N/A'}`],
-        [`Email: ${korisnici?.email || 'N/A'}`],
-        [`Dodano: ${korisnici?.dodano || 'N/A'}`]
-      ],
-
-      didParseCell: (data) => {
-        if (data.section === 'head') {
-          data.cell.styles.fillColor = [241, 245, 249];
-          data.cell.styles.textColor = primaryColor;
-          data.cell.styles.fontStyle = 'bold';
-        }
-      }
-
-    })
-
-    currentY = doc.lastAutoTable.finalY + 12
     doc.setFont('Montserrat', 'bold')
     doc.setFontSize(13)
     doc.setTextColor(...textColor)
@@ -133,7 +101,7 @@ export default function KorisniciPdfgenerator({ korisnici }) {
 
         doc.setPage(i)
 
-        doc.setDrawColor(226.232, 240)
+        doc.setDrawColor(226,232, 240)
         doc.setLineWidth(0.4)
         doc.line(15, doc.internal.pageSize.getHeight() - 15, 195, doc.internal.pageSize.getHeight() - 15)
 
@@ -142,7 +110,7 @@ export default function KorisniciPdfgenerator({ korisnici }) {
         doc.setTextColor(...secondaryColor)
 
         doc.text(
-          `generirano: ${newDate().toLocaleString('hr-HR')}`,
+          `generirano: ${new Date().toLocaleString('hr-HR')}`,
           15,
           doc.internal.pageSize.getHeight() - 8
         )
@@ -163,5 +131,5 @@ export default function KorisniciPdfgenerator({ korisnici }) {
 
   }
 
-  return { generirajPDF }
+  return generirajPDF
 }

@@ -5,7 +5,7 @@ import OznakeServices from "../../services/oznake/OznakeServices";
 import { Row, Col, Card, Button, Badge, Form, Carousel, Pagination } from "react-bootstrap";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { FaArrowTurnUp, FaFire } from "react-icons/fa6"; // Dodana ikona vatrice
+import { FaArrowTurnUp, FaFire } from "react-icons/fa6";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
@@ -93,14 +93,13 @@ function AukcijaOdbrojavanje({ zavrsavaDatum, onStatusChange }) {
       setJeZavrseno(rezultat.zavrseno);
       setJeVruce(rezultat.vruce);
       
-      // Javljamo roditeljskoj komponenti je li aukcija završena kako bi se kartica zamutila
       if (onStatusChange) {
         onStatusChange(rezultat.zavrseno);
       }
     }
 
     azuriraj();
-    const interval = setInterval(azuriraj, 1000); // Osvježavanje svake sekunde za preciznost vatrice
+    const interval = setInterval(azuriraj, 1000);
 
     return () => clearInterval(interval);
   }, [zavrsavaDatum]);
@@ -139,6 +138,7 @@ export default function PredmetiList() {
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); 
+  const [sortiranje, setSortiranje] = useState("naziv-asc"); // State za sortiranje
   const [zavrseneAukcije, setZavrseneAukcije] = useState({}); 
   
   const [stranica, setStranica] = useState(1);
@@ -251,6 +251,7 @@ export default function PredmetiList() {
     ? prikaziNazivKategorije(parseInt(params.id)) 
     : kategorijaFilter;
 
+  // Filtriranje i sortiranje predmeta
   const filtriraniPredmeti = predmeti.filter((c) => {
     let zadovoljavaKategoriju = true;
     if (params.id) {
@@ -267,6 +268,26 @@ export default function PredmetiList() {
       : true;
 
     return zadovoljavaKategoriju && zadovoljavaPretragu;
+  }).sort((a, b) => {
+    if (sortiranje === "naziv-asc") {
+      return (a.naziv || "").localeCompare(b.naziv || "", "hr");
+    }
+    if (sortiranje === "naziv-desc") {
+      return (b.naziv || "").localeCompare(a.naziv || "", "hr");
+    }
+    if (sortiranje === "datum-postavljanja-asc") {
+      return new Date(a.dodano || 0) - new Date(b.dodano || 0);
+    }
+    if (sortiranje === "datum-postavljanja-desc") {
+      return new Date(b.dodano || 0) - new Date(a.dodano || 0);
+    }
+    if (sortiranje === "datum-zavrsetka-asc") {
+      return new Date(a.zavrsava || a.dodano || 0) - new Date(b.zavrsava || b.dodano || 0);
+    }
+    if (sortiranje === "datum-zavrsetka-desc") {
+      return new Date(b.zavrsava || b.dodano || 0) - new Date(a.zavrsava || a.dodano || 0);
+    }
+    return 0;
   });
 
   const ukupnoStavki = filtriraniPredmeti.length;
@@ -311,30 +332,53 @@ export default function PredmetiList() {
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
           Lista predmeta  {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
         </Heading>
-        <p style={{color:"orange",}}  className="m-3 text-center">trenutno ste na stranici { stranica} / {ukupnoStranica} stranica</p>
+        <p style={{color:"orange"}} className="m-3 text-center">trenutno ste na stranici {stranica} / {ukupnoStranica} stranica</p>
 
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
           <Link to={RouteNames.PREDMET_NOVI} className="m-3">
             <Button variant="success" size="sm">Dodaj predmet</Button>
           </Link>
 
-          <div className="d-flex align-items-center gap-2">
-            <span className="fs-7" style={{ whiteSpace: 'nowrap',color:'orange' }}>Prikaz:</span>
-            <Form.Select
-              size="sm"
-              value={velicinaStranice}
-              onChange={(e) => {
-                setVelicinaStranice(parseInt(e.target.value));
-                setStranica(1); 
-              }}
-              style={{ width: '80px' }}
-            >
-              <option value="3">3</option>
-              <option value="6">6</option>
-              <option value="9">9</option>
-              <option value="12">12</option>
-              <option value="24">24</option>
-            </Form.Select>
+          <div className="d-flex align-items-center gap-2 flex-wrap">
+            {/* Izbornik sortiranja */}
+            <div className="d-flex align-items-center gap-1">
+              <span className="fs-7" style={{ whiteSpace: 'nowrap', color:'orange' }}>Sortiraj:</span>
+              <Form.Select
+                size="sm"
+                value={sortiranje}
+                onChange={(e) => {
+                  setSortiranje(e.target.value);
+                  setStranica(1);
+                }}
+                style={{ width: '170px' }}
+              >
+                <option value="naziv-asc">Abecedi (A-Z)</option>
+                <option value="naziv-desc">Abecedi (Z-A)</option>
+                <option value="datum-postavljanja-desc">Datumu postavljanja (Novo)</option>
+                <option value="datum-postavljanja-asc">Datumu postavljanja (Staro)</option>
+                <option value="datum-zavrsetka-asc">Datumu završetka (Uskoro)</option>
+                <option value="datum-zavrsetka-desc">Datumu završetka (Kasnije)</option>
+              </Form.Select>
+            </div>
+
+            <div className="d-flex align-items-center gap-1">
+              <span className="fs-7" style={{ whiteSpace: 'nowrap', color:'orange' }}>Prikaz:</span>
+              <Form.Select
+                size="sm"
+                value={velicinaStranice}
+                onChange={(e) => {
+                  setVelicinaStranice(parseInt(e.target.value));
+                  setStranica(1); 
+                }}
+                style={{ width: '75px' }}
+              >
+                <option value="3">3</option>
+                <option value="6">6</option>
+                <option value="9">9</option>
+                <option value="12">12</option>
+                <option value="24">24</option>
+              </Form.Select>
+            </div>
 
             <Form.Control
               type="text"
@@ -344,7 +388,7 @@ export default function PredmetiList() {
                 setSearchTerm(e.target.value);
                 setStranica(1); 
               }}
-              style={{ maxWidth: '250px' }}
+              style={{ maxWidth: '220px' }}
               size="sm"
             />
           </div>
@@ -420,14 +464,14 @@ export default function PredmetiList() {
                         </div>
                       </div>
 
-                      <Card.Text className="text-secondary flex-grow-1 mb-4 " style={{fontSize:".9rem"}}>
+                      <Card.Text className="text-secondary flex-grow-1 mb-4" style={{fontSize:".9rem"}}>
                         <ExpandableText text={c.opis} maxLength={60} />
                       </Card.Text>
 
                       <div className="d-flex flex-column gap-1 mb-3">
                         <div className="d-flex justify-content-start">
                           <span className="text-muted" style={{fontSize:".9rem"}}>Početna cijena:</span>
-                          <Badge bg="success" className=" mx-2 mb-3">
+                          <Badge bg="success" className="mx-2 mb-3">
                             {c.pocetnaCijena} €
                           </Badge>
                         </div>
@@ -463,7 +507,6 @@ export default function PredmetiList() {
                             <strong>U kategoriji:</strong> {prikaziNazivKategorije(c.kategorija)}
                           </small>
                           
-                          {/* Odbrojavanje s dinamičkim bojama, vatricom i praćenjem završetka */}
                           <AukcijaOdbrojavanje 
                             zavrsavaDatum={c.zavrsava || c.dodano} 
                             onStatusChange={(zavrseno) => {
@@ -489,7 +532,6 @@ export default function PredmetiList() {
           )}
         </Row>
 
-        {/* Responzivna paginacija na dnu */}
         {ukupnoStranica > 1 && (
           <div className="d-flex justify-content-center mt-4">
             <div className="d-flex d-sm-none align-items-center gap-2">
@@ -539,7 +581,7 @@ export default function PredmetiList() {
                   disabled={stranica === 1} 
                 />
                 <Pagination.Prev 
-                  onClick={() => z => setStranica(prev => Math.max(prev - 1, 1))} 
+                  onClick={() => setStranica(prev => Math.max(prev - 1, 1))} 
                   disabled={stranica === 1} 
                 />
                 
@@ -551,7 +593,7 @@ export default function PredmetiList() {
                 />
                 <Pagination.Last 
                   onClick={() => setStranica(ukupnoStranica)} 
-                  disabled5={stranica === ukupnoStranica} 
+                  disabled={stranica === ukupnoStranica} 
                 />
               </Pagination>
             </div>

@@ -79,14 +79,14 @@ export default function KorisniciPdfGenerator({ korisnici }) {
           font: 'Montserrat',
           fontStyle: 'bold',
           fillColor: primaryColor,
-          textColor: [0, 0, 255],
-          halign: 'left'
+          textColor: [255,255,255],
+          halign: 'center'
         },
         columnStyles: {
           0: { cellWidth: 10, halign: 'center' },
-          1: { cellWidth: 50 },
+          1: { cellWidth: 55 },
           2: { cellWidth: 55 },
-          3: { cellWidth: 65 },
+          3: { cellWidth: 55 },
         }
 
        

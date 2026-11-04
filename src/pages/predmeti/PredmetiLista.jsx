@@ -5,7 +5,7 @@ import OznakeServices from "../../services/oznake/OznakeServices";
 import { Row, Col, Card, Button, Badge, Form, Carousel, Pagination } from "react-bootstrap";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { FaArrowTurnUp } from "react-icons/fa6";
+import { FaArrowTurnUp, FaFire } from "react-icons/fa6"; // Dodana ikona vatrice
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
@@ -38,6 +38,81 @@ function ExpandableText({ text, maxLength = 100 }) {
   );
 }
 
+// Pomoćna komponenta za dinamičko odbrojavanje i vraćanje stanja
+function AukcijaOdbrojavanje({ zavrsavaDatum, onStatusChange }) {
+  const [preostaloVrijeme, setPreostaloVrijeme] = useState("");
+  const [statusBoja, setStatusBoja] = useState("text-muted");
+  const [jeZavrseno, setJeZavrseno] = useState(false);
+  const [jeVruce, setJeVruce] = useState(false); // Manje od 5 minuta
+
+  function izracunajVrijeme(postDate) {
+    if (!postDate) return { tekst: "Nema datuma", boja: "text-muted", zavrseno: false, vruce: false };
+    
+    const endDate = new Date(postDate);
+    if (isNaN(endDate.getTime())) return { tekst: "Nevažeći datum", boja: "text-muted", zavrseno: false, vruce: false };
+    
+    const targetDate = postDate instanceof Date ? new Date(postDate.getTime() + 7 * 24 * 60 * 60 * 1000) : endDate;
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      return { tekst: "Aukcija je završila", boja: "text-danger fw-bold", zavrseno: true, vruce: false };
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const totalMinutes = Math.floor(diff / (1000 * 60));
+
+    let boja = "text-secondary";
+    let vruce = false;
+
+    // Manje od 5 minuta do isteka
+    if (totalMinutes <= 5) {
+      boja = "text-danger fw-bold";
+      vruce = true;
+    } 
+    // Manje od 1 dana (24 sata = 1440 minuta)
+    else if (totalMinutes <= 1440) {
+      boja = "text-warning fw-bold";
+    }
+
+    let tekst = `${days}d ${hours}h ${minutes}m`;
+    if (days === 0) {
+      tekst = `${hours}h ${minutes}m`;
+    }
+
+    return { tekst, boja, zavrseno: false, vruce };
+  }
+
+  useEffect(() => {
+    function azuriraj() {
+      const rezultat = izracunajVrijeme(zavrsavaDatum);
+      setPreostaloVrijeme(rezultat.tekst);
+      setStatusBoja(rezultat.boja);
+      setJeZavrseno(rezultat.zavrseno);
+      setJeVruce(rezultat.vruce);
+      
+      // Javljamo roditeljskoj komponenti je li aukcija završena kako bi se kartica zamutila
+      if (onStatusChange) {
+        onStatusChange(rezultat.zavrseno);
+      }
+    }
+
+    azuriraj();
+    const interval = setInterval(azuriraj, 1000); // Osvježavanje svake sekunde za preciznost vatrice
+
+    return () => clearInterval(interval);
+  }, [zavrsavaDatum]);
+
+  return (
+    <div className={`mt-1 ${statusBoja} d-flex align-items-center gap-1`}>
+      <span><strong>Preostalo:</strong> {preostaloVrijeme}</span>
+      {jeVruce && <FaFire className="text-danger animate-bounce" title="Aukcija uskoro završava!" />}
+    </div>
+  );
+}
+
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
   const datum = new Date(datumVrijednost);
@@ -64,8 +139,8 @@ export default function PredmetiList() {
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); 
+  const [zavrseneAukcije, setZavrseneAukcije] = useState({}); 
   
-  // State za paginaciju i veličinu stranice
   const [stranica, setStranica] = useState(1);
   const [velicinaStranice, setVelicinaStranice] = useState(6);
 
@@ -74,12 +149,10 @@ export default function PredmetiList() {
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
 
-  // Resetiramo stranicu na 1 kad god se promijeni kategorija
   useEffect(() => {
     setStranica(1);
   }, [params.id, kategorijaFilter]);
 
-  // Pouzdano vraćanje na vrh stranice nakon što se DOM i animacije renderiraju
   useEffect(() => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -178,7 +251,6 @@ export default function PredmetiList() {
     ? prikaziNazivKategorije(parseInt(params.id)) 
     : kategorijaFilter;
 
-  // Filtriranje predmeta
   const filtriraniPredmeti = predmeti.filter((c) => {
     let zadovoljavaKategoriju = true;
     if (params.id) {
@@ -216,7 +288,6 @@ export default function PredmetiList() {
     return kat ? kat.ikona : "";
   }
 
-  // Generiranje itema za desktop paginaciju
   let items = [];
   for (let number = 1; number <= ukupnoStranica; number++) {
     items.push(
@@ -239,7 +310,6 @@ export default function PredmetiList() {
       >
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
           Lista predmeta  {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
-    
         </Heading>
         <p style={{color:"orange",}}  className="m-3 text-center">trenutno ste na stranici { stranica} / {ukupnoStranica} stranica</p>
 
@@ -263,8 +333,7 @@ export default function PredmetiList() {
               <option value="6">6</option>
               <option value="9">9</option>
               <option value="12">12</option>
-                <option value="24">24</option>
-
+              <option value="24">24</option>
             </Form.Select>
 
             <Form.Control
@@ -292,10 +361,18 @@ export default function PredmetiList() {
             predmetiNaStranici.map((c) => {
               const listaOznaka = c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
               const listaSlika = c.slike || c.slikaUrls || [];
+              const jeZavrseno = zavrseneAukcije[c.id] || false;
 
               return (
                 <Col key={c.id}>
-                  <Card className="h-100 shadow-sm border-0 overflow-hidden">
+                  <Card 
+                    className="h-100 shadow-sm border-0 overflow-hidden position-relative"
+                    style={{
+                      filter: jeZavrseno ? "blur(1.5px) grayscale(30%)" : "none",
+                      opacity: jeZavrseno ? 0.75 : 1,
+                      transition: "all 0.3s ease"
+                    }}
+                  >
                     {listaSlika.length > 1 ? (
                       <Carousel data-bs-theme="dark" interval={null} className="bg-light">
                         {listaSlika.map((slikaItem, idx) => (
@@ -385,6 +462,14 @@ export default function PredmetiList() {
                           <small className="text-muted d-block">
                             <strong>U kategoriji:</strong> {prikaziNazivKategorije(c.kategorija)}
                           </small>
+                          
+                          {/* Odbrojavanje s dinamičkim bojama, vatricom i praćenjem završetka */}
+                          <AukcijaOdbrojavanje 
+                            zavrsavaDatum={c.zavrsava || c.dodano} 
+                            onStatusChange={(zavrseno) => {
+                              setZavrseneAukcije(prev => ({ ...prev, [c.id]: zavrseno }));
+                            }}
+                          />
                         </div>
                       </div>
 
@@ -407,8 +492,6 @@ export default function PredmetiList() {
         {/* Responzivna paginacija na dnu */}
         {ukupnoStranica > 1 && (
           <div className="d-flex justify-content-center mt-4">
-            
-            {/* 1. Mobilna verzija paginacije (vidljiva samo na mobitelima) */}
             <div className="d-flex d-sm-none align-items-center gap-2">
               <Button 
                 variant="secondary" 
@@ -449,7 +532,6 @@ export default function PredmetiList() {
               </Button>
             </div>
 
-            {/* 2. Desktop verzija paginacije (skrivena na mobitelu, vidljiva od 'sm' nadalje) */}
             <div className="d-none d-sm-block">
               <Pagination style={{ padding: "1rem" }}>
                 <Pagination.First 
@@ -457,7 +539,7 @@ export default function PredmetiList() {
                   disabled={stranica === 1} 
                 />
                 <Pagination.Prev 
-                  onClick={() => setStranica(prev => Math.max(prev - 1, 1))} 
+                  onClick={() => z => setStranica(prev => Math.max(prev - 1, 1))} 
                   disabled={stranica === 1} 
                 />
                 
@@ -469,11 +551,10 @@ export default function PredmetiList() {
                 />
                 <Pagination.Last 
                   onClick={() => setStranica(ukupnoStranica)} 
-                  disabled={stranica === ukupnoStranica} 
+                  disabled5={stranica === ukupnoStranica} 
                 />
               </Pagination>
             </div>
-
           </div>
         )}
       </motion.div>

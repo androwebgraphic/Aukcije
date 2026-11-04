@@ -71,12 +71,14 @@ export default function KorisniciPdfGenerator({ korisnici }) {
         margin: { left: 15, right: 15 },
         head: [['#', 'Ime', 'Prezime', 'Email']],
         body: tableData,
+        styles: {
+          font: 'Montserrat'
+        },
         fontSize: 9,
         textColor: textColor,
         cellPadding: 4,
         overflow: 'linebreak',
         headStyles: {
-          font: 'Montserrat',
           fontStyle: 'bold',
           fillColor: primaryColor,
           textColor: [255,255,255],

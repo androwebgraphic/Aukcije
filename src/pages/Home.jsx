@@ -99,7 +99,12 @@ export default function Home() {
 				</Col>
 				<Col xs={12} md={3}>
 					<Card className="mb-3 shadow-lg border-0 info">
-						<Heading as="h2">Info</Heading>
+						<Heading as="h2">Info 			<LordIcon
+									style={{ width: "2rem", height: "2rem" }}
+									colors="primary:#ffffff,secondary:#333333"
+									src="/lordicon/info.json"
+									trigger="hover"
+								/></Heading>
 						<Card.Body className="text-center">
 							<Heading as="h3">
 								Kategorije{" "}

@@ -9,30 +9,27 @@ import KategorijeServices from '../services/kategorije/KategorijeServices';
 function NavMain() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
-  const [kategorije, setKategorije] = useState([])
+  const [kategorije, setKategorije] = useState([]);
 
   async function ucitajKategorije() {
-    await KategorijeServices.get().then((o) => setKategorije(o.data))
+    try {
+      const response = await KategorijeServices.get();
+      setKategorije(response.data);
+    } catch (error) {
+      console.error("Greška kod učitavanja kategorija:", error);
+    }
   }
 
   useEffect(() => {
-    ucitajKategorije()
-  }, [])
-
-  // Funkcija koja hvata odabir iz padajućeg izbornika
-  const handleChange = (e) => {
-    const selectedRoute = e.target.value;
-    if (selectedRoute) {
-      navigate(selectedRoute);
-      setExpanded(false);
-      e.target.value = ""; // Resetira odabir da se može ponovno kliknuti isto
-    }
-  };
+    ucitajKategorije();
+  }, []);
 
   return (
     <>
       <Navbar expand="sm" data-bs-theme="dark" expanded={expanded} onToggle={(isOpen) => setExpanded(isOpen)}>
-        <Navbar.Brand><Link style={{ textDecoration:"none"} } to="/" >{APP_NAME}</Link></Navbar.Brand>
+        <Navbar.Brand>
+          <Link style={{ textDecoration: "none" }} to="/">{APP_NAME}</Link>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
@@ -41,39 +38,41 @@ function NavMain() {
               Početna
             </Nav.Link>
 
+            {/* Glavni izbornik Programi */}
+            <NavDropdown title="Programi" id="programi-dropdown">
+              <NavDropdown.Item as={Link} to={RouteNames.KATEGORIJE} onClick={() => setExpanded(false)}>
+                Kategorije
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to={RouteNames.OZNAKE} onClick={() => setExpanded(false)}>
+                Oznake
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to={RouteNames.KORISNICI} onClick={() => setExpanded(false)}>
+                Korisnici
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={() => { navigate(RouteNames.GENERIRANJE_PODATAKA); setExpanded(false); }}>
+                Generiraj podatke
+              </NavDropdown.Item>
+            </NavDropdown>
 
-            <NavDropdown title="Programi" id="programi">
-              <NavDropdown.Item href={RouteNames.KATEGORIJE}>Kategorije</NavDropdown.Item>
+            {/* Zaseban dropdown za Predmete i njihove kategorije da se izbjegne ugniježđivanje */}
+            <NavDropdown title="Predmeti" id="predmeti-dropdown">
+              <NavDropdown.Item as={Link} to={RouteNames.PREDMETI} onClick={() => setExpanded(false)}>
+                Svi predmeti
+              </NavDropdown.Item>
+              
+              {kategorije && kategorije.length > 0 && <NavDropdown.Divider />}
 
-              <NavDropdown title="Predmeti" id="predmeti">
-  <NavDropdown.Item as={Link} to={RouteNames.PREDMETI}>
-    Svi
-  </NavDropdown.Item>
-
-  {kategorije && kategorije.map((k) => (
-    <NavDropdown.Item 
-      key={k.id} 
-      as={Link} 
-      to={`/predmeti/kategorija/${k.id}`}
-    >
-      {k.naziv}
-    </NavDropdown.Item>
-  ))}
-</NavDropdown>
-
-     <NavDropdown.Item href={RouteNames.OZNAKE}>Oznake</NavDropdown.Item>
-             
-
-
-
-              <NavDropdown.Item href={RouteNames.KORISNICI}>Korisnici</NavDropdown.Item>
-
-
-               <NavDropdown.Divider />
-              <NavDropdown.Item
-                onClick={() => navigate(RouteNames.GENERIRANJE_PODATAKA)}
-              >Generiraj podatke</NavDropdown.Item>
-
+              {kategorije && kategorije.map((k) => (
+                <NavDropdown.Item 
+                  key={k.id} 
+                  as={Link} 
+                  to={`/predmeti/kategorija/${k.id}`}
+                  onClick={() => setExpanded(false)}
+                >
+                  {k.naziv}
+                </NavDropdown.Item>
+              ))}
             </NavDropdown>
 
             <Nav.Link onClick={() => { navigate(RouteNames.KORISNIK_NOVI); setExpanded(false); }}>

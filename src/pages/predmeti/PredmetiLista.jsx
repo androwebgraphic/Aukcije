@@ -396,7 +396,7 @@ export default function PredmetiList() {
 									style={{ width: "2rem", height: "2rem" }}
 									src="/lordicon/search.json"
               trigger="hover"
-             colors="primary:#ff5733,secondary:#ff5733"
+             colors="primary:#fff,secondary:#fff"
 								/>
           </div>
         

@@ -7,8 +7,6 @@ import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
 
-import { FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
@@ -308,7 +306,7 @@ export default function PredmetiPromjena() {
         </Row>
 
         <Row className="mt-4 mb-4">
-          <Col xs={4} >  <FaEdit size={40} style={{ color: "orange", backgroundColor:"white", padding:".5rem"}} onClick={() => obrisi(c.id)}/></Col>
+          <Col xs={4} ><Button type="submit" variant="warning" className="w-100" size="sm">Promijeni</Button></Col>
           <Col xs={4} ><Button variant="danger" className="w-100" size="sm" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
         </Row>
       </Form>

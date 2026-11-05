@@ -9,6 +9,7 @@ import { FaArrowTurnUp, FaFire } from "react-icons/fa6";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
+import { LordIcon } from "@lordicon/react";
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -382,7 +383,7 @@ export default function PredmetiList() {
 
             <Form.Control
               type="text"
-              placeholder="Pretraži predmete..."
+              placeholder="Pretraži predmete...  "
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -391,7 +392,14 @@ export default function PredmetiList() {
               style={{ maxWidth: '220px' }}
               size="sm"
             />
+              	<LordIcon
+									style={{ width: "2rem", height: "2rem" }}
+									src="/lordicon/search.json"
+              trigger="hover"
+             colors="primary:#ff5733,secondary:#ff5733"
+								/>
           </div>
+        
         </div>
       </motion.div>
 

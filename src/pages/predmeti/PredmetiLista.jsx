@@ -10,6 +10,8 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import { LordIcon } from "@lordicon/react";
+import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -331,7 +333,7 @@ export default function PredmetiList() {
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
       >
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
-          Lista predmeta  {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
+          Svi oredmeti {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
         </Heading>
         <p style={{color:"orange"}} className="m-3 text-center">trenutno ste na stranici {stranica} / {ukupnoStranica} stranica</p>
 
@@ -525,8 +527,8 @@ export default function PredmetiList() {
                       </div>
 
                       <div className="d-flex gap-2 pt-2 border-top">
-                        <Button variant="warning" className="w-50" size="sm" onClick={() => navigate(`/predmeti/promijeni/${c.id}`)}>Promijeni</Button>
-                        <Button variant="danger" className="w-50" size="sm" onClick={() => obrisi(c.id)}>Obriši</Button>
+                        <FaEdit size={40} style={{color:"orange"}} onClick={() => navigate(`/predmeti/promijeni/${c.id}`)} />
+                      <MdDeleteForever   size={40} style={{color:"red"}} onClick={() => obrisi(c.id)}/>
                       </div>
                     </Card.Body>
                   </Card>

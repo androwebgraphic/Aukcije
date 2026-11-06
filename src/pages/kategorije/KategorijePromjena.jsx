@@ -62,7 +62,7 @@ export default function KategorijePromijena() {
 
     const naziv = nazivRef.current.value;
     const opis = opisRef.current.value; 
-    if (naziv.trim().length < 2 || naziv.trim().length > 30 || naziv.trim() === "") {
+    if (naziv.trim().length < 2 || naziv.trim().length > 30 || naziv.trim() === " ") {
 
       toast.error("Polja ne smiju biti prazna, broj znakova veci od 2 a mnji od 10", {
 

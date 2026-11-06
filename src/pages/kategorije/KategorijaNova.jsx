@@ -45,7 +45,7 @@ export default function KategorijaNova() {
 
     // 2. Validacija
     const newErrors = {};
-    if (naziv.trim().length < 3 || naziv.trim().length > 30 || naziv.trim.length ==="") {
+    if (naziv.trim().length < 3 || naziv.trim().length > 30 || naziv.trim().length === " ") {
     
             toast.error("naziv ne smije biti prazno polje, broj znakova veci od 2 a manji od 30", {
     

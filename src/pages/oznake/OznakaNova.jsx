@@ -16,14 +16,15 @@ export default function OznakaNova() {
     }
   }
 
-  function handleSubmit(e) {
+function handleSubmit(e) {
     e.preventDefault();
-    const podatci = new FormData(e.target);
+    const form = e.target;
 
-    dodaj({
-      naziv: podatci.get("naziv") || ""
-    });
+    const naziv = form.elements.naziv ? form.elements.naziv.value : "";
+
+    dodaj({ naziv });
   }
+
 
   return (
 <>

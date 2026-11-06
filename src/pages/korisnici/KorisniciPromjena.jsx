@@ -36,7 +36,7 @@ export default function KorisniciPromijena() {
   }
 
   async function promijeni(podatci) {
-    await KorisniciServices.promijeni(params.id,podatci).then(() => {
+    await KorisniciServices.promijeni(params.id, podatci).then(() => {
       navigate(RouteNames.KORISNICI);
     });
   }
@@ -83,7 +83,7 @@ export default function KorisniciPromijena() {
             <Form.Group controlId="email">
               <FormLabel>Email</FormLabel>
               <FormControl
-               type="text"
+               type="email"
                 name="email"
             
                 defaultValue={korisnik.email}

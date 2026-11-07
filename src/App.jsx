@@ -12,81 +12,93 @@ import Logiranje from "./pages/Logiranje.jsx";
 
 import KategorijaList from "./pages/kategorije/KategorijaList.jsx";
 import KategorijaNova from "./pages/kategorije/KategorijaNova.jsx";
-import KategorijePromijena from "./pages/kategorije/KategorijePromjena.jsx";
+import KategorijePromjena from "./pages/kategorije/KategorijePromjena.jsx";
 
 import PredmetiLista from "./pages/predmeti/PredmetiLista.jsx";
 import PredmetNovi from "./pages/predmeti/PredmetNovi.jsx";
 import PredmetiPromjena from "./pages/predmeti/PredmetiPromjena.jsx";
 
-
-
 import KorisniciLista from "./pages/korisnici/KorisniciLista.jsx";
 import KorisniciPromijena from "./pages/korisnici/KorisniciPromjena.jsx";
 
-import GeneriranjePodataka from "./pages/GeneriranjePodataka"
+import GeneriranjePodataka from "./pages/GeneriranjePodataka";
 
-import OznakeLista from './pages/oznake/OznakeLista.jsx'
-import OznakaNova from './pages/oznake/OznakaNova.jsx'
-import OznakePromjena from './pages/oznake/OznakePromjena.jsx'
+import OznakeLista from "./pages/oznake/OznakeLista.jsx";
+import OznakaNova from "./pages/oznake/OznakaNova.jsx";
+import OznakePromjena from "./pages/oznake/OznakePromjena.jsx";
 
 import Uvjeti from "./pages/Uvjeti.jsx";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
 	return (
-    <>
-      			<Container>
-			<Header />
-
+		<>
+			<Container>
+				<Header />
 
 				<Routes>
-          <Route path={RouteNames.HOME} element={<Home />} />
-          <Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
-          
+					<Route path={RouteNames.HOME} element={<Home />} />
+					<Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
 
 					<Route path={RouteNames.KATEGORIJE} element={<KategorijaList />} />
-          <Route path={RouteNames.KATEGORIJA_NOVA} element={<KategorijaNova />} />
-          <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijePromijena/> } />
+					<Route
+						path={RouteNames.KATEGORIJA_NOVA}
+						element={<KategorijaNova />}
+					/>
+					<Route
+						path={RouteNames.KATEGORIJE_PROMJENA}
+						element={<KategorijePromjena />}
+					/>
 
-          
-{/* 1. Specifična ruta za promjenu */}
-  <Route path={RouteNames.PREDMETI_PROMJENA} element={<PredmetiPromjena />} />
-  
-  {/* 2. Ruta za novi predmet */}
-  <Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
-  
-  {/* 3. Ruta za prikaz predmeta po kategoriji (OVO JE NEDOSTAJALO!) */}
-  <Route path={RouteNames.PREDMETI_KATEGORIJA} element={<PredmetiLista />} />
+					{/* 1. Specifična ruta za promjenu */}
+					<Route
+						path={RouteNames.PREDMETI_PROMJENA}
+						element={<PredmetiPromjena />}
+					/>
 
-  {/* 4. Općenita ruta za listu svih predmeta */}
-  <Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
+					{/* 2. Ruta za novi predmet */}
+					<Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
 
+					{/* 3. Ruta za prikaz predmeta po kategoriji (OVO JE NEDOSTAJALO!) */}
+					<Route
+						path={RouteNames.PREDMETI_KATEGORIJA}
+						element={<PredmetiLista />}
+					/>
 
-				
-          <Route path={RouteNames.KORISNICI} element={<KorisniciLista />} />
-          <Route path={RouteNames.KORISNIK_NOVI} element={<Registracija />} />
-          <Route path={RouteNames.KORISNIK_PROMJENA} element={ <KorisniciPromijena />} />
+					{/* 4. Općenita ruta za listu svih predmeta */}
+					<Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
 
-          <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
+					<Route path={RouteNames.KORISNICI} element={<KorisniciLista />} />
+					<Route path={RouteNames.KORISNIK_NOVI} element={<Registracija />} />
+					<Route
+						path={RouteNames.KORISNIK_PROMJENA}
+						element={<KorisniciPromijena />}
+					/>
 
-                  <Route path={RouteNames.OZNAKE} element={<OznakeLista />} />
-          <Route path={RouteNames.OZNAKA_NOVA} element={<OznakaNova />} />
-          <Route path={RouteNames.OZNAKE_PROMJENA} element={ <OznakePromjena />} />
-          
+					<Route
+						path={RouteNames.GENERIRANJE_PODATAKA}
+						element={<GeneriranjePodataka />}
+					/>
+
+					<Route path={RouteNames.OZNAKE} element={<OznakeLista />} />
+					<Route path={RouteNames.OZNAKA_NOVA} element={<OznakaNova />} />
+					<Route
+						path={RouteNames.OZNAKE_PROMJENA}
+						element={<OznakePromjena />}
+					/>
 
 					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />
 				</Routes>
 
-				{/* <Carousel></Carousel> */}
-		
+				<ToastContainer
+					position="top"
+					className="fixed top-50 start-50 translate-middle-x"
+				/>
 
-        <Footer />
-        	</Container>
-    <ToastContainer toastClassName={{position: "fixed", top:"50%", left:"50%"}}/>
+				<Footer />
+			</Container>
 		</>
 	);
 }

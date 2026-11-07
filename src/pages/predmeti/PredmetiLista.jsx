@@ -333,7 +333,7 @@ export default function PredmetiList() {
         transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
       >
         <Heading as="h2" color="azure" className=" mb-2 mt-0">
-          Svi oredmeti {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
+          Svi Predmeti {aktivnaKategorijaNaziv ? `- ${aktivnaKategorijaNaziv.toUpperCase()}` : ""} ({ukupnoStavki})
         </Heading>
         <p style={{color:"orange"}} className="m-3 text-center">trenutno ste na stranici {stranica} / {ukupnoStranica} stranica</p>
 
@@ -527,8 +527,8 @@ export default function PredmetiList() {
                       </div>
 
                       <div className="d-flex gap-2 pt-2 border-top">
-                        <FaEdit size={40} style={{color:"orange"}} onClick={() => navigate(`/predmeti/promijeni/${c.id}`)} />
-                      <MdDeleteForever   size={40} style={{color:"red"}} onClick={() => obrisi(c.id)}/>
+                        <FaEdit size={40} style={{color:"orange", cursor:"pointer"}} onClick={() => navigate(`/predmeti/promijeni/${c.id}`)} />
+                      <MdDeleteForever   size={40} style={{color:"red", cursor:"pointer"}} onClick={() => obrisi(c.id)}/>
                       </div>
                     </Card.Body>
                   </Card>

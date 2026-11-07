@@ -216,7 +216,7 @@ export default function PredmetNovi() {
             </Card>
           </Col>
 
-          <Col sm={6}>
+          <Col sm={12}>
             <Form.Group controlId="opis">
               <FormLabel><strong>Opis</strong></FormLabel>
               <FormControl as="textarea" name="opis" rows={3} value={predmet.opis} onChange={handleChange} placeholder="Unesite opis predmeta" />
@@ -233,7 +233,7 @@ export default function PredmetNovi() {
           <Col sm={3} lg={2}>
             <Form.Group controlId="stanje">
               <FormLabel>Stanje</FormLabel>
-              <FormControl type="text" name="stanje" value={predmet.stanje} onChange={handleChange} placeholder="npr. Odlično" />
+              <FormControl type="text" name="stanje" maxLength="30" value={predmet.stanje} onChange={handleChange} placeholder="npr. Odlično" />
             </Form.Group>
           </Col>
 

@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Row,
+  Container
 
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -109,6 +110,7 @@ export default function KategorijaNova() {
 
   return (
     <>
+      <Container>
       <Heading as='h2' color='azure'>Dodavanje nove kategorije</Heading>
 
       <Form onSubmit={handleSubmit} noValidate>
@@ -160,7 +162,8 @@ export default function KategorijaNova() {
             </Link>
           </Col>
         </Row>
-      </Form>
+        </Form>
+        </Container>
     </>
   );
 }

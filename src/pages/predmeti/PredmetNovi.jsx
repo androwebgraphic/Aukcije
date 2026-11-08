@@ -88,18 +88,28 @@ export default function PredmetNovi() {
     setPretragaOznaka(""); 
     setPrikaziAutoComplete(false);
   }
+async function kreirajI_DodajOznaku() {
+    const nazivOznake = pretragaOznaka.trim();
+    if (!nazivOznake) return;
 
-  async function kreirajI_DodajOznaku() {
-    if (!pretragaOznaka.trim()) return;
     try {
-      const odgovor = await OznakeServices.dodaj({ naziv: pretragaOznaka.trim() });
-      const novaOznaka = odgovor?.data !== undefined ? odgovor.data : odgovor;
+      const odgovor = await OznakeServices.dodaj({ naziv: nazivOznake });
+      
+      // Provjeravamo sve moguće oblike koje API/Axios može vratiti
+      let stvorenaOznaka = odgovor?.data !== undefined ? odgovor.data : odgovor;
 
-      if (novaOznaka && novaOznaka.id) {
-        setOznake(prev => [...prev, novaOznaka]);
-        setOdabraneOznake(prev => [...prev, novaOznaka]);
+      // Ako je backend iz nekog razloga vratio samo ID (npr. broj ili string), 
+      // sami konstruiramo objekt s tim ID-jem i nazivom koji je korisnik upisao.
+      if (typeof stvorenaOznaka === "number" || typeof stvorenaOznaka === "string") {
+        stvorenaOznaka = { id: stvorenaOznaka, naziv: nazivOznake };
+      }
+
+      if (stvorenaOznaka && stvorenaOznaka.id) {
+        setOznake(prev => [...prev, stvorenaOznaka]);
+        setOdabraneOznake(prev => [...prev, stvorenaOznaka]);
       } else {
-        const privremenaOznaka = { id: Date.now(), naziv: pretragaOznaka.trim() };
+        // Fallback ako objekt nema ID
+        const privremenaOznaka = { id: Date.now(), naziv: nazivOznake };
         setOznake(prev => [...prev, privremenaOznaka]);
         setOdabraneOznake(prev => [...prev, privremenaOznaka]);
       }
@@ -216,7 +226,7 @@ export default function PredmetNovi() {
             </Card>
           </Col>
 
-          <Col sm={12}>
+          <Col sm={6}>
             <Form.Group controlId="opis">
               <FormLabel><strong>Opis</strong></FormLabel>
               <FormControl as="textarea" name="opis" rows={3} value={predmet.opis} onChange={handleChange} placeholder="Unesite opis predmeta" />
@@ -285,8 +295,8 @@ export default function PredmetNovi() {
         </Row>
 
         <Row className="mt-4 mb-4">
-          <Col xs={6}><Button type="submit" variant="success" className="w-100" size="sm" >Dodaj</Button></Col>
-          <Col xs={6}><Button variant="danger" className="w-100" size="sm" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
+          <Col xs={6} md={3}><Button type="submit" variant="outline-success" className="w-100" size="sm" >Dodaj</Button></Col>
+          <Col xs={6} md={3}><Button variant="outline-danger" className="w-100" size="sm" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
         </Row>
       </Form>
     </Container>

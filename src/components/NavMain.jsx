@@ -26,7 +26,8 @@ function NavMain() {
 
   return (
     <>
-      <Navbar expand="sm" data-bs-theme="dark" expanded={expanded} onToggle={(isOpen) => setExpanded(isOpen)}>
+  
+      <Navbar expand="lg" data-bs-theme="dark" expanded={expanded} onToggle={(isOpen) => setExpanded(isOpen)}>
         <Navbar.Brand>
           <Link style={{ textDecoration: "none" }} to="/">{APP_NAME}</Link>
         </Navbar.Brand>
@@ -83,7 +84,8 @@ function NavMain() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
+        </Navbar>
+
     </>
   );
 }

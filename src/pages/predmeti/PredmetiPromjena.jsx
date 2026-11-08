@@ -7,8 +7,8 @@ import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
 import { FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
 import { TbPencilCancel } from "react-icons/tb";
+import { MdDelete } from "react-icons/md";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
@@ -70,7 +70,6 @@ export default function PredmetiPromjena() {
     try {
       let ucitaneOznake = [];
 
-      // 1. Dohvat oznaka (API + localStorage fallback)
       try {
         const resOznake = await OznakeServices.get();
         ucitaneOznake = resOznake?.data || resOznake || [];
@@ -89,7 +88,6 @@ export default function PredmetiPromjena() {
       }
       setOznake(ucitaneOznake);
 
-      // 2. Dohvat kategorija (API + localStorage fallback)
       let ucitaneKategorije = [];
       try {
         const resKategorije = await KategorijeServices.get();
@@ -108,7 +106,6 @@ export default function PredmetiPromjena() {
       }
       setKategorije(ucitaneKategorije);
 
-      // 3. Dohvat predmeta
       if (params.id) {
         let s = null;
         
@@ -181,23 +178,33 @@ export default function PredmetiPromjena() {
   }
 
   async function kreirajI_DodajOznaku() {
-    if (!pretragaOznaka.trim()) return;
+    const nazivOznake = pretragaOznaka.trim();
+    if (!nazivOznake) return;
+
     try {
       let novaOznaka = null;
       
       try {
-        const odgovor = await OznakeServices.dodaj({ naziv: pretragaOznaka.trim() });
+        const odgovor = await OznakeServices.dodaj({ naziv: nazivOznake });
         novaOznaka = odgovor?.data !== undefined ? odgovor.data : odgovor;
       } catch {
-        novaOznaka = { id: Date.now(), naziv: pretragaOznaka.trim() };
+        novaOznaka = null;
       }
 
-      if (novaOznaka && (novaOznaka.id || novaOznaka.sifra)) {
-        const azuriraneOznake = [...oznake, novaOznaka];
-        setOznake(azuriraneOznake);
-        setOdabraneOznake(prev => [...prev, novaOznaka]);
-        localStorage.setItem("oznake", JSON.stringify(azuriraneOznake));
+      // Osiguravamo da je novaOznaka uvijek objekt s ID-jem/šifrom i nazivom
+      if (!novaOznaka || typeof novaOznaka !== 'object' || (!novaOznaka.id && !novaOznaka.sifra)) {
+        novaOznaka = { id: Date.now(), naziv: nazivOznake };
       }
+
+      // Ako backend vrati objekt bez naziva (npr. vrati samo ID), ručno mu pridružimo upisani naziv
+      if (!novaOznaka.naziv) {
+        novaOznaka.naziv = nazivOznake;
+      }
+
+      const azuriraneOznake = [...oznake, novaOznaka];
+      setOznake(azuriraneOznake);
+      setOdabraneOznake(prev => [...prev, novaOznaka]);
+      localStorage.setItem("oznake", JSON.stringify(azuriraneOznake));
 
       setPretragaOznaka("");
       setPrikaziAutoComplete(false);
@@ -261,74 +268,30 @@ export default function PredmetiPromjena() {
   }
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 mb-5">
       <Heading as="h2" color="azure" className="mb-4">
         Promjena predmeta: {predmet?.naziv || ""}
       </Heading>
-      
+
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Naziv</Form.Label>
-          <Form.Control 
-            type="text" 
-            name="naziv" 
-            value={predmet.naziv || ""} 
-            onChange={handleChange} 
-            required 
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Opis</Form.Label>
-          <Form.Control 
-            as="textarea" 
-            rows={3} 
-            name="opis" 
-            value={predmet.opis || ""} 
-            onChange={handleChange} 
-          />
-        </Form.Group>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Godina nastanka</Form.Label>
-              <Form.Control 
-                type="number" 
-                name="godinaNastanka" 
-                value={predmet.godinaNastanka || ""} 
-                onChange={handleChange} 
+        <Row className="g-3">
+          {/* Naziv */}
+          <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label>Naziv</Form.Label>
+              <Form.Control
+                type="text"
+                name="naziv"
+                value={predmet.naziv || ""}
+                onChange={handleChange}
+                required
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Stanje</Form.Label>
-              <Form.Control 
-                type="text" 
-                name="stanje" 
-                value={predmet.stanje || ""} 
-                onChange={handleChange} 
-              />
-            </Form.Group>
-          </Col>
-        </Row>
 
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Početna cijena</Form.Label>
-              <Form.Control 
-                type="number" 
-                step="0.01" 
-                name="pocetnaCijena" 
-                value={predmet.pocetnaCijena || ""} 
-                onChange={handleChange} 
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
+          {/* Kategorija */}
+          <Col xs={12} md={6}>
+            <Form.Group>
               <Form.Label>Kategorija</Form.Label>
               <FormSelect 
                 value={odabranaKategorija} 
@@ -343,11 +306,64 @@ export default function PredmetiPromjena() {
               </FormSelect>
             </Form.Group>
           </Col>
-        </Row>
 
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
+          {/* Opis */}
+          <Col xs={12}>
+            <Form.Group>
+              <Form.Label>Opis</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="opis"
+                value={predmet.opis || ""}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+
+          {/* Godina nastanka */}
+          <Col xs={12} md={4}>
+            <Form.Group>
+              <Form.Label>Godina nastanka</Form.Label>
+              <Form.Control 
+                type="number" 
+                name="godinaNastanka" 
+                value={predmet.godinaNastanka || ""} 
+                onChange={handleChange} 
+              />
+            </Form.Group>
+          </Col>
+
+          {/* Stanje */}
+          <Col xs={12} md={4}>
+            <Form.Group>
+              <Form.Label>Stanje</Form.Label>
+              <Form.Control 
+                type="text" 
+                name="stanje" 
+                value={predmet.stanje || ""} 
+                onChange={handleChange} 
+              />
+            </Form.Group>
+          </Col>
+
+          {/* Početna cijena */}
+          <Col xs={12} md={4}>
+            <Form.Group>
+              <Form.Label>Početna cijena</Form.Label>
+              <Form.Control 
+                type="number" 
+                step="0.01" 
+                name="pocetnaCijena" 
+                value={predmet.pocetnaCijena || ""} 
+                onChange={handleChange} 
+              />
+            </Form.Group>
+          </Col>
+
+          {/* Dodano */}
+          <Col xs={12} md={6}>
+            <Form.Group>
               <Form.Label>Dodano</Form.Label>
               <Form.Control 
                 type="datetime-local" 
@@ -357,8 +373,10 @@ export default function PredmetiPromjena() {
               />
             </Form.Group>
           </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
+
+          {/* Završava */}
+          <Col xs={12} md={6}>
+            <Form.Group>
               <Form.Label>Završava</Form.Label>
               <Form.Control 
                 type="datetime-local" 
@@ -368,116 +386,124 @@ export default function PredmetiPromjena() {
               />
             </Form.Group>
           </Col>
-        </Row>
 
-        <Form.Group className="mb-3 position-relative" ref={autoCompleteRef}>
-          <Form.Label>Oznake</Form.Label>
-          <div className="d-flex flex-wrap gap-2 mb-2">
-            {odabraneOznake.map((oznaka, index) => (
-              <span key={index} className="badge bg-secondary d-flex align-items-center gap-1 p-2">
-                {oznaka.naziv}
-                <button 
-                  type="button" 
-                  className="btn-close btn-close-white btn-sm" 
-                  onClick={() => setOdabraneOznake(odabraneOznake.filter((_, i) => i !== index))}
-                ></button>
-              </span>
-            ))}
-          </div>
-
-          <div className="position-relative">
-            <Form.Control 
-              type="text" 
-              placeholder="Klikni za popis oznaka ili upiši za pretragu..." 
-              value={pretragaOznaka}
-              onChange={(e) => {
-                setPretragaOznaka(e.target.value);
-                setPrikaziAutoComplete(true);
-              }}
-              onFocus={() => setPrikaziAutoComplete(true)}
-            />
-
-            {prikaziAutoComplete && (
-              <div className="list-group position-absolute w-100 shadow bg-white border rounded mt-1" style={{ zIndex: 1000, maxHeight: "200px", overflowY: "auto" }}>
-                {filtrirajOznake().length > 0 ? (
-                  filtrirajOznake().map(o => (
+          {/* Oznake */}
+          <Col xs={12} md={6}>
+            <Form.Group className="position-relative" ref={autoCompleteRef}>
+              <Form.Label>Oznake</Form.Label>
+              <div className="d-flex flex-wrap gap-2 mb-2">
+                {odabraneOznake.map((oznaka, index) => (
+                  <span key={index} className="badge bg-secondary d-flex align-items-center gap-1 p-2">
+                    {oznaka.naziv}
                     <button 
                       type="button" 
-                      key={o.id || o.sifra} 
-                      className="list-group-item list-group-item-action"
-                      onClick={() => dodajOznaku(o)}
-                    >
-                      {o.naziv}
-                    </button>
-                  ))
-                ) : (
-                  <div className="p-2 text-muted text-center">Nema pronađenih oznaka</div>
-                )}
-
-                {pretragaOznaka.trim() !== "" && !oznakaVecPostoji(pretragaOznaka) && (
-                  <button 
-                    type="button" 
-                    className="list-group-item list-group-item-action text-primary fw-bold border-top"
-                    onClick={kreirajI_DodajOznaku}
-                  >
-                    + Dodaj novu oznaku: "{pretragaOznaka}"
-                  </button>
-                )}
+                      className="btn-close btn-close-white btn-sm" 
+                      onClick={() => setOdabraneOznake(odabraneOznake.filter((_, i) => i !== index))}
+                    ></button>
+                  </span>
+                ))}
               </div>
-            )}
-          </div>
-        </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Slike (maksimalno 5)</Form.Label>
-          <Form.Control 
-            type="file" 
-            multiple 
-            accept="image/*" 
-            onChange={handleImageChange} 
-          />
-          {slikeError && <Alert variant="danger" className="mt-2">{slikeError}</Alert>}
-          
-          <div className="d-flex flex-wrap gap-2 mt-3">
-            {slike.map((slika, index) => (
-              <div key={index} className="position-relative">
-                <img 
-                  src={slika} 
-                  alt="Pregled" 
-                  style={{ width: "100px", height: "100px", objectFit: "cover" }} 
-                  className="rounded border"
+              <div className="position-relative">
+                <Form.Control 
+                  type="text" 
+                  placeholder="Klikni za popis oznaka ili upiši za pretragu..." 
+                  value={pretragaOznaka}
+                  onChange={(e) => {
+                    setPretragaOznaka(e.target.value);
+                    setPrikaziAutoComplete(true);
+                  }}
+                  onFocus={() => setPrikaziAutoComplete(true)}
                 />
-                <button 
-                  type="button" 
-                  className="btn btn-danger btn-sm position-absolute top-0 end-0 p-1"
-                  onClick={() => setSlike(slike.filter((_, i) => i !== index))}
-                >
-                  <MdDeleteForever size={16} />
-                </button>
-              </div>
-            ))}
-          </div>
-        </Form.Group>
 
-        <Row className="mt-4 mb-4">
-          <Col xs={6} md={3}>
+                {prikaziAutoComplete && (
+                  <div className="list-group position-absolute w-100 shadow bg-white border rounded mt-1" style={{ zIndex: 1000, maxHeight: "200px", overflowY: "auto" }}>
+                    {filtrirajOznake().length > 0 ? (
+                      filtrirajOznake().map(o => (
+                        <button 
+                          type="button" 
+                          key={o.id || o.sifra} 
+                          className="list-group-item list-group-item-action"
+                          onClick={() => dodajOznaku(o)}
+                        >
+                          {o.naziv}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="p-2 text-muted text-center">Nema pronađenih oznaka</div>
+                    )}
+
+                    {pretragaOznaka.trim() !== "" && !oznakaVecPostoji(pretragaOznaka) && (
+                      <button 
+                        type="button" 
+                        className="list-group-item list-group-item-action text-primary fw-bold border-top"
+                        onClick={kreirajI_DodajOznaku}
+                      >
+                        + Dodaj novu oznaku: "{pretragaOznaka}"
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Form.Group>
+          </Col>
+
+          {/* Slike */}
+          <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label>Slike (maksimalno 5)</Form.Label>
+              <Form.Control 
+                type="file" 
+                multiple 
+                accept="image/*" 
+                onChange={handleImageChange} 
+              />
+              {slikeError && <Alert variant="danger" className="mt-2">{slikeError}</Alert>}
+              
+              <div className="d-flex flex-wrap gap-2 mt-3">
+                {slike.map((slika, index) => (
+                  <div key={index} className="position-relative">
+                    <img 
+                      src={slika} 
+                      alt="Pregled" 
+                      style={{ width: "100px", height: "100px", objectFit: "cover" }} 
+                      className="rounded border"
+                    />
+                    <button 
+                      type="button" 
+                      className="btn btn-danger btn-sm position-absolute top-0 end-0 p-1"
+                      onClick={() => setSlike(slike.filter((_, i) => i !== index))}
+                    >
+                      <MdDelete size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </Form.Group>
+          </Col>
+
+          {/* Gumbi za akciju */}
+          <Col xs={6} md={3} className="mt-4">
             <Button 
-              variant="success" 
+              variant="outline-success" 
               type="submit" 
-              className="w-100 d-flex align-items-center justify-content-center gap-2"
+              className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+              size="sm"
+
             >
-              <FaEdit size={20} /> Promijeni
+         Promijeni
             </Button>
           </Col>
 
-          <Col xs={6} md={3}>
+          <Col xs={6} md={3} className="mt-4">
             <Button 
-              variant="danger" 
+              variant="outline-danger" 
               type="button" 
-              className="w-100 d-flex align-items-center justify-content-center gap-2" 
+              className="w-100 d-flex align-items-center justify-content-center gap-2 py-2" 
+              size="sm"
               onClick={() => navigate(RouteNames.PREDMETI)}
             >
-              <TbPencilCancel size={20} /> Odustani
+            Odustani
             </Button>
           </Col>
         </Row>

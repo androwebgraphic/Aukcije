@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
-import { Row, Col, Card, Button, Badge, Form, Carousel, Pagination } from "react-bootstrap";
+import { Row, Col, Card, Button, Badge, Form, Carousel, Pagination,Container} from "react-bootstrap";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { FaArrowTurnUp, FaFire } from "react-icons/fa6";
@@ -10,8 +10,7 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import { LordIcon } from "@lordicon/react";
-import { FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
+
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -327,6 +326,7 @@ export default function PredmetiList() {
 
   return (
     <>
+      <Container>
       <motion.div
         initial={{ opacity: 0, x: -1000 }}
         animate={{ opacity: 1, x: 0 }}
@@ -527,8 +527,8 @@ export default function PredmetiList() {
                       </div>
 
                       <div className="d-flex gap-2 pt-2 border-top">
-                        <FaEdit size={40} style={{color:"orange", cursor:"pointer"}} onClick={() => navigate(`/predmeti/promijeni/${c.id}`)} />
-                      <MdDeleteForever   size={40} style={{color:"red", cursor:"pointer"}} onClick={() => obrisi(c.id)}/>
+                        <Button variant="outline-warning" size="sm" onClick={() => navigate(`/predmeti/promijeni/${c.id}`)} >Promijeni</Button>
+                      <Button  variant="outline-danger" size="sm" onClick={() => obrisi(c.id)}>Obriši</Button>
                       </div>
                     </Card.Body>
                   </Card>
@@ -609,7 +609,8 @@ export default function PredmetiList() {
             </div>
           </div>
         )}
-      </motion.div>
+        </motion.div>
+        </Container>
     </>
   );
 }

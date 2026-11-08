@@ -1,7 +1,6 @@
-import { Container } from "react-bootstrap";
+
 import { APP_NAME } from "../constants";
-import MenHighFive from "../assets/lottiefiles/Men High Five.json";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import MenHighFive from "../assets/lottiefiles/Men High Five.json"
 import { Link } from "react-router-dom";
 import Heading from "../components/UI/Heading";
 import { Row, Col } from "react-bootstrap";

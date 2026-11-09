@@ -13,7 +13,7 @@ function Header() {
         <header>
  
             
-               <div className="h" id='top'>
+               <div className="h">
           <Link to="/">
             <img className="logo" src={aukcijelogo} />
                  

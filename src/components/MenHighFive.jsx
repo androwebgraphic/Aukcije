@@ -1,11 +1,23 @@
+import { useEffect, useRef } from "react";
+import lottie from "lottie-web";
+import animationData from "../assets/lottiefiles/menHighFive.json";
 
+export default function MenHighFive(props) {
+  const containerRef = useRef(null);
 
-const MenHighFive = () => {
-<Player
-  autoplay
-  loop
-  src="../assets/lottiefiles.MenhighFive.json"
-  // style={{ height: '300px', width: '300px' }}
-/>
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const instance = lottie.loadAnimation({
+      container: containerRef.current,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animationData,
+    });
+
+    return () => instance.destroy();
+  }, []);
+
+  return <div ref={containerRef} style={props.style} />;
 }
-export default MenHighFive

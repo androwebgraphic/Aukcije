@@ -97,9 +97,9 @@ function App() {
 					className="fixed top-50 start-50 translate-middle-x"
 				/>
 
-			
+			 	<Footer />
       </Container>
-      	<Footer />
+     
 		</>
 	);
 }

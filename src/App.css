@@ -12,10 +12,10 @@
 
 /* Osnovni layout */
 #root {
-  width: 100%;
-  margin: 0 auto;
+  /* width: 100%;
+  margin: 0 auto; */
   text-align: left;
-  background: linear-gradient(180deg, #4058cf 0%, #b940c9 50%, #ffd36b 100%);
+  /* background: linear-gradient(180deg, #4058cf 0%, #b940c9 50%, #ffd36b 100%); */
 }
 
 .container {
@@ -23,6 +23,7 @@
   margin: 0 auto;
   padding: 1rem 1.7rem;
   overflow: hidden;
+   background: linear-gradient(180deg, #4058cf 0%, #b940c9 50%, #ffd36b 100%);
 }
 
 /* Tipografija */
@@ -105,7 +106,7 @@ header {
 }
 
 .navbar-toggler-icon {
-  /* background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 /* Navigacijski linkovi */
@@ -145,8 +146,8 @@ header {
 /* Osigurava da se navigacijska traka i unutarnji dio rastegnu preko cijele dostupne širine */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-around;
+  align-items: start;
 }
 
 /* Ako je unutar navbar-a korišten container, maknuti mu ograničenje da se može raširiti */
@@ -190,7 +191,12 @@ header {
   display: grid;
   grid-template-columns: 0.5fr 2fr;
 }
+.h a{
 
+  margin: 0;
+  padding: 0;
+  justify-self: start;
+}
 .card {
   background-color: white;
   border-radius: 0.7rem;

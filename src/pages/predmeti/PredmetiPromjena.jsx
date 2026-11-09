@@ -6,9 +6,7 @@ import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
-import { FaEdit } from "react-icons/fa";
-import { TbPencilCancel } from "react-icons/tb";
-import { MdDelete } from "react-icons/md";
+
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
@@ -449,7 +447,7 @@ export default function PredmetiPromjena() {
           </Col>
 
           {/* Slike */}
-          <Col xs={12} md={6}>
+          {/* <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Slike (maksimalno 5)</Form.Label>
               <Form.Control 
@@ -480,7 +478,7 @@ export default function PredmetiPromjena() {
                 ))}
               </div>
             </Form.Group>
-          </Col>
+          </Col> */}
 
           {/* Gumbi za akciju */}
           <Col xs={6} md={3} className="mt-4">

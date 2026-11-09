@@ -6,6 +6,7 @@ import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
+import { Cropper } from "react-cropper";
 
 export default function PredmetNovi() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function PredmetNovi() {
     pocetnaCijena: "",
     dodano: formatZaDateTimeLocal(new Date()),
     zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+  
   });
   
   const [kategorije, setKategorije] = useState([]);
@@ -269,7 +271,7 @@ async function kreirajI_DodajOznaku() {
           </Col>
 
           {/* SEKCIJA ZA UPLOAD SLIKA */}
-          {/* <Col sm={6}>
+          <Col sm={6}>
             <Card className="p-3 bg-light border">
               <Form.Group className="mb-3">
                 <Form.Label><strong>Slike predmeta (maksimalno 5)</strong></Form.Label>
@@ -291,7 +293,7 @@ async function kreirajI_DodajOznaku() {
                 </div>
               )}
             </Card>
-          </Col> */}
+          </Col>
         </Row>
 
         <Row className="mt-4 mb-4">

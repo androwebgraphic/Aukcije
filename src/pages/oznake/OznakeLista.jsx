@@ -78,15 +78,15 @@ export default function OznakeList() {
             filtriraneOznake.map((o) => (
               <ListGroup.Item
                 key={o.id}
-                className="d-flex justify-content-between align-items-center"
+                className=" justify-content-between align-items-center"
               >
                 <span className="fw-bold" style={{ color: '#1a3580' }}>
                   {o.naziv}
                 </span>
 
-                <div className="d-flex gap-2">
+                <div className=" d-flex gap-2">
                   <Button
-                        className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                        className="w-100 align-items-center justify-content-center gap-2 py-2"
                     variant="outline-warning"
                     size="sm"
                     onClick={() => navigate(`/oznake/${o.id}`)}

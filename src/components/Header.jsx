@@ -1,7 +1,7 @@
 
 
 import NavMain from "./NavMain";
-import aukcijelogo from '../img/aukcijelogo.svg'
+import aukcijelogo from '../img/Aukcije logo.png'
 import { Link } from "react-router-dom";
 
 

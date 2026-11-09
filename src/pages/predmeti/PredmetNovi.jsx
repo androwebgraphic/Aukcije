@@ -166,7 +166,7 @@ async function kreirajI_DodajOznaku() {
     <Container className="mt-4 mb-5">
       <Heading as="h2" color="azure" className="mb-4">Dodavanje novog predmeta</Heading>
       
-      <Form onSubmit={handleSubmit}>
+      <Form   onSubmit={handleSubmit}>
         <Row className="g-3">
           <Col sm={6}>
             <Form.Group controlId="naziv">

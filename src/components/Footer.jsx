@@ -1,5 +1,4 @@
 import { DATA_SOURCE,APP_NAME, RouteNames } from "../constants";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
 
@@ -14,7 +13,7 @@ function Footer() {
   return (
     <>
       <footer >
-        <ScrollToTopButton />
+         <ScrollToTopButton />
           <Nav>
               <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); }}>
                  Uvjeti korištenja

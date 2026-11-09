@@ -31,6 +31,7 @@ import Uvjeti from "./pages/Uvjeti.jsx";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ScrollToTopButton from "./components/ScrollToTopButton.jsx";
 
 function App() {
 	return (
@@ -97,7 +98,8 @@ function App() {
 					className="fixed top-50 start-50 translate-middle-x"
 				/>
 
-			 	<Footer />
+        <Footer />
+       
       </Container>
      
 		</>

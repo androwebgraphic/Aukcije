@@ -177,12 +177,12 @@ export default function KategorijePromijena() {
   
                                 <div className="d-flex gap-2 mt-predmet pt-2 ">
 
-            <Button type="submit" className="btn btn-warning w-100" size="sm">
+            <Button type="submit" variant="outline-warning" className=" w-100" size="sm">
               Promijeni
             </Button>
       
    
-           <Button size="sm" className="btn btn-danger w-100 " onClick={() => navigate(RouteNames.KATEGORIJE)}>
+           <Button size="sm" variant="outline-danger" className=" w-100 " onClick={() => navigate(RouteNames.KATEGORIJE)}>
             Odustani
             </Button>
             </div>

@@ -151,7 +151,7 @@ export default function KategorijaList() {
                                             <div className="d-flex gap-2 mt-predmet pt-2 border-top">
 
                       <Button
-                            variant="warning"
+                            variant="outline-warning"
                             className="w-100"
                             size="sm"
                             onClick={() => navigate(`/kategorije/${c.id}`)}
@@ -162,7 +162,7 @@ export default function KategorijaList() {
                         
                
                         <Button 
-                          variant="danger" 
+                          variant="outline-danger" 
                           className="w-100"
                           size="sm"
                           onClick={() => obrisi(c.id)}

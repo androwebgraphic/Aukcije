@@ -269,7 +269,7 @@ async function kreirajI_DodajOznaku() {
           </Col>
 
           {/* SEKCIJA ZA UPLOAD SLIKA */}
-          <Col sm={6}>
+          {/* <Col sm={6}>
             <Card className="p-3 bg-light border">
               <Form.Group className="mb-3">
                 <Form.Label><strong>Slike predmeta (maksimalno 5)</strong></Form.Label>
@@ -291,7 +291,7 @@ async function kreirajI_DodajOznaku() {
                 </div>
               )}
             </Card>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="mt-4 mb-4">

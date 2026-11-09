@@ -326,7 +326,7 @@ export default function PredmetiList() {
 
   return (
     <>
-      <Container>
+   
       <motion.div
         initial={{ opacity: 0, x: -1000 }}
         animate={{ opacity: 1, x: 0 }}
@@ -610,7 +610,7 @@ export default function PredmetiList() {
           </div>
         )}
         </motion.div>
-        </Container>
+   
     </>
   );
 }

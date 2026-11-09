@@ -46,15 +46,15 @@ export default function OznakaNova() {
         </Row>
 
         <Row className="mt-4">
-          <Col sm={6} md={3}>
-            <Button type="submit" variant="success" size="sm" className="w-100">
+          <Col xs={6} md={3}>
+            <Button type="submit" variant="outline-success" size="sm" className="w-100">
               Dodaj
             </Button>
           </Col>
-          <Col sm={6} md={3}>
+          <Col xs={6} md={3}>
         
               <Link to={RouteNames.OZNAKE} style={{ color: 'white', textDecoration: 'none' }}>
-                <Button size="sm" variant="danger">Odustani</Button>
+                <Button size="sm" variant="outline-danger"  className="w-100">Odustani</Button>
               </Link>
           
           </Col>

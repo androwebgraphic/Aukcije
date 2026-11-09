@@ -80,7 +80,7 @@ header {
 .navbar-brand {
   text-align: left;
   font-family: "BerkshireSwash-Regular", sans-serif;
-  color: #f9f9fa !important;
+  color: #fff !important;
   letter-spacing: 0.4rem;
 }
 
@@ -235,6 +235,7 @@ form {
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 1rem;
   padding: 1rem;
+  margin-bottom:1rem;
 }
 
 label {
@@ -323,11 +324,21 @@ footer {
   background-color: var(--main-color);
 }
 
-footer button {
+
+
+footer button.scroll-to-top-btn{
   background-color: azure;
   border-radius: 50%;
   border: medium;
   float: right;
+}
+button[type="submit"]{
+  width: 100%;
+  max-width: 320px; /* Spriječava da gumb bude ogromna traka */
+  padding: 12px 20px;
+  font-size: 16px; /* Spriječava automatsko zumiranje na iOS-u */
+  white-space: nowrap;
+  /* border-radius: 8px; */
 }
 .scroll-to-top-btn {
   position: fixed;

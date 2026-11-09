@@ -107,15 +107,15 @@ export default function OznakePromijena() {
 
         <Row>
           <Col xs={6} md={6}>
-            <Button type="submit" variant="warning" size="sm" className="w-50">
+            <Button type="submit" variant="outline-warning" size="sm" className="100">
               Promijeni
             </Button>
           </Col>
           <Col xs={6} md={6}>
             <Button
-              variant="danger"
+              variant="outline-danger"
               size="sm"
-              className="w-50"
+              className="100"
               onClick={() => navigate(RouteNames.OZNAKE)}
             >
               Odustani

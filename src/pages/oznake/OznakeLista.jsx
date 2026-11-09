@@ -86,14 +86,16 @@ export default function OznakeList() {
 
                 <div className="d-flex gap-2">
                   <Button
-                    variant="warning"
+                        className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                    variant="outline-warning"
                     size="sm"
                     onClick={() => navigate(`/oznake/${o.id}`)}
                   >
                     Promijeni
                   </Button>
                   <Button
-                    variant="danger"
+                        className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                    variant="outline-danger"
                     size="sm"
                     onClick={() => obrisi(o.id)}
                   >

@@ -1,51 +1,43 @@
-export const APP_NAME = 'Aukcije '
+export const APP_NAME = "Aukcije ";
 
 export const RouteNames = {
-  //kategorije
+	//kategorije
 
-  HOME: '/',
-  KATEGORIJE: '/kategorije',
-  KATEGORIJE_PROMJENA: '/kategorije/:id',
-  KATEGORIJA_NOVA: '/kategorije/dodajkategoriju',
+	HOME: "/",
+	KATEGORIJE: "/kategorije",
+	KATEGORIJE_PROMJENA: "/kategorije/:id",
+	KATEGORIJA_NOVA: "/kategorije/dodajkategoriju",
 
-//auth
-  REGISTRACIJA: '/registracija',
-  LOGIRANJE: '/logiranje',
+	//auth
+	REGISTRACIJA: "/registracija",
+	LOGIRANJE: "/logiranje",
 
-  //Predmeti
+	//Predmeti
 
-    PREDMETI_PROMJENA: '/predmeti/promijeni/:id',
-  PREDMETI:'/predmeti',
-  PREDMETI_KATEGORIJA:'/predmeti/kategorija/:id',
-  PREDMET_NOVI: '/predmeti/dodajpredmet',
+	PREDMETI_PROMJENA: "/predmeti/promijeni/:id",
+	PREDMETI: "/predmeti",
+	PREDMETI_KATEGORIJA: "/predmeti/kategorija/:id",
+	PREDMET_NOVI: "/predmeti/dodajpredmet",
 
+	// Vinili
 
-  // Vinili
+	UVJETI: "/uvjeti",
 
+	//korisnici
 
-  UVJETI: '/uvjeti',
+	KORISNIK_PROMJENA: "/korisnici/:id",
+	KORISNIK_NOVI: "/korisnici/dodajkorisnika",
+	KORISNICI: "/korisnici",
 
+	//generiranje. podataka
+	GENERIRANJE_PODATAKA: "/generiraj-podatke",
 
-  
+	//oznake
 
-  //korisnici
-
-  KORISNIK_PROMJENA: '/korisnici/:id',
-  KORISNIK_NOVI: '/korisnici/dodajkorisnika',
-  KORISNICI: '/korisnici',
-  
-
-  //generiranje. podataka
-  GENERIRANJE_PODATAKA: '/generiraj-podatke',
-   
-  //oznake
-
-  OZNAKE_PROMJENA: '/oznake/:id',
-  OZNAKA_NOVA: '/dodajoznaku',
-  OZNAKE: '/oznake',
-   
-}
+	OZNAKE_PROMJENA: "/oznake/:id",
+	OZNAKA_NOVA: "/dodajoznaku",
+	OZNAKE: "/oznake",
+};
 
 //memorija, localStorage, firebase
-export const DATA_SOURCE = 'localStorage'
-
+export const DATA_SOURCE = "localStorage";

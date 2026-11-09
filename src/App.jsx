@@ -31,7 +31,7 @@ import Uvjeti from "./pages/Uvjeti.jsx";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ScrollToTopButton from "./components/ScrollToTopButton.jsx";
+
 
 function App() {
 	return (

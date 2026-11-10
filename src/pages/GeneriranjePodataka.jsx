@@ -84,7 +84,8 @@ export default function GeneriranjePodataka() {
         dodano: faker.date.past().toISOString(),
         zavrsava: faker.date.soon().toISOString(),
         kategorija: odabranaKategorija.id,
-        oznake: randomOznake
+        oznake: randomOznake,
+        ponude: []
       };
 
       await PredmetiServices.dodaj(predmet);

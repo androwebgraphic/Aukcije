@@ -12,7 +12,13 @@ export const predmeti = [
     zavrsava: "2026-07-01T20:00:00",
     kategorija: 1,
     oznake: [1, 2],
-   
+    ponude: [
+      {
+        korisnik: 1, 
+        datum: '2026-11-10T17:52:00',
+        cijena: 655.93
+      }
+    ]
   },
   {
     id: 2,
@@ -24,7 +30,8 @@ export const predmeti = [
     dodano: "2026-06-02T10:00:00",
     zavrsava: "2026-07-02T20:00:00",
     kategorija: 1,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 3,
@@ -36,7 +43,8 @@ export const predmeti = [
     dodano: "2026-06-03T10:00:00",
     zavrsava: "2026-07-03T20:00:00",
     kategorija: 1,
-    oznake:[2,2]
+    oznake:[2,2],
+    ponude: []
   },
 
   // --- 2. STARI AUTI I MOTOCIKLI ---
@@ -50,7 +58,8 @@ export const predmeti = [
     dodano: "2026-06-04T10:00:00",
     zavrsava: "2026-07-04T20:00:00",
     kategorija: 11,
-    oznake:[1,4]
+    oznake:[1,4],
+    ponude: []
   },
   {
     id: 5,
@@ -62,7 +71,8 @@ export const predmeti = [
     dodano: "2026-06-05T10:00:00",
     zavrsava: "2026-07-05T20:00:00",
     kategorija: 11,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 6,
@@ -74,7 +84,8 @@ export const predmeti = [
     dodano: "2026-06-06T10:00:00",
     zavrsava: "2026-07-06T20:00:00",
     kategorija: 11,
-    oznake:[3,2]
+    oznake:[3,2],
+    ponude: []
   },
 
   // --- 3. SATOVI ---
@@ -88,7 +99,8 @@ export const predmeti = [
     dodano: "2026-06-07T10:00:00",
     zavrsava: "2026-07-07T20:00:00",
     kategorija: 4,
-    oznake:[2,1]
+    oznake:[2,1],
+    ponude: []
   },
   {
     id: 8,
@@ -100,7 +112,8 @@ export const predmeti = [
     dodano: "2026-06-08T10:00:00",
     zavrsava: "2026-07-08T20:00:00",
     kategorija: 4,
-    oznake:[4,2]
+    oznake:[4,2],
+    ponude: []
   },
   {
     id: 9,
@@ -112,7 +125,8 @@ export const predmeti = [
     dodano: "2026-06-09T10:00:00",
     zavrsava: "2026-07-09T20:00:00",
     kategorija: 4,
-    oznake:[3,5]
+    oznake:[3,5],
+    ponude: []
   },
 
   // --- 4. NUMIZMATIKA ---
@@ -126,7 +140,8 @@ export const predmeti = [
     dodano: "2026-06-10T10:00:00",
     zavrsava: "2026-07-10T20:00:00",
     kategorija: 5,
-    oznake:[1,1]
+    oznake:[1,1],
+    ponude: []
   },
   {
     id: 11,
@@ -138,7 +153,8 @@ export const predmeti = [
     dodano: "2026-06-11T10:00:00",
     zavrsava: "2026-07-11T20:00:00",
     kategorija: 5,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 12,
@@ -150,7 +166,8 @@ export const predmeti = [
     dodano: "2026-06-12T10:00:00",
     zavrsava: "2026-07-12T20:00:00",
     kategorija: 5,
-    oznake:[4,4]
+    oznake:[4,4],
+    ponude: []
   },
 
   // --- 5. FILATELIJA ---
@@ -164,7 +181,8 @@ export const predmeti = [
     dodano: "2026-06-13T10:00:00",
     zavrsava: "2026-07-13T20:00:00",
     kategorija: 7,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 14,
@@ -176,7 +194,8 @@ export const predmeti = [
     dodano: "2026-06-14T10:00:00",
     zavrsava: "2026-07-14T20:00:00",
     kategorija: 7,
-    oznake:[5,2]
+    oznake:[5,2],
+    ponude: []
   },
   {
     id: 15,
@@ -188,7 +207,8 @@ export const predmeti = [
     dodano: "2026-06-15T10:00:00",
     zavrsava: "2026-07-15T20:00:00",
     kategorija: 7,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
 
   // --- 6. NAKIT ---
@@ -202,7 +222,8 @@ export const predmeti = [
     dodano: "2026-06-16T10:00:00",
     zavrsava: "2026-07-16T20:00:00",
     kategorija: 6,
-    oznake:[3,3]
+    oznake:[3,3],
+    ponude: []
   },
   {
     id: 17,
@@ -214,7 +235,8 @@ export const predmeti = [
     dodano: "2026-06-17T10:00:00",
     zavrsava: "2026-07-17T20:00:00",
     kategorija: 6,
-    oznake:[4,4]
+    oznake:[4,4],
+    ponude: []
   },
   {
     id: 18,
@@ -226,7 +248,8 @@ export const predmeti = [
     dodano: "2026-06-18T10:00:00",
     zavrsava: "2026-07-18T20:00:00",
     kategorija: 6,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
 
   // --- 7. UMJETNINE ---
@@ -240,7 +263,8 @@ export const predmeti = [
     dodano: "2026-06-19T10:00:00",
     zavrsava: "2026-07-19T20:00:00",
     kategorija: 8,
-    oznake:[3,1]
+    oznake:[3,1],
+    ponude: []
   },
   {
     id: 20,
@@ -252,7 +276,8 @@ export const predmeti = [
     dodano: "2026-06-20T10:00:00",
     zavrsava: "2026-07-20T20:00:00",
     kategorija: 8,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 21,
@@ -264,7 +289,8 @@ export const predmeti = [
     dodano: "2026-06-21T10:00:00",
     zavrsava: "2026-07-21T20:00:00",
     kategorija: 8,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
 
   // --- 8. PLOČE (VINIL) ---
@@ -278,7 +304,8 @@ export const predmeti = [
     dodano: "2026-06-22T10:00:00",
     zavrsava: "2026-07-22T20:00:00",
     kategorija: 9,
-    oznake:[5,5]
+    oznake:[5,5],
+    ponude: []
   },
   {
     id: 23,
@@ -290,7 +317,8 @@ export const predmeti = [
     dodano: "2026-06-23T10:00:00",
     zavrsava: "2026-07-23T20:00:00",
     kategorija: 9,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 24,
@@ -302,7 +330,8 @@ export const predmeti = [
     dodano: "2026-06-24T10:00:00",
     zavrsava: "2026-07-24T20:00:00",
     kategorija: 9,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
 
   // --- 9. STARINSKO ORUŽJE ---
@@ -316,7 +345,8 @@ export const predmeti = [
     dodano: "2026-06-25T10:00:00",
     zavrsava: "2026-07-25T20:00:00",
     kategorija: 9,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 26,
@@ -328,7 +358,8 @@ export const predmeti = [
     dodano: "2026-06-26T10:00:00",
     zavrsava: "2026-07-26T20:00:00",
     kategorija: 9,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 27,
@@ -340,7 +371,8 @@ export const predmeti = [
     dodano: "2026-06-27T10:00:00",
     zavrsava: "2026-07-27T20:00:00",
     kategorija: 9,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
 
   // --- 10. ALATI ---
@@ -354,7 +386,8 @@ export const predmeti = [
     dodano: "2026-06-28T10:00:00",
     zavrsava: "2026-07-28T20:00:00",
     kategorija: 3,
-    oznake:[3,5]
+    oznake:[3,5],
+    ponude: []
   },
   {
     id: 29,
@@ -366,7 +399,8 @@ export const predmeti = [
     dodano: "2026-06-29T10:00:00",
     zavrsava: "2026-07-29T20:00:00",
     kategorija: 3,
-    oznake:[1,2]
+    oznake:[1,2],
+    ponude: []
   },
   {
     id: 30,
@@ -378,7 +412,8 @@ export const predmeti = [
     dodano: "2026-06-30T10:00:00",
     zavrsava: "2026-07-30T20:00:00",
     kategorija: 3,
-    oznake:[4,4]
+    oznake:[4,4],
+    ponude: []
   },
 
   // --- 11. BELETRISTIKA ---
@@ -392,7 +427,8 @@ export const predmeti = [
     dodano: "2026-07-01T10:00:00",
     zavrsava: "2026-08-01T20:00:00",
     kategorija: 10,
-    oznake:[1,1]
+    oznake:[1,1],
+    ponude: []
   },
   {
     id: 32,
@@ -404,7 +440,8 @@ export const predmeti = [
     dodano: "2026-07-02T10:00:00",
     zavrsava: "2026-08-02T20:00:00",
     kategorija: 10,
-    oznake:[0,2]
+    oznake:[0,2],
+    ponude: []
   },
   {
     id: 33,
@@ -416,6 +453,7 @@ export const predmeti = [
     dodano: "2026-07-03T10:00:00",
     zavrsava: "2026-08-03T20:00:00",
     kategorija: 10,
-    oznake:[2,2]
+    oznake:[2,2],
+    ponude: []
   }
 ];

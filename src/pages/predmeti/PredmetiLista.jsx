@@ -28,9 +28,14 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import { LordIcon } from "@lordicon/react";
+import Odbrojavanje from "../../components/Odbrojavanje";
+
+
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  
 
   if (!text) return null;
 
@@ -57,106 +62,6 @@ function ExpandableText({ text, maxLength = 100 }) {
   );
 }
 
-// Pomoćna komponenta za dinamičko odbrojavanje i vraćanje stanja
-function AukcijaOdbrojavanje({ zavrsavaDatum, onStatusChange }) {
-  const [preostaloVrijeme, setPreostaloVrijeme] = useState("");
-  const [statusBoja, setStatusBoja] = useState("text-muted");
-  const [jeZavrseno, setJeZavrseno] = useState(false);
-  const [jeVruce, setJeVruce] = useState(false); // Manje od 5 minuta
-
-  function izracunajVrijeme(postDate) {
-    if (!postDate)
-      return {
-        tekst: "Nema datuma",
-        boja: "text-muted",
-        zavrseno: false,
-        vruce: false,
-      };
-
-    const endDate = new Date(postDate);
-    if (isNaN(endDate.getTime()))
-      return {
-        tekst: "Nevažeći datum",
-        boja: "text-muted",
-        zavrseno: false,
-        vruce: false,
-      };
-
-    const targetDate =
-      postDate instanceof Date
-        ? new Date(postDate.getTime() + 7 * 24 * 60 * 60 * 1000)
-        : endDate;
-    const now = new Date();
-    const diff = targetDate - now;
-
-    if (diff <= 0) {
-      return {
-        tekst: "Aukcija je završila",
-        boja: "text-danger fw-bold",
-        zavrseno: true,
-        vruce: false,
-      };
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const totalMinutes = Math.floor(diff / (1000 * 60));
-
-    let boja = "text-secondary";
-    let vruce = false;
-
-    // Manje od 5 minuta do isteka
-    if (totalMinutes <= 5) {
-      boja = "text-danger fw-bold";
-      vruce = true;
-    }
-    // Manje od 1 dana (24 sata = 1440 minuta)
-    else if (totalMinutes <= 1440) {
-      boja = "text-warning fw-bold";
-    }
-
-    let tekst = `${days}d ${hours}h ${minutes}m`;
-    if (days === 0) {
-      tekst = `${hours}h ${minutes}m`;
-    }
-
-    return { tekst, boja, zavrseno: false, vruce };
-  }
-
-  useEffect(() => {
-    function azuriraj() {
-      const rezultat = izracunajVrijeme(zavrsavaDatum);
-      setPreostaloVrijeme(rezultat.tekst);
-      setStatusBoja(rezultat.boja);
-      setJeZavrseno(rezultat.zavrseno);
-      setJeVruce(rezultat.vruce);
-
-      if (onStatusChange) {
-        onStatusChange(rezultat.zavrseno);
-      }
-    }
-
-    azuriraj();
-    const interval = setInterval(azuriraj, 1000);
-
-    return () => clearInterval(interval);
-  }, [zavrsavaDatum]);
-
-  return (
-    <div className={`mt-1 ${statusBoja} d-flex align-items-center gap-1`}>
-      <span>
-        <strong>Preostalo:</strong> {preostaloVrijeme}
-      </span>
-      {jeVruce && (
-        <FaFire
-          className="text-danger animate-bounce"
-          title="Aukcija uskoro završava!"
-        />
-      )}
-    </div>
-  );
-}
 
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
@@ -189,6 +94,7 @@ export default function PredmetiList() {
   const [uvjetiPretrazivanja, setUvjetiPretrazivanja] = useState("");
   const [sortiranje, setSortiranje] = useState("naziv-asc");
   const [zavrseneAukcije, setZavrseneAukcije] = useState({});
+  const [predmetiNaStranici, setPredmetiNaStranici] = useState([])
 
   // DODANO: Stanje za modal i ponudu
   const [showModal, setShowModal] = useState(false);
@@ -205,7 +111,7 @@ export default function PredmetiList() {
 
   useEffect(() => {
     setStranica(1);
-  }, [<unsafe_url>params.id</unsafe_url>, kategorijaFilter]);
+  }, [params.id, kategorijaFilter]);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -230,6 +136,7 @@ export default function PredmetiList() {
   async function ucitajPredmete() {
     try {
       const odgovor = await PredmetiServices.dohvatiStranicu(1, 1000);
+      //console.log(odgovor)
       setPredmeti(odgovor.data || odgovor || []);
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
@@ -255,8 +162,8 @@ export default function PredmetiList() {
   }
 
   async function obrisi(predmetItem) {
-    const identifikator = <unsafe_url>predmetItem.id</unsafe_url> || predmetItem.sifra || predmetItem.predmetId;
-    
+    const identifikator = predmetItem.id || predmetItem.sifra || predmetItem.predmetId;
+
     if (!identifikator) {
       alert("Greška: Predmet nema definiran ID ni šifru!");
       return;
@@ -277,24 +184,38 @@ export default function PredmetiList() {
 
   // DODANO: Funkcije za modal
   function otvoriModalZaPonudu(predmet) {
+    console.log(predmet)
     setOdabraniPredmet(predmet);
     setIznosPonude(Number(predmet.pocetnaCijena) + 1);
     setShowModal(true);
   }
 
-  function potvrdiPonudu() {
+  async function potvrdiPonudu() {
     if (!odabraniPredmet) return;
 
     setPredmeti((prevPredmeti) =>
-      prevPredmeti.map((p) =>
-        <unsafe_url>p.id</unsafe_url> === <unsafe_url>odabraniPredmet.id</unsafe_url>
+      prevPredmeti.map((p) => {
+        p.id === odabraniPredmet.id
           ? { ...p, pocetnaCijena: iznosPonude }
           : p
+      }
       )
+
+
     );
+    odabraniPredmet.ponude.push({
+      korisnik: 1,
+      datum: new Date().toISOString(),
+      cijena: iznosPonude
+    })
+    await promjeniPredmet(odabraniPredmet)
 
     setShowModal(false);
     setOdabraniPredmet(null);
+  }
+
+  async function promjeniPredmet(predmet) {
+    PredmetiServices.promijeni(predmet.id, predmet)
   }
 
   function prikaziNazivKategorije(kategorijaVal) {
@@ -302,7 +223,7 @@ export default function PredmetiList() {
     if (typeof kategorijaVal === "object" && kategorijaVal.naziv) {
       return kategorijaVal.naziv;
     }
-    const kategorija = kategorije.find((s) => <unsafe_url>s.id</unsafe_url> === parseInt(kategorijaVal));
+    const kategorija = kategorije.find((s) => s.id === parseInt(kategorijaVal));
     return kategorija ? kategorija.naziv : "Nepoznato";
   }
 
@@ -310,11 +231,11 @@ export default function PredmetiList() {
     if (kategorijaVal === null || kategorijaVal === undefined) return null;
     if (typeof kategorijaVal === "object") {
       return Number(
-        <unsafe_url>kategorijaVal.id</unsafe_url> ??
-          kategorijaVal.sifra ??
-          kategorijaVal.kategorijaId ??
-          kategorijaVal.kategorija_id ??
-          null,
+        kategorijaVal.id ??
+        kategorijaVal.sifra ??
+        kategorijaVal.kategorijaId ??
+        kategorijaVal.kategorija_id ??
+        null,
       );
     }
     const parsed = Number(kategorijaVal);
@@ -328,21 +249,21 @@ export default function PredmetiList() {
     }
     const o = oznake.find(
       (item) =>
-        String(<unsafe_url>item.id</unsafe_url>) === String(oznakaItem) ||
+        String(item.id) === String(oznakaItem) ||
         String(item.sifra) === String(oznakaItem),
     );
     return o ? o.naziv : `Oznaka ID: ${oznakaItem}`;
   }
 
-  const aktivnaKategorijaNaziv = <unsafe_url>params.id</unsafe_url>
-    ? prikaziNazivKategorije(parseInt(<unsafe_url>params.id</unsafe_url>))
+  const aktivnaKategorijaNaziv = params.id
+    ? prikaziNazivKategorije(parseInt(params.id))
     : kategorijaFilter;
 
   const filtriraniPredmeti = predmeti
     .filter((c) => {
       let zadovoljavaKategoriju = true;
-      if (<unsafe_url>params.id</unsafe_url>) {
-        const katIdIzUrl = parseInt(<unsafe_url>params.id</unsafe_url>);
+      if (params.id) {
+        const katIdIzUrl = parseInt(params.id);
         const predmetKatId = dohvatiIdKategorije(c.kategorija);
         zadovoljavaKategoriju = predmetKatId === katIdIzUrl;
       } else if (kategorijaFilter) {
@@ -392,15 +313,16 @@ export default function PredmetiList() {
     if (stranica > ukupnoStranica) {
       setStranica(1);
     }
+    const zadnjiIndeks = stranica * velicinaStranice;
+  const prviIndeks = zadnjiIndeks - velicinaStranice;
+  setPredmetiNaStranici(filtriraniPredmeti.slice(prviIndeks, zadnjiIndeks));
   }, [ukupnoStranica, stranica]);
 
-  const zadnjiIndeks = stranica * velicinaStranice;
-  const prviIndeks = zadnjiIndeks - velicinaStranice;
-  const predmetiNaStranici = filtriraniPredmeti.slice(prviIndeks, zadnjiIndeks);
+  
 
   function dohvatiIkonaKategorije(kategorijaVal) {
     const katId = dohvatiIdKategorije(kategorijaVal);
-    const kat = kategorije.find((k) => <unsafe_url>k.id</unsafe_url> === katId);
+    const kat = kategorije.find((k) => k.id === katId);
     return kat ? kat.ikona : "";
   }
 
@@ -420,6 +342,7 @@ export default function PredmetiList() {
     setUvjetiPretrazivanja(e.target.value);
     setStranica(1);
   }
+
 
   return (
     <>
@@ -500,15 +423,15 @@ export default function PredmetiList() {
             </div>
 
             <InputGroup className="mb-3">
-                <InputGroup.Text>
-                    <FaSearch />
-                </InputGroup.Text>
-                <Form.Control
-                    type="text"
-                    placeholder="Pretraži predmete "
-                    value={uvjetiPretrazivanja}
-                    onChange={PromijeniUvjetPretrazivanja}
-                />
+              <InputGroup.Text>
+                <FaSearch />
+              </InputGroup.Text>
+              <Form.Control
+                type="text"
+                placeholder="Pretraži predmete "
+                value={uvjetiPretrazivanja}
+                onChange={PromijeniUvjetPretrazivanja}
+              />
             </InputGroup>
           </div>
         </div>
@@ -519,21 +442,22 @@ export default function PredmetiList() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}>
         <Row xs={1} sm={1} md={2} lg={3} className="g-3">
+         
           {predmetiNaStranici && predmetiNaStranici.length > 0 ? (
             predmetiNaStranici.map((c) => {
-              const listaOznaka =
-                c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
-              
+
+              const listaOznaka = c.oznake ? c.oznake : [];
+
               let siroveSlike = c.slike || c.slikaUrls || (c.slika ? [c.slika] : []);
               if (!Array.isArray(siroveSlike)) {
                 siroveSlike = typeof siroveSlike === "string" ? [siroveSlike] : [];
               }
               const listaSlika = siroveSlike;
 
-              const jeZavrseno = zavrseneAukcije[<unsafe_url>c.id</unsafe_url> || c.sifra] || false;
+              const jeZavrseno = zavrseneAukcije[c.id || c.sifra] || false;
 
               return (
-                <Col key={<unsafe_url>c.id</unsafe_url> || c.sifra}>
+                <Col key={c.id || c.sifra}>
                   <Card
                     className="h-100 shadow-sm border-0 overflow-hidden position-relative"
                     style={{
@@ -666,16 +590,8 @@ export default function PredmetiList() {
                             <strong>U kategoriji:</strong>{" "}
                             {prikaziNazivKategorije(c.kategorija)}
                           </small>
-
-                          <AukcijaOdbrojavanje
-                            zavrsavaDatum={c.zavrsava || c.dodano}
-                            onStatusChange={(zavrseno) => {
-                              setZavrseneAukcije((prev) => ({
-                                ...prev,
-                                [<unsafe_url>c.id</unsafe_url> || c.sifra]: zavrseno,
-                              }));
-                            }}
-                          />
+                          <Odbrojavanje zavrsava={c.zavrsava} />
+                     
                         </div>
                       </div>
 
@@ -694,7 +610,7 @@ export default function PredmetiList() {
                           variant="outline-warning"
                           size="sm"
                           onClick={() =>
-                            navigate(`/predmeti/promijeni/${<unsafe_url>c.id</unsafe_url> || c.sifra}`)
+                            navigate(`/predmeti/promijeni/${c.id || c.sifra}`)
                           }>
                           Promijeni
                         </Button>

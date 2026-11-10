@@ -122,7 +122,11 @@ async function kreirajI_DodajOznaku() {
       console.error("Greška pri kreiranju nove oznake:", error);
     }
   }
+  //Funkcija za dodavanje slika
+  
 
+
+  
   // function handleImageChange(e) {
   //   const odabrane = Array.from(e.target.files);
   //   if (slike.length + odabrane.length > 5) {

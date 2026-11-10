@@ -11,8 +11,8 @@ import {
   Form,
   Carousel,
   Pagination,
-  InputGroup
-  
+  InputGroup,
+  Modal
 } from "react-bootstrap";
 import {
   Link,
@@ -190,6 +190,11 @@ export default function PredmetiList() {
   const [sortiranje, setSortiranje] = useState("naziv-asc");
   const [zavrseneAukcije, setZavrseneAukcije] = useState({});
 
+  // DODANO: Stanje za modal i ponudu
+  const [showModal, setShowModal] = useState(false);
+  const [odabraniPredmet, setOdabraniPredmet] = useState(null);
+  const [iznosPonude, setIznosPonude] = useState(0);
+
   const [stranica, setStranica] = useState(1);
   const [velicinaStranice, setVelicinaStranice] = useState(6);
 
@@ -200,7 +205,7 @@ export default function PredmetiList() {
 
   useEffect(() => {
     setStranica(1);
-  }, [params.id, kategorijaFilter]);
+  }, [<unsafe_url>params.id</unsafe_url>, kategorijaFilter]);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -250,7 +255,7 @@ export default function PredmetiList() {
   }
 
   async function obrisi(predmetItem) {
-    const identifikator = predmetItem.id || predmetItem.sifra || predmetItem.predmetId;
+    const identifikator = <unsafe_url>predmetItem.id</unsafe_url> || predmetItem.sifra || predmetItem.predmetId;
     
     if (!identifikator) {
       alert("Greška: Predmet nema definiran ID ni šifru!");
@@ -270,12 +275,34 @@ export default function PredmetiList() {
     }
   }
 
+  // DODANO: Funkcije za modal
+  function otvoriModalZaPonudu(predmet) {
+    setOdabraniPredmet(predmet);
+    setIznosPonude(Number(predmet.pocetnaCijena) + 1);
+    setShowModal(true);
+  }
+
+  function potvrdiPonudu() {
+    if (!odabraniPredmet) return;
+
+    setPredmeti((prevPredmeti) =>
+      prevPredmeti.map((p) =>
+        <unsafe_url>p.id</unsafe_url> === <unsafe_url>odabraniPredmet.id</unsafe_url>
+          ? { ...p, pocetnaCijena: iznosPonude }
+          : p
+      )
+    );
+
+    setShowModal(false);
+    setOdabraniPredmet(null);
+  }
+
   function prikaziNazivKategorije(kategorijaVal) {
     if (!kategorijaVal) return "Nepoznato";
     if (typeof kategorijaVal === "object" && kategorijaVal.naziv) {
       return kategorijaVal.naziv;
     }
-    const kategorija = kategorije.find((s) => s.id === parseInt(kategorijaVal));
+    const kategorija = kategorije.find((s) => <unsafe_url>s.id</unsafe_url> === parseInt(kategorijaVal));
     return kategorija ? kategorija.naziv : "Nepoznato";
   }
 
@@ -283,7 +310,7 @@ export default function PredmetiList() {
     if (kategorijaVal === null || kategorijaVal === undefined) return null;
     if (typeof kategorijaVal === "object") {
       return Number(
-        kategorijaVal.id ??
+        <unsafe_url>kategorijaVal.id</unsafe_url> ??
           kategorijaVal.sifra ??
           kategorijaVal.kategorijaId ??
           kategorijaVal.kategorija_id ??
@@ -301,21 +328,21 @@ export default function PredmetiList() {
     }
     const o = oznake.find(
       (item) =>
-        String(item.id) === String(oznakaItem) ||
+        String(<unsafe_url>item.id</unsafe_url>) === String(oznakaItem) ||
         String(item.sifra) === String(oznakaItem),
     );
     return o ? o.naziv : `Oznaka ID: ${oznakaItem}`;
   }
 
-  const aktivnaKategorijaNaziv = params.id
-    ? prikaziNazivKategorije(parseInt(params.id))
+  const aktivnaKategorijaNaziv = <unsafe_url>params.id</unsafe_url>
+    ? prikaziNazivKategorije(parseInt(<unsafe_url>params.id</unsafe_url>))
     : kategorijaFilter;
 
   const filtriraniPredmeti = predmeti
     .filter((c) => {
       let zadovoljavaKategoriju = true;
-      if (params.id) {
-        const katIdIzUrl = parseInt(params.id);
+      if (<unsafe_url>params.id</unsafe_url>) {
+        const katIdIzUrl = parseInt(<unsafe_url>params.id</unsafe_url>);
         const predmetKatId = dohvatiIdKategorije(c.kategorija);
         zadovoljavaKategoriju = predmetKatId === katIdIzUrl;
       } else if (kategorijaFilter) {
@@ -373,7 +400,7 @@ export default function PredmetiList() {
 
   function dohvatiIkonaKategorije(kategorijaVal) {
     const katId = dohvatiIdKategorije(kategorijaVal);
-    const kat = kategorije.find((k) => k.id === katId);
+    const kat = kategorije.find((k) => <unsafe_url>k.id</unsafe_url> === katId);
     return kat ? kat.ikona : "";
   }
 
@@ -497,17 +524,16 @@ export default function PredmetiList() {
               const listaOznaka =
                 c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
               
-              // SIGURNA PROVJERA: Osiguravamo da je listaSlika uvijek provjereno polje (Array)
               let siroveSlike = c.slike || c.slikaUrls || (c.slika ? [c.slika] : []);
               if (!Array.isArray(siroveSlike)) {
                 siroveSlike = typeof siroveSlike === "string" ? [siroveSlike] : [];
               }
               const listaSlika = siroveSlike;
 
-              const jeZavrseno = zavrseneAukcije[c.id || c.sifra] || false;
+              const jeZavrseno = zavrseneAukcije[<unsafe_url>c.id</unsafe_url> || c.sifra] || false;
 
               return (
-                <Col key={c.id || c.sifra}>
+                <Col key={<unsafe_url>c.id</unsafe_url> || c.sifra}>
                   <Card
                     className="h-100 shadow-sm border-0 overflow-hidden position-relative"
                     style={{
@@ -646,25 +672,35 @@ export default function PredmetiList() {
                             onStatusChange={(zavrseno) => {
                               setZavrseneAukcije((prev) => ({
                                 ...prev,
-                                [c.id || c.sifra]: zavrseno,
+                                [<unsafe_url>c.id</unsafe_url> || c.sifra]: zavrseno,
                               }));
                             }}
                           />
                         </div>
                       </div>
 
+                      {/* DODANO: Gumb za ponudu */}
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="w-100 mb-2"
+                        disabled={jeZavrseno}
+                        onClick={() => otvoriModalZaPonudu(c)}>
+                        Tvoja ponuda
+                      </Button>
+
                       <div className="d-flex gap-2 pt-2 border-top">
                         <Button
                           variant="outline-warning"
                           size="sm"
                           onClick={() =>
-                            navigate(`/predmeti/promijeni/${c.id || c.sifra}`)
+                            navigate(`/predmeti/promijeni/${<unsafe_url>c.id</unsafe_url> || c.sifra}`)
                           }>
                           Promijeni
                         </Button>
                         <Button
                           variant="outline-danger"
-                        size="sm"
+                          size="sm"
                           onClick={() => obrisi(c)}>
                           Obriši
                         </Button>
@@ -753,6 +789,39 @@ export default function PredmetiList() {
           </div>
         )}
       </motion.div>
+
+      {/* DODANO: Modal za ponudu */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Unos ponude</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {odabraniPredmet && (
+            <Form>
+              <Form.Group>
+                <Form.Label>Vaša ponuda za: {odabraniPredmet.naziv}</Form.Label>
+                <Form.Control
+                  type="number"
+                  min={Number(odabraniPredmet.pocetnaCijena) + 1}
+                  value={iznosPonude}
+                  onChange={(e) => setIznosPonude(Number(e.target.value))}
+                />
+                <Form.Text className="text-muted">
+                  Minimalni iznos je {Number(odabraniPredmet.pocetnaCijena) + 1} € (1 € više od trenutne).
+                </Form.Text>
+              </Form.Group>
+            </Form>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Odustani
+          </Button>
+          <Button variant="primary" onClick={potvrdiPonudu}>
+            Potvrdi ponudu
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

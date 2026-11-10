@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, FormSelect, FormControl, FormLabel, Row, Alert, Card } from "react-bootstrap";
+import { Button, Col, Container, Form, FormSelect, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState, useRef } from "react";
@@ -7,11 +7,13 @@ import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
 
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
   const params = useParams();
-  
+
   const [predmet, setPredmet] = useState({
     naziv: "",
     opis: "",
@@ -30,8 +32,10 @@ export default function PredmetiPromjena() {
   const [odabraneOznake, setOdabraneOznake] = useState([]);
   const [prikaziAutoComplete, setPrikaziAutoComplete] = useState(false);
 
-  const [slike, setSlike] = useState([]);
-  const [slikeError, setSlikeError] = useState("");
+  // Stanja za upravljanje slikama i cropperom
+  const [slike, setSlike] = useState([]); // Niz svih slika predmeta
+  const [aktivnaSlikaZaCrop, setAktivnaSlikaZaCrop] = useState(null); // Trenutna slika u cropperu
+  const cropperRef = useRef(null);
 
   const autoCompleteRef = useRef(null);
 
@@ -67,12 +71,11 @@ export default function PredmetiPromjena() {
   async function ucitajPodatke() {
     try {
       let ucitaneOznake = [];
-
       try {
         const resOznake = await OznakeServices.get();
         ucitaneOznake = resOznake?.data || resOznake || [];
       } catch (err) {
-        console.warn("API za oznake nije dostupan, čitam iz localStorage-a");
+        console.warn("API za oznake nije dostupan, čitam iz localStorage-a", err);
       }
 
       if (!ucitaneOznake || ucitaneOznake.length === 0) {
@@ -91,7 +94,7 @@ export default function PredmetiPromjena() {
         const resKategorije = await KategorijeServices.get();
         ucitaneKategorije = resKategorije?.data || resKategorije || [];
       } catch (err) {
-        console.warn("API za kategorije nije dostupan, čitam iz localStorage-a");
+        console.warn("API za kategorije nije dostupan, čitam iz localStorage-a", err);
       }
 
       if (!ucitaneKategorije || ucitaneKategorije.length === 0) {
@@ -106,7 +109,6 @@ export default function PredmetiPromjena() {
 
       if (params.id) {
         let s = null;
-        
         const lokalniPredmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
         s = lokalniPredmeti.find(p => String(p.id || p.sifra) === String(params.id));
 
@@ -123,8 +125,11 @@ export default function PredmetiPromjena() {
           if (s.dodano && typeof s.dodano === 'string') s.dodano = s.dodano.substring(0, 16);
           if (s.zavrsava && typeof s.zavrsava === 'string') s.zavrsava = s.zavrsava.substring(0, 16);
 
-          setPredmet(s); 
-          setSlike(s.slike || []);
+          setPredmet(s);
+
+          // Podrška za niz slika (c.slike) ili staru pojedinačnu sliku (c.slika)
+          let postojećeSlike = s.slike || s.slikaUrls || (s.slika ? [s.slika] : []);
+          setSlike(postojećeSlike);
           
           if (s.oznake) {
             const mapiraneOznake = s.oznake.map(item => {
@@ -161,17 +166,15 @@ export default function PredmetiPromjena() {
     return oznake.filter(o => {
       const vecOdabrana = odabraneOznake.some(op => String(op.id || op.sifra) === String(o.id || o.sifra));
       if (vecOdabrana) return false;
-
       if (!pretragaOznaka.trim()) return true;
-
       return o.naziv && o.naziv.toLowerCase().includes(pretragaOznaka.toLowerCase());
     });
   }
 
   function dodajOznaku(oznaka) {
     if (odabraneOznake.some(o => String(o.id || o.sifra) === String(oznaka.id || oznaka.sifra))) return;
-    setOdabraneOznake([...odabraneOznake, oznaka]); 
-    setPretragaOznaka(""); 
+    setOdabraneOznake([...odabraneOznake, oznaka]);
+    setPretragaOznaka("");
     setPrikaziAutoComplete(false);
   }
 
@@ -181,7 +184,6 @@ export default function PredmetiPromjena() {
 
     try {
       let novaOznaka = null;
-      
       try {
         const odgovor = await OznakeServices.dodaj({ naziv: nazivOznake });
         novaOznaka = odgovor?.data !== undefined ? odgovor.data : odgovor;
@@ -189,12 +191,10 @@ export default function PredmetiPromjena() {
         novaOznaka = null;
       }
 
-      // Osiguravamo da je novaOznaka uvijek objekt s ID-jem/šifrom i nazivom
       if (!novaOznaka || typeof novaOznaka !== 'object' || (!novaOznaka.id && !novaOznaka.sifra)) {
         novaOznaka = { id: Date.now(), naziv: nazivOznake };
       }
 
-      // Ako backend vrati objekt bez naziva (npr. vrati samo ID), ručno mu pridružimo upisani naziv
       if (!novaOznaka.naziv) {
         novaOznaka.naziv = nazivOznake;
       }
@@ -211,27 +211,46 @@ export default function PredmetiPromjena() {
     }
   }
 
-  function handleImageChange(e) {
-    const odabrane = Array.from(e.target.files);
-    if (slike.length + odabrane.length > 5) {
-      setSlikeError("Ukupno najviše 5 slika.");
-      return;
-    }
-    setSlikeError("");
+  // Funkcija za odabir više slika s računala
+  function onChangeImages(e) {
+    e.preventDefault();
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    Promise.all(odabrane.map(f => new Promise((resolve, reject) => {
-      const r = new FileReader(); 
-      r.readAsDataURL(f); 
-      r.onload = () => resolve(r.result); 
-      r.onerror = reject;
-    }))).then(base64Slike => {
-      setSlike(prev => [...prev, ...base64Slike]);
-    });
+    // Uzimamo prvu sliku za crop, a ostale možemo redom ili staviti u cropper
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAktivnaSlikaZaCrop(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
+  }
+
+  // Spremanje obrezane slike u niz slika
+  function spremiCropanuSliku() {
+    if (cropperRef.current && cropperRef.current.cropper) {
+      const cropper = cropperRef.current.cropper;
+      const canvas = cropper.getCroppedCanvas({
+        width: 400,
+        height: 400,
+        imageSmoothingEnable: true,
+        imageSmoothingQuality: 'high'
+      });
+      if (canvas) {
+        const dataUrl = canvas.toDataURL('image/png');
+        setSlike(prev => [...prev, dataUrl]); // Dodajemo u niz slika
+        setAktivnaSlikaZaCrop(null); // Gasimo cropper za tu sliku
+      }
+    }
+  }
+
+  // Brisanje pojedinačne slike iz niza
+  function obrisiSliku(indexZaBrisanje) {
+    setSlike(prev => prev.filter((_, index) => index !== indexZaBrisanje));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    
+
     const azuriraniPredmet = {
       id: params.id,
       naziv: predmet.naziv || "",
@@ -243,21 +262,21 @@ export default function PredmetiPromjena() {
       zavrsava: predmet.zavrsava || "",
       kategorija: odabranaKategorija || null,
       oznake: odabraneOznake,
-      slike: slike
+      slike: slike, // Spremamo niz slika
+      slika: slike.length > 0 ? slike[0] : null // Zadržavamo i kompatibilnost s primarnom slikom
     };
 
     try {
       const pohranjeniPredmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
       const indeks = pohranjeniPredmeti.findIndex(p => String(p.id || p.sifra) === String(params.id));
-      
+
       if (indeks !== -1) {
         pohranjeniPredmeti[indeks] = azuriraniPredmet;
       } else {
         pohranjeniPredmeti.push(azuriraniPredmet);
       }
-      
+
       localStorage.setItem("predmeti", JSON.stringify(pohranjeniPredmeti));
-      
       navigate(RouteNames.PREDMETI);
     } catch (error) {
       console.error("Greška prilikom spremanja:", error);
@@ -291,8 +310,8 @@ export default function PredmetiPromjena() {
           <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Kategorija</Form.Label>
-              <FormSelect 
-                value={odabranaKategorija} 
+              <FormSelect
+                value={odabranaKategorija}
                 onChange={(e) => setOdabranaKategorija(e.target.value)}
               >
                 <option value="">Odaberi kategoriju</option>
@@ -323,11 +342,11 @@ export default function PredmetiPromjena() {
           <Col xs={12} md={4}>
             <Form.Group>
               <Form.Label>Godina nastanka</Form.Label>
-              <Form.Control 
-                type="number" 
-                name="godinaNastanka" 
-                value={predmet.godinaNastanka || ""} 
-                onChange={handleChange} 
+              <Form.Control
+                type="number"
+                name="godinaNastanka"
+                value={predmet.godinaNastanka || ""}
+                onChange={handleChange}
               />
             </Form.Group>
           </Col>
@@ -336,11 +355,11 @@ export default function PredmetiPromjena() {
           <Col xs={12} md={4}>
             <Form.Group>
               <Form.Label>Stanje</Form.Label>
-              <Form.Control 
-                type="text" 
-                name="stanje" 
-                value={predmet.stanje || ""} 
-                onChange={handleChange} 
+              <Form.Control
+                type="text"
+                name="stanje"
+                value={predmet.stanje || ""}
+                onChange={handleChange}
               />
             </Form.Group>
           </Col>
@@ -349,12 +368,12 @@ export default function PredmetiPromjena() {
           <Col xs={12} md={4}>
             <Form.Group>
               <Form.Label>Početna cijena</Form.Label>
-              <Form.Control 
-                type="number" 
-                step="0.01" 
-                name="pocetnaCijena" 
-                value={predmet.pocetnaCijena || ""} 
-                onChange={handleChange} 
+              <Form.Control
+                type="number"
+                step="0.01"
+                name="pocetnaCijena"
+                value={predmet.pocetnaCijena || ""}
+                onChange={handleChange}
               />
             </Form.Group>
           </Col>
@@ -363,11 +382,11 @@ export default function PredmetiPromjena() {
           <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Dodano</Form.Label>
-              <Form.Control 
-                type="datetime-local" 
-                name="dodano" 
-                value={predmet.dodano || ""} 
-                onChange={handleChange} 
+              <Form.Control
+                type="datetime-local"
+                name="dodano"
+                value={predmet.dodano || ""}
+                onChange={handleChange}
               />
             </Form.Group>
           </Col>
@@ -376,11 +395,11 @@ export default function PredmetiPromjena() {
           <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Završava</Form.Label>
-              <Form.Control 
-                type="datetime-local" 
-                name="zavrsava" 
-                value={predmet.zavrsava || ""} 
-                onChange={handleChange} 
+              <Form.Control
+                type="datetime-local"
+                name="zavrsava"
+                value={predmet.zavrsava || ""}
+                onChange={handleChange}
               />
             </Form.Group>
           </Col>
@@ -393,9 +412,9 @@ export default function PredmetiPromjena() {
                 {odabraneOznake.map((oznaka, index) => (
                   <span key={index} className="badge bg-secondary d-flex align-items-center gap-1 p-2">
                     {oznaka.naziv}
-                    <button 
-                      type="button" 
-                      className="btn-close btn-close-white btn-sm" 
+                    <button
+                      type="button"
+                      className="btn-close btn-close-white btn-sm"
                       onClick={() => setOdabraneOznake(odabraneOznake.filter((_, i) => i !== index))}
                     ></button>
                   </span>
@@ -403,9 +422,9 @@ export default function PredmetiPromjena() {
               </div>
 
               <div className="position-relative">
-                <Form.Control 
-                  type="text" 
-                  placeholder="Klikni za popis oznaka ili upiši za pretragu..." 
+                <Form.Control
+                  type="text"
+                  placeholder="Klikni za popis oznaka ili upiši za pretragu..."
                   value={pretragaOznaka}
                   onChange={(e) => {
                     setPretragaOznaka(e.target.value);
@@ -418,9 +437,9 @@ export default function PredmetiPromjena() {
                   <div className="list-group position-absolute w-100 shadow bg-white border rounded mt-1" style={{ zIndex: 1000, maxHeight: "200px", overflowY: "auto" }}>
                     {filtrirajOznake().length > 0 ? (
                       filtrirajOznake().map(o => (
-                        <button 
-                          type="button" 
-                          key={o.id || o.sifra} 
+                        <button
+                          type="button"
+                          key={o.id || o.sifra}
                           className="list-group-item list-group-item-action"
                           onClick={() => dodajOznaku(o)}
                         >
@@ -432,8 +451,8 @@ export default function PredmetiPromjena() {
                     )}
 
                     {pretragaOznaka.trim() !== "" && !oznakaVecPostoji(pretragaOznaka) && (
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="list-group-item list-group-item-action text-primary fw-bold border-top"
                         onClick={kreirajI_DodajOznaku}
                       >
@@ -446,62 +465,94 @@ export default function PredmetiPromjena() {
             </Form.Group>
           </Col>
 
-          {/* Slike */}
-          {/* <Col xs={12} md={6}>
+          {/* SEKCIJA ZA SLIKE I CROPPER */}
+          <Col lg={6}>
             <Form.Group>
-              <Form.Label>Slike (maksimalno 5)</Form.Label>
-              <Form.Control 
-                type="file" 
-                multiple 
-                accept="image/*" 
-                onChange={handleImageChange} 
-              />
-              {slikeError && <Alert variant="danger" className="mt-2">{slikeError}</Alert>}
-              
-              <div className="d-flex flex-wrap gap-2 mt-3">
-                {slike.map((slika, index) => (
-                  <div key={index} className="position-relative">
-                    <img 
-                      src={slika} 
-                      alt="Pregled" 
-                      style={{ width: "100px", height: "100px", objectFit: "cover" }} 
-                      className="rounded border"
-                    />
-                    <button 
-                      type="button" 
-                      className="btn btn-danger btn-sm position-absolute top-0 end-0 p-1"
-                      onClick={() => setSlike(slike.filter((_, i) => i !== index))}
-                    >
-                      <MdDelete size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <Form.Label><strong>Slike predmeta</strong></Form.Label>
+              <Form.Control className='mb-3' type='file' onChange={onChangeImages} accept="image/*" />
             </Form.Group>
-          </Col> */}
+
+            {/* Ako je odabrana nova slika za obrezivanje */}
+            {aktivnaSlikaZaCrop && (
+              <div className="mb-3 p-2 border bg-light rounded">
+                <p className="small text-muted mb-1">Obreži novu sliku:</p>
+                <Cropper
+                  src={aktivnaSlikaZaCrop}
+                  style={{ height: 300, width: '100%' }}
+                  initialAspectRatio={1}
+                  guides={true}
+                  autoCropArea={1}
+                  viewMode={1}
+                  minCropBoxWidth={200}
+                  minCropBoxHeight={200}
+                  cropBoxResizable={true}
+                  background={false}
+                  responsive={true}
+                  checkOrientation={false}
+                  ref={cropperRef}
+                />
+                <Button 
+                  variant="primary" 
+                  size="sm" 
+                  className="mt-2"
+                  type="button"
+                  onClick={spremiCropanuSliku}
+                >
+                  Potvrdi i dodaj obrezanu sliku
+                </Button>
+              </div>
+            )}
+
+            {/* Prikaz svih spremljenih/postojećih slika s mogućnošću brisanja */}
+            <div className="d-flex flex-wrap gap-2 mt-3">
+              {slike.map((slikaSrc, index) => (
+                <div key={index} className="position-relative border rounded p-1 bg-white shadow-sm" style={{ width: "100px", height: "100px" }}>
+                  <img 
+                    src={slikaSrc.startsWith("data:") || slikaSrc.startsWith("http") ? slikaSrc : `data:image/jpeg;base64,${slikaSrc}`} 
+                    alt={`Slika ${index + 1}`} 
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                    className="rounded"
+                  />
+                  <Button 
+                    variant="danger" 
+                    size="sm" 
+                    className="position-absolute top-0 end-0 p-0 px-1 rounded-circle"
+                    style={{ lineHeight: 1, fontSize: "12px" }}
+                    type="button"
+                    onClick={() => obrisiSliku(index)}
+                    title="Obriši sliku"
+                  >
+                    &times;
+                  </Button>
+                </div>
+              ))}
+              {slike.length === 0 && !aktivnaSlikaZaCrop && (
+                <small className="text-muted">Nema priloženih slika.</small>
+              )}
+            </div>
+          </Col>
 
           {/* Gumbi za akciju */}
           <Col xs={6} md={3} className="mt-4">
-            <Button 
-              variant="outline-success" 
-              type="submit" 
+            <Button
+              variant="outline-success"
+              type="submit"
               className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
               size="sm"
-
             >
-         Promijeni
+              Promijeni
             </Button>
           </Col>
 
           <Col xs={6} md={3} className="mt-4">
-            <Button 
-              variant="outline-danger" 
-              type="button" 
-              className="w-100 d-flex align-items-center justify-content-center gap-2 py-2" 
+            <Button
+              variant="outline-danger"
+              type="button"
+              className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
               size="sm"
               onClick={() => navigate(RouteNames.PREDMETI)}
             >
-            Odustani
+              Odustani
             </Button>
           </Col>
         </Row>

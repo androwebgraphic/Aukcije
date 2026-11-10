@@ -7,6 +7,7 @@ import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
 import { Cropper } from "react-cropper";
+import 'cropperjs/dist/cropper.css';
 
 export default function PredmetNovi() {
   const navigate = useNavigate();
@@ -17,17 +18,6 @@ export default function PredmetNovi() {
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   };
 
-  const [predmet, setPredmet] = useState({
-    naziv: "",
-    opis: "",
-    godinaNastanka: "",
-    stanje: "",
-    pocetnaCijena: "",
-    dodano: formatZaDateTimeLocal(new Date()),
-    zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
-  
-  });
-  
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
   const [odabranaKategorija, setOdabranaKategorija] = useState("");
@@ -36,9 +26,18 @@ export default function PredmetNovi() {
   const [odabraneOznake, setOdabraneOznake] = useState([]);
   const [prikaziAutoComplete, setPrikaziAutoComplete] = useState(false);
 
-  const [slike, setSlike] = useState([]);
-  const [slikeError, setSlikeError] = useState("");
+  const [predmet, setPredmet] = useState({
+    naziv: "",
+    opis: "",
+    godinaNastanka: "",
+    stanje: "",
+    pocetnaCijena: "",
+    dodano: formatZaDateTimeLocal(new Date()),
+    zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+  });
 
+  const [slikaZaCrop, setSlikaZaCrop] = useState(null);
+  const cropperRef = useRef(null);
   const autoCompleteRef = useRef(null);
 
   useEffect(() => {
@@ -90,18 +89,15 @@ export default function PredmetNovi() {
     setPretragaOznaka(""); 
     setPrikaziAutoComplete(false);
   }
-async function kreirajI_DodajOznaku() {
+
+  async function kreirajI_DodajOznaku() {
     const nazivOznake = pretragaOznaka.trim();
     if (!nazivOznake) return;
 
     try {
       const odgovor = await OznakeServices.dodaj({ naziv: nazivOznake });
-      
-      // Provjeravamo sve moguće oblike koje API/Axios može vratiti
       let stvorenaOznaka = odgovor?.data !== undefined ? odgovor.data : odgovor;
 
-      // Ako je backend iz nekog razloga vratio samo ID (npr. broj ili string), 
-      // sami konstruiramo objekt s tim ID-jem i nazivom koji je korisnik upisao.
       if (typeof stvorenaOznaka === "number" || typeof stvorenaOznaka === "string") {
         stvorenaOznaka = { id: stvorenaOznaka, naziv: nazivOznake };
       }
@@ -110,7 +106,6 @@ async function kreirajI_DodajOznaku() {
         setOznake(prev => [...prev, stvorenaOznaka]);
         setOdabraneOznake(prev => [...prev, stvorenaOznaka]);
       } else {
-        // Fallback ako objekt nema ID
         const privremenaOznaka = { id: Date.now(), naziv: nazivOznake };
         setOznake(prev => [...prev, privremenaOznaka]);
         setOdabraneOznake(prev => [...prev, privremenaOznaka]);
@@ -122,32 +117,39 @@ async function kreirajI_DodajOznaku() {
       console.error("Greška pri kreiranju nove oznake:", error);
     }
   }
-  //Funkcija za dodavanje slika
-  
 
+  function onChangeImage(e) {
+    e.preventDefault();
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-  
-  // function handleImageChange(e) {
-  //   const odabrane = Array.from(e.target.files);
-  //   if (slike.length + odabrane.length > 5) {
-  //     setSlikeError("Ukupno najviše 5 slika.");
-  //     return;
-  //   }
-  //   setSlikeError("");
-
-  //   Promise.all(odabrane.map(f => new Promise((resolve, reject) => {
-  //     const r = new FileReader(); 
-  //     r.readAsDataURL(f); 
-  //     r.onload = () => resolve(r.result); 
-  //     r.onerror = reject;
-  //   }))).then(base64Slike => {
-  //     setSlike(prev => [...prev, ...base64Slike]);
-  //   });
-  // }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSlikaZaCrop(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (slikeError) return;
+
+    let dataUrl = null;
+    if (cropperRef.current && cropperRef.current.cropper) {
+      try {
+        const cropper = cropperRef.current.cropper;
+        const canvas = cropper.getCroppedCanvas({
+          width: 400,
+          height: 400,
+          imageSmoothingEnable: true,
+          imageSmoothingQuality: 'high'
+        });
+        if (canvas) {
+          dataUrl = canvas.toDataURL('image/png');
+        }
+      } catch (err) {
+        console.warn("Greška pri obrezivanju slike:", err);
+      }
+    }
 
     try {
       await PredmetiServices.dodaj({
@@ -160,7 +162,7 @@ async function kreirajI_DodajOznaku() {
         zavrsava: predmet.zavrsava ? new Date(predmet.zavrsava).toISOString() : null,
         kategorija: odabranaKategorija ? Number(odabranaKategorija) : null,
         oznake: odabraneOznake.map(o => o.id),
-        slike: slike
+        slike: dataUrl
       });
       navigate(RouteNames.PREDMETI);
     } catch (error) {
@@ -172,7 +174,7 @@ async function kreirajI_DodajOznaku() {
     <Container className="mt-4 mb-5">
       <Heading as="h2" color="azure" className="mb-4">Dodavanje novog predmeta</Heading>
       
-      <Form   onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Row className="g-3">
           <Col sm={6}>
             <Form.Group controlId="naziv">
@@ -274,34 +276,39 @@ async function kreirajI_DodajOznaku() {
             </Form.Group>
           </Col>
 
-          {/* SEKCIJA ZA UPLOAD SLIKA */}
-          {/* <Col sm={6}>
-            <Card className="p-3 bg-light border">
-              <Form.Group className="mb-3">
-                <Form.Label><strong>Slike predmeta (maksimalno 5)</strong></Form.Label>
-                <FormControl type="file" multiple accept="image/*" onChange={handleImageChange} />
-                {slikeError && <Alert variant="danger" className="mt-2">{slikeError}</Alert>}
-              </Form.Group>
-
-              {slike.length > 0 && (
-                <div>
-                  <Form.Label className="text-muted small">Pregled odabranih slika:</Form.Label>
-                  <div className="d-flex flex-wrap gap-2">
-                    {slike.map((s, i) => (
-                      <div key={i} className="position-relative">
-                        <img src={s} alt={`Upload ${i}`} style={{ width: '100px', height: '100px', objectFit: 'cover' }} className="rounded border shadow-sm" />
-                        <Button variant="danger" size="sm" className="position-absolute top-0 end-0 p-0 px-1 rounded-circle" onClick={() => setSlike(slike.filter((_, idx) => idx !== i))}>&times;</Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </Card>
-          </Col> */}
+          {/* SEKCIJA ZA SLIKU I CROPPER */}
+          <Col lg={6}>
+            <Form.Group controlId="slikaPredmeta">
+              <FormLabel><strong>Slika predmeta</strong></FormLabel>
+              <FormControl className="mb-3" type="file" onChange={onChangeImage} accept="image/*" />
+            </Form.Group>
+            
+            {slikaZaCrop ? (
+              <Cropper
+                src={slikaZaCrop}
+                style={{ height: 350, width: '100%' }}
+                initialAspectRatio={1}
+                guides={true}
+                autoCropArea={1}
+                viewMode={1}
+                minCropBoxWidth={200}
+                minCropBoxHeight={200}
+                cropBoxResizable={true}
+                background={false}
+                responsive={true}
+                checkOrientation={false}
+                ref={cropperRef}
+              />
+            ) : (
+              <div className="p-4 border text-center text-muted bg-light rounded">
+                Odaberite sliku predmeta iznad za obrezivanje.
+              </div>
+            )}
+          </Col>
         </Row>
 
         <Row className="mt-4 mb-4">
-          <Col xs={6} md={3}><Button type="submit" variant="outline-success" className="w-100" size="sm" >Dodaj</Button></Col>
+          <Col xs={6} md={3}><Button type="submit" variant="outline-success" className="w-100" size="sm">Dodaj</Button></Col>
           <Col xs={6} md={3}><Button variant="outline-danger" className="w-100" size="sm" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
         </Row>
       </Form>

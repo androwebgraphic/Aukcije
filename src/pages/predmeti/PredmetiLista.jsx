@@ -187,7 +187,7 @@ export default function PredmetiList() {
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
   const [uvjetiPretrazivanja, setUvjetiPretrazivanja] = useState("");
-  const [sortiranje, setSortiranje] = useState("naziv-asc"); // State za sortiranje
+  const [sortiranje, setSortiranje] = useState("naziv-asc");
   const [zavrseneAukcije, setZavrseneAukcije] = useState({});
 
   const [stranica, setStranica] = useState(1);
@@ -249,10 +249,7 @@ export default function PredmetiList() {
     }
   }
 
- async function obrisi(predmetItem) {
-    // Ispisujemo cijeli objekt u konzolu da vidimo koja polja ima (id, sifra itd.)
-    console.log("Predmet koji se pokušava obrisati:", predmetItem);
-
+  async function obrisi(predmetItem) {
     const identifikator = predmetItem.id || predmetItem.sifra || predmetItem.predmetId;
     
     if (!identifikator) {
@@ -265,9 +262,8 @@ export default function PredmetiList() {
     }
 
     try {
-      console.log("Šaljem zahtjev za brisanje ID-ja:", identifikator);
       await PredmetiServices.obrisi(identifikator);
-      ucitajPredmete(); // Osvježi listu
+      ucitajPredmete();
     } catch (error) {
       console.error("Greška prilikom brisanja:", error);
       alert("Brisanje predmeta nije uspjelo. Provjerite konzolu za detalje.");
@@ -315,7 +311,6 @@ export default function PredmetiList() {
     ? prikaziNazivKategorije(parseInt(params.id))
     : kategorijaFilter;
 
-  // Filtriranje i sortiranje predmeta
   const filtriraniPredmeti = predmeti
     .filter((c) => {
       let zadovoljavaKategoriju = true;
@@ -395,11 +390,9 @@ export default function PredmetiList() {
   }
 
   function PromijeniUvjetPretrazivanja(e) {
-    
-    setUvjetiPretrazivanja(e.target.value)
-setStranica(1)
+    setUvjetiPretrazivanja(e.target.value);
+    setStranica(1);
   }
-
 
   return (
     <>
@@ -426,7 +419,6 @@ setStranica(1)
           </Link>
 
           <div className="d-flex align-items-center gap-2 flex-wrap">
-            {/* Izbornik sortiranja */}
             <div className="d-flex align-items-center gap-1">
               <span
                 className="fs-7"
@@ -480,7 +472,6 @@ setStranica(1)
               </Form.Select>
             </div>
 
-        
             <InputGroup className="mb-3">
                 <InputGroup.Text>
                     <FaSearch />
@@ -492,8 +483,6 @@ setStranica(1)
                     onChange={PromijeniUvjetPretrazivanja}
                 />
             </InputGroup>
-         
-       
           </div>
         </div>
       </motion.div>
@@ -507,8 +496,14 @@ setStranica(1)
             predmetiNaStranici.map((c) => {
               const listaOznaka =
                 c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
-              // Dodana podrška za c.slika u singularu pored c.slike i c.slikaUrls
-              const listaSlika = c.slike || c.slikaUrls || (c.slika ? [c.slika] : []);
+              
+              // SIGURNA PROVJERA: Osiguravamo da je listaSlika uvijek provjereno polje (Array)
+              let siroveSlike = c.slike || c.slikaUrls || (c.slika ? [c.slika] : []);
+              if (!Array.isArray(siroveSlike)) {
+                siroveSlike = typeof siroveSlike === "string" ? [siroveSlike] : [];
+              }
+              const listaSlika = siroveSlike;
+
               const jeZavrseno = zavrseneAukcije[c.id || c.sifra] || false;
 
               return (
@@ -669,7 +664,7 @@ setStranica(1)
                         </Button>
                         <Button
                           variant="outline-danger"
-                          size="sm"
+                        size="sm"
                           onClick={() => obrisi(c)}>
                           Obriši
                         </Button>

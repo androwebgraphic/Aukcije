@@ -35,7 +35,7 @@ async function obrisi(id) {
   memorijaPredmeta = memorijaPredmeta.filter(c => c.id !== parseInt(id));
 }
 
-async function dohvatiStranicu(stranica = 1, velicinaStranice = 12) {
+async function dohvatiStranicu(stranica = 1, velicinaStranice = 12, uvjetiPretrazivanja = ' ') {
   const pocetniIndex = (stranica - 1) * velicinaStranice;
   const zavrsniIndex = pocetniIndex + velicinaStranice; 
   const stranicenjePodatci = memorijaPredmeta.slice(pocetniIndex, zavrsniIndex); 

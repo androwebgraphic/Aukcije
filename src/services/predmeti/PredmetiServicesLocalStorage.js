@@ -50,7 +50,7 @@ async function obrisi(id) {
   return true;
 }
 
-async function dohvatiStranicu(stranica = 1, velicinaStranice = 12) {
+async function dohvatiStranicu(stranica = 1, velicinaStranice = 12,uvjetiPretrazivanja = ' ') {
   const predmeti = dohvatiSveIzStorage()
   const pocetniIndex = (stranica - 1) * velicinaStranice
   const zavrsniIndex = pocetniIndex + velicinaStranice // Ispravljeno

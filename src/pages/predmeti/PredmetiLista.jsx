@@ -11,7 +11,8 @@ import {
   Form,
   Carousel,
   Pagination,
-  Container,
+  InputGroup
+  
 } from "react-bootstrap";
 import {
   Link,
@@ -20,7 +21,9 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { FaArrowTurnUp, FaFire } from "react-icons/fa6";
+import { FaArrowTurnUp, FaFire, } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
@@ -183,7 +186,7 @@ export default function PredmetiList() {
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [uvjetiPretrazivanja, setUvjetiPretrazivanja] = useState("");
   const [sortiranje, setSortiranje] = useState("naziv-asc"); // State za sortiranje
   const [zavrseneAukcije, setZavrseneAukcije] = useState({});
 
@@ -326,8 +329,8 @@ export default function PredmetiList() {
           nazivKat.toLowerCase() === kategorijaFilter.toLowerCase();
       }
 
-      const zadovoljavaPretragu = searchTerm
-        ? c.naziv && c.naziv.toLowerCase().includes(searchTerm.toLowerCase())
+      const zadovoljavaPretragu = uvjetiPretrazivanja
+        ? c.naziv && c.naziv.toLowerCase().includes(uvjetiPretrazivanja.toLowerCase())
         : true;
 
       return zadovoljavaKategoriju && zadovoljavaPretragu;
@@ -390,6 +393,13 @@ export default function PredmetiList() {
       </Pagination.Item>,
     );
   }
+
+  function PromijeniUvjetPretrazivanja(e) {
+    
+    setUvjetiPretrazivanja(e.target.value)
+setStranica(1)
+  }
+
 
   return (
     <>
@@ -470,23 +480,20 @@ export default function PredmetiList() {
               </Form.Select>
             </div>
 
-            <Form.Control
-              type="text"
-              placeholder="Pretraži predmete...  "
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setStranica(1);
-              }}
-              style={{ maxWidth: "220px" }}
-              size="sm"
-            />
-            <LordIcon
-              style={{ width: "2rem", height: "2rem" }}
-              src="/lordicon/search.json"
-              trigger="hover"
-              colors="primary:#fff,secondary:#fff"
-            />
+        
+            <InputGroup className="mb-3">
+                <InputGroup.Text>
+                    <FaSearch />
+                </InputGroup.Text>
+                <Form.Control
+                    type="text"
+                    placeholder="Pretraži predmete "
+                    value={uvjetiPretrazivanja}
+                    onChange={PromijeniUvjetPretrazivanja}
+                />
+            </InputGroup>
+         
+       
           </div>
         </div>
       </motion.div>

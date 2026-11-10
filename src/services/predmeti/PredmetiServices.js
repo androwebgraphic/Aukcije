@@ -40,5 +40,5 @@ export default {
   dodaj: (predmet) => AktivniServis.dodaj(predmet), 
   promijeni: (id, predmet) => AktivniServis.promijeni(id, predmet),
   obrisi: (id) => AktivniServis.obrisi(id), // <-- Ovdje je dodan zarez koji je nedostajao
-  dohvatiStranicu: (stranica, velicinaStranice) => AktivniServis.dohvatiStranicu(stranica, velicinaStranice)
+  dohvatiStranicu: (stranica, velicinaStranice,uvjetiPretrazivanja) => AktivniServis.dohvatiStranicu(stranica, velicinaStranice,uvjetiPretrazivanja)
 }

@@ -123,23 +123,23 @@ async function kreirajI_DodajOznaku() {
     }
   }
 
-  function handleImageChange(e) {
-    const odabrane = Array.from(e.target.files);
-    if (slike.length + odabrane.length > 5) {
-      setSlikeError("Ukupno najviše 5 slika.");
-      return;
-    }
-    setSlikeError("");
+  // function handleImageChange(e) {
+  //   const odabrane = Array.from(e.target.files);
+  //   if (slike.length + odabrane.length > 5) {
+  //     setSlikeError("Ukupno najviše 5 slika.");
+  //     return;
+  //   }
+  //   setSlikeError("");
 
-    Promise.all(odabrane.map(f => new Promise((resolve, reject) => {
-      const r = new FileReader(); 
-      r.readAsDataURL(f); 
-      r.onload = () => resolve(r.result); 
-      r.onerror = reject;
-    }))).then(base64Slike => {
-      setSlike(prev => [...prev, ...base64Slike]);
-    });
-  }
+  //   Promise.all(odabrane.map(f => new Promise((resolve, reject) => {
+  //     const r = new FileReader(); 
+  //     r.readAsDataURL(f); 
+  //     r.onload = () => resolve(r.result); 
+  //     r.onerror = reject;
+  //   }))).then(base64Slike => {
+  //     setSlike(prev => [...prev, ...base64Slike]);
+  //   });
+  // }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -271,7 +271,7 @@ async function kreirajI_DodajOznaku() {
           </Col>
 
           {/* SEKCIJA ZA UPLOAD SLIKA */}
-          <Col sm={6}>
+          {/* <Col sm={6}>
             <Card className="p-3 bg-light border">
               <Form.Group className="mb-3">
                 <Form.Label><strong>Slike predmeta (maksimalno 5)</strong></Form.Label>
@@ -293,7 +293,7 @@ async function kreirajI_DodajOznaku() {
                 </div>
               )}
             </Card>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="mt-4 mb-4">

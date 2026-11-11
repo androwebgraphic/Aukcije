@@ -21,7 +21,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { FaArrowTurnUp, FaFire, } from "react-icons/fa6";
+import { FaArrowTurnUp } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 
 import Heading from "../../components/UI/Heading";
@@ -30,12 +30,8 @@ import IkonaKategorije from "../../components/UI/IkonaKategorije";
 
 import Odbrojavanje from "../../components/Odbrojavanje";
 
-
-
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  
 
   if (!text) return null;
 
@@ -61,7 +57,6 @@ function ExpandableText({ text, maxLength = 100 }) {
     </span>
   );
 }
-
 
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
@@ -94,9 +89,9 @@ export default function PredmetiList() {
   const [uvjetiPretrazivanja, setUvjetiPretrazivanja] = useState("");
   const [sortiranje, setSortiranje] = useState("naziv-asc");
   const [zavrseneAukcije, setZavrseneAukcije] = useState({});
-  const [predmetiNaStranici, setPredmetiNaStranici] = useState([])
+  const [predmetiNaStranici, setPredmetiNaStranici] = useState([]);
 
-  // DODANO: Stanje za modal i ponudu
+  // Stanje za modal i ponudu
   const [showModal, setShowModal] = useState(false);
   const [odabraniPredmet, setOdabraniPredmet] = useState(null);
   const [iznosPonude, setIznosPonude] = useState(0);
@@ -136,7 +131,6 @@ export default function PredmetiList() {
   async function ucitajPredmete() {
     try {
       const odgovor = await PredmetiServices.dohvatiStranicu(1, 1000);
-      //console.log(odgovor)
       setPredmeti(odgovor.data || odgovor || []);
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
@@ -182,40 +176,66 @@ export default function PredmetiList() {
     }
   }
 
-  // DODANO: Funkcije za modal
   function otvoriModalZaPonudu(predmet) {
-    console.log(predmet)
     setOdabraniPredmet(predmet);
-    setIznosPonude(Number(predmet.pocetnaCijena) + 1);
+    
+    // Utvrđujemo trenutnu važeću cijenu (zadnja ponuda ako postoji, inače početna cijena)
+    const imaPonuda = Array.isArray(predmet.ponude) && predmet.ponude.length > 0;
+    const trenutnaCijena = imaPonuda
+      ? Number(predmet.ponude[predmet.ponude.length - 1].cijena)
+      : Number(predmet.pocetnaCijena);
+
+    setIznosPonude(trenutnaCijena + 1);
     setShowModal(true);
   }
 
   async function potvrdiPonudu() {
     if (!odabraniPredmet) return;
 
-    setPredmeti((prevPredmeti) =>
-      prevPredmeti.map((p) => {
-        p.id === odabraniPredmet.id
-          ? { ...p, pocetnaCijena: iznosPonude }
-          : p
-      }
-      )
+    const imaPonuda = Array.isArray(odabraniPredmet.ponude) && odabraniPredmet.ponude.length > 0;
+    const trenutnaCijena = imaPonuda
+      ? Number(odabraniPredmet.ponude[odabraniPredmet.ponude.length - 1].cijena)
+      : Number(odabraniPredmet.pocetnaCijena);
 
+    const minimalnaDozvoljenaCijena = trenutnaCijena + 1;
 
-    );
-    odabraniPredmet.ponude.push({
-      korisnik: 1,
-      datum: new Date().toISOString(),
-      cijena: iznosPonude
-    })
-    await promjeniPredmet(odabraniPredmet)
+    if (Number(iznosPonude) < minimalnaDozvoljenaCijena) {
+      alert(`Iznos ponude mora biti minimalno ${minimalnaDozvoljenaCijena} €.`);
+      return;
+    }
 
-    setShowModal(false);
-    setOdabraniPredmet(null);
-  }
+    const azuriraniPredmet = {
+      ...odabraniPredmet,
+      ponude: [
+        ...(odabraniPredmet.ponude || []),
+        {
+          korisnik: 1,
+          datum: new Date().toISOString(),
+          cijena: Number(iznosPonude),
+        },
+      ],
+    };
 
-  async function promjeniPredmet(predmet) {
-    PredmetiServices.promijeni(predmet.id, predmet)
+    try {
+      // 1. Slanje promjene na server
+      await PredmetiServices.promijeni(odabraniPredmet.id || odabraniPredmet.sifra, azuriraniPredmet);
+
+      // 2. Trenutno ažuriranje lokalnog stanja da se promjena vidi ODMAH bez refresha
+      setPredmeti((prevPredmeti) =>
+        prevPredmeti.map((p) => {
+          if (!p) return p;
+          const pId = p.id || p.sifra;
+          const targetId = odabraniPredmet.id || odabraniPredmet.sifra;
+          return pId === targetId ? azuriraniPredmet : p;
+        })
+      );
+
+      setShowModal(false);
+      setOdabraniPredmet(null);
+    } catch (error) {
+      console.error("Greška prilikom slanja ponude:", error);
+      alert("Slanje ponude nije uspjelo.");
+    }
   }
 
   function prikaziNazivKategorije(kategorijaVal) {
@@ -261,6 +281,8 @@ export default function PredmetiList() {
 
   const filtriraniPredmeti = predmeti
     .filter((c) => {
+      if (!c) return false; // Sigurnosna zaštita protiv undefined objekata
+
       let zadovoljavaKategoriju = true;
       if (params.id) {
         const katIdIzUrl = parseInt(params.id);
@@ -314,11 +336,9 @@ export default function PredmetiList() {
       setStranica(1);
     }
     const zadnjiIndeks = stranica * velicinaStranice;
-  const prviIndeks = zadnjiIndeks - velicinaStranice;
-  setPredmetiNaStranici(filtriraniPredmeti.slice(prviIndeks, zadnjiIndeks));
-  }, [ukupnoStranica, stranica]);
-
-  
+    const prviIndeks = zadnjiIndeks - velicinaStranice;
+    setPredmetiNaStranici(filtriraniPredmeti.slice(prviIndeks, zadnjiIndeks));
+  }, [ukupnoStranica, stranica, predmeti, uvjetiPretrazivanja, sortiranje, kategorijaFilter, params.id]);
 
   function dohvatiIkonaKategorije(kategorijaVal) {
     const katId = dohvatiIdKategorije(kategorijaVal);
@@ -342,7 +362,6 @@ export default function PredmetiList() {
     setUvjetiPretrazivanja(e.target.value);
     setStranica(1);
   }
-
 
   return (
     <>
@@ -442,10 +461,8 @@ export default function PredmetiList() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}>
         <Row xs={1} sm={1} md={2} lg={3} className="g-3">
-         
           {predmetiNaStranici && predmetiNaStranici.length > 0 ? (
             predmetiNaStranici.map((c) => {
-
               const listaOznaka = c.oznake ? c.oznake : [];
 
               let siroveSlike = c.slike || c.slikaUrls || (c.slika ? [c.slika] : []);
@@ -455,6 +472,12 @@ export default function PredmetiList() {
               const listaSlika = siroveSlike;
 
               const jeZavrseno = zavrseneAukcije[c.id || c.sifra] || false;
+
+              // Provjera ponuda
+              const imaPonuda = Array.isArray(c.ponude) && c.ponude.length > 0;
+              const zadnjaPonuda = imaPonuda
+                ? c.ponude[c.ponude.length - 1].cijena
+                : null;
 
               return (
                 <Col key={c.id || c.sifra}>
@@ -539,17 +562,29 @@ export default function PredmetiList() {
                       </Card.Text>
 
                       <div className="d-flex flex-column gap-1 mb-3">
-                        <div className="d-flex justify-content-start">
-                          <span
-                            className="text-muted"
-                            style={{ fontSize: ".9rem" }}>
-                            Početna cijena:
-                          </span>
-                          <Badge bg="success" className="mx-2 mb-3">
-                            {c.pocetnaCijena} €
-                          </Badge>
+                        {/* Prikaz početne cijene i zadnje ponude */}
+                        <div className="d-flex flex-column gap-1">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="text-muted" style={{ fontSize: ".9rem" }}>
+                              Početna cijena:
+                            </span>
+                            <span className="fw-semibold text-secondary">
+                              {c.pocetnaCijena} €
+                            </span>
+                          </div>
+
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span className="text-muted" style={{ fontSize: ".9rem" }}>
+                              Zadnja ponuda:
+                            </span>
+                            <Badge bg={imaPonuda ? "success" : "secondary"}>
+                              {imaPonuda ? `${zadnjaPonuda} €` : "Nema ponuda"}
+                            </Badge>
+                          </div>
                         </div>
+
                         <hr />
+
                         {Array.isArray(listaOznaka) &&
                           listaOznaka.length > 0 && (
                             <div className="d-flex align-items-center gap-1 flex-wrap">
@@ -591,11 +626,9 @@ export default function PredmetiList() {
                             {prikaziNazivKategorije(c.kategorija)}
                           </small>
                           <Odbrojavanje zavrsava={c.zavrsava} />
-                     
                         </div>
                       </div>
 
-                      {/* DODANO: Gumb za ponudu */}
                       <Button
                         variant="primary"
                         size="sm"
@@ -706,34 +739,57 @@ export default function PredmetiList() {
         )}
       </motion.div>
 
-      {/* DODANO: Modal za ponudu */}
+      {/* Modal za ponudu */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Unos ponude</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {odabraniPredmet && (
-            <Form>
-              <Form.Group>
-                <Form.Label>Vaša ponuda za: {odabraniPredmet.naziv}</Form.Label>
-                <Form.Control
-                  type="number"
-                  min={Number(odabraniPredmet.pocetnaCijena) + 1}
-                  value={iznosPonude}
-                  onChange={(e) => setIznosPonude(Number(e.target.value))}
-                />
-                <Form.Text className="text-muted">
-                  Minimalni iznos je {Number(odabraniPredmet.pocetnaCijena) + 1} € (1 € više od trenutne).
-                </Form.Text>
-              </Form.Group>
-            </Form>
-          )}
+          {odabraniPredmet && (() => {
+            const imaPonuda = Array.isArray(odabraniPredmet.ponude) && odabraniPredmet.ponude.length > 0;
+            const trenutnaCijena = imaPonuda
+              ? Number(odabraniPredmet.ponude[odabraniPredmet.ponude.length - 1].cijena)
+              : Number(odabraniPredmet.pocetnaCijena);
+            const minimalnaCijena = trenutnaCijena + 1;
+
+            return (
+              <Form>
+                <Form.Group>
+                  <Form.Label>Vaša ponuda za: {odabraniPredmet.naziv}</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={minimalnaCijena}
+                    value={iznosPonude}
+                    onChange={(e) => setIznosPonude(e.target.value)}
+                    isInvalid={Number(iznosPonude) < minimalnaCijena}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Ponuda mora biti minimalno {minimalnaCijena} €.
+                  </Form.Control.Feedback>
+                  <Form.Text className="text-muted">
+                    Trenutno važeća cijena je {trenutnaCijena} €. Minimalni iznos ponude je {minimalnaCijena} €.
+                  </Form.Text>
+                </Form.Group>
+              </Form>
+            );
+          })()}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Odustani
           </Button>
-          <Button variant="primary" onClick={potvrdiPonudu}>
+          <Button 
+            variant="primary" 
+            onClick={potvrdiPonudu}
+            disabled={
+              odabraniPredmet && (() => {
+                const imaPonuda = Array.isArray(odabraniPredmet.ponude) && odabraniPredmet.ponude.length > 0;
+                const trenutnaCijena = imaPonuda
+                  ? Number(odabraniPredmet.ponude[odabraniPredmet.ponude.length - 1].cijena)
+                  : Number(odabraniPredmet.pocetnaCijena);
+                return Number(iznosPonude) <= trenutnaCijena;
+              })()
+            }>
             Potvrdi ponudu
           </Button>
         </Modal.Footer>

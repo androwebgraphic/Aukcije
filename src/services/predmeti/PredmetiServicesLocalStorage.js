@@ -16,7 +16,7 @@ async function get() {
 
 async function getByID(id) {
   const predmeti = dohvatiSveIzStorage()
-  const predmet = predmeti.find(c=> c.id === parseInt(id))
+  const predmet = predmeti.find(c=> Number(c.id) === parseInt(id))
   return { data: predmet }
 }
 
@@ -25,7 +25,7 @@ async function dodaj(predmet) {
   if (predmeti.length === 0) {
     predmet.id = 1
   } else {
-    const maxId = Math.max(...predmeti.map(c=> c.id))
+    const maxId = Math.max(...predmeti.map(c=>Number( c.id)))
     predmet.id = maxId + 1
   }
 
@@ -34,19 +34,33 @@ async function dodaj(predmet) {
 }
 
 async function promijeni(id, predmet) {
-  const predmeti = dohvatiSveIzStorage()
-  const index = predmeti.findIndex(c => c.id === parseInt(id))
+  let predmeti = dohvatiSveIzStorage();
+  
+  const azuriraniPredmeti = predmeti.map(c => {
+    const trenutniId = String(c.id || c.sifra);
+    const trazeniId = String(id);
+    
+    if (trenutniId === trazeniId) {
+      return { ...c, ...predmet };
+    }
+    return c;
+  });
 
-  if (index !== -1) {
-    predmeti[index] = { ...predmeti[index], ...predmet }
-    spremiUStorage(predmeti)
-  }
+  spremiUStorage(azuriraniPredmeti);
+  return { data: azuriraniPredmeti }; // Vraćamo cijeli ažurirani niz!
 }
 
 async function obrisi(id) {
+<<<<<<< Updated upstream
   let predmeti = dohvatiSveIzStorage()
   predmeti = predmeti.filter(c=> c.id !== parseInt(id))
   spremiUStorage(predmeti)
+=======
+  let predmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
+  predmeti = predmeti.filter(p => Number(p.id || p.sifra) !== parseInt(id));
+  localStorage.setItem("predmeti", JSON.stringify(predmeti));
+  return true;
+>>>>>>> Stashed changes
 }
 
 async function dohvatiStranicu(stranica = 1, velicinaStranice = 12) {

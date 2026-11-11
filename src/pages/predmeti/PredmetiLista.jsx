@@ -5,6 +5,7 @@ import OznakeServices from "../../services/oznake/OznakeServices";
 import { Row, Col, Card, Button, Badge, Form, Carousel, Pagination } from "react-bootstrap";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
+<<<<<<< Updated upstream
 import { FaArrowTurnUp, FaFire } from "react-icons/fa6";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
@@ -12,6 +13,15 @@ import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import { LordIcon } from "@lordicon/react";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+=======
+import { FaArrowTurnUp } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+
+import Heading from "../../components/UI/Heading";
+import { motion } from "framer-motion";
+import IkonaKategorije from "../../components/UI/IkonaKategorije";
+import Odbrojavanje from "../../components/Odbrojavanje";
+>>>>>>> Stashed changes
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -41,6 +51,7 @@ function ExpandableText({ text, maxLength = 100 }) {
   );
 }
 
+<<<<<<< Updated upstream
 // Pomoćna komponenta za dinamičko odbrojavanje i vraćanje stanja
 function AukcijaOdbrojavanje({ zavrsavaDatum, onStatusChange }) {
   const [preostaloVrijeme, setPreostaloVrijeme] = useState("");
@@ -115,6 +126,8 @@ function AukcijaOdbrojavanje({ zavrsavaDatum, onStatusChange }) {
   );
 }
 
+=======
+>>>>>>> Stashed changes
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
   const datum = new Date(datumVrijednost);
@@ -140,10 +153,22 @@ export default function PredmetiList() {
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
+<<<<<<< Updated upstream
   const [searchTerm, setSearchTerm] = useState(""); 
   const [sortiranje, setSortiranje] = useState("naziv-asc"); // State za sortiranje
   const [zavrseneAukcije, setZavrseneAukcije] = useState({}); 
   
+=======
+  const [uvjetiPretrazivanja, setUvjetiPretrazivanja] = useState("");
+  const [sortiranje, setSortiranje] = useState("naziv-asc");
+  const [zavrseneAukcije, setZavrseneAukcije] = useState({});
+
+  // Stanje za modal i ponudu
+  const [showModal, setShowModal] = useState(false);
+  const [odabraniPredmet, setOdabraniPredmet] = useState(null);
+  const [iznosPonude, setIznosPonude] = useState(0);
+
+>>>>>>> Stashed changes
   const [stranica, setStranica] = useState(1);
   const [velicinaStranice, setVelicinaStranice] = useState(6);
 
@@ -179,10 +204,22 @@ export default function PredmetiList() {
     ucitajSve();
   }, []);
 
-  async function ucitajPredmete() {
+ async function ucitajPredmete() {
     try {
+<<<<<<< Updated upstream
       const odgovor = await PredmetiServices.dohvatiStranicu(1, 1000); 
       setPredmeti(odgovor.data || odgovor || []);
+=======
+      const odgovor = await PredmetiServices.dohvatiStranicu(1, 1000);
+      const siroviPredmeti = odgovor.data || odgovor || [];
+      
+      // Dodatna sigurnost: filtriramo da slučajno nema duplikata po ID-ju
+      const unikatni = siroviPredmeti.filter((predmet, index, self) =>
+        index === self.findIndex((p) => String(p.id || p.sifra) === String(predmet.id || predmet.sifra))
+      );
+
+      setPredmeti(unikatni);
+>>>>>>> Stashed changes
     } catch (error) {
       console.error("Greška pri dohvaćanju predmeta:", error);
     }
@@ -210,10 +247,74 @@ export default function PredmetiList() {
     if (!confirm("Želite obrisati?")) {
       return;
     }
+<<<<<<< Updated upstream
     await PredmetiServices.obrisi(id);
     ucitajPredmete();
+=======
+
+    if (!confirm(`Želite li obrisati predmet "${predmetItem.naziv || ''}"?`)) {
+      return;
+    }
+
+    try {
+      await PredmetiServices.obrisi(identifikator);
+      ucitajPredmete();
+    } catch (error) {
+      console.error("Greška prilikom brisanja:", error);
+      alert("Brisanje predmeta nije uspjelo. Provjerite konzolu za detalje.");
+    }
   }
 
+function otvoriModalZaPonudu(predmet) {
+    setOdabraniPredmet(predmet); // Ovdje spremamo cijeli objekt
+    setIznosPonude(Number(predmet.pocetnaCijena) + 1);
+    setShowModal(true);
+  }
+
+  async function potvrdiPonudu() {
+    if (!odabraniPredmet) return;
+
+    const idPredmeta = odabraniPredmet.id || odabraniPredmet.sifra;
+
+    const novaPonuda = {
+      korisnik: 1,
+      datum: new Date().toISOString(),
+      cijena: iznosPonude
+    };
+
+    const postojecePonude = Array.isArray(odabraniPredmet.ponude) ? odabraniPredmet.ponude : [];
+    const azuriranePonude = [...postojecePonude, novaPonuda];
+
+    const azuriraniPredmet = {
+      ...odabraniPredmet,
+      pocetnaCijena: iznosPonude,
+      ponude: azuriranePonude
+    };
+
+    try {
+      const odgovor = await PredmetiServices.promijeni(idPredmeta, azuriraniPredmet);
+      const osvjezeniPredmeti = odgovor.data || odgovor;
+
+      if (Array.isArray(osvjezeniPredmeti)) {
+        setPredmeti(osvjezeniPredmeti);
+      } else {
+        setPredmeti((prevPredmeti) =>
+          prevPredmeti.map((p) =>
+            String(p.id || p.sifra) === String(idPredmeta) ? azuriraniPredmet : p
+          )
+        );
+      }
+
+      setShowModal(false);
+      setOdabraniPredmet(null);
+    } catch (error) {
+      console.error("Greška prilikom spremanja ponude:", error);
+      alert("Slanje ponude nije uspjelo.");
+    }
+>>>>>>> Stashed changes
+  }
+
+ 
   function prikaziNazivKategorije(kategorijaVal) {
     if (!kategorijaVal) return "Nepoznato";
     if (typeof kategorijaVal === 'object' && kategorijaVal.naziv) {
@@ -296,12 +397,16 @@ export default function PredmetiList() {
   const ukupnoStavki = filtriraniPredmeti.length;
   const ukupnoStranica = Math.ceil(ukupnoStavki / velicinaStranice) || 1;
 
+<<<<<<< Updated upstream
   useEffect(() => {
     if (stranica > ukupnoStranica) {
       setStranica(1);
     }
   }, [ukupnoStranica, stranica]);
 
+=======
+  // Izračun paginacije direktno u renderu (bez useEffect petlje)
+>>>>>>> Stashed changes
   const zadnjiIndeks = stranica * velicinaStranice;
   const prviIndeks = zadnjiIndeks - velicinaStranice;
   const predmetiNaStranici = filtriraniPredmeti.slice(prviIndeks, zadnjiIndeks);
@@ -325,6 +430,14 @@ export default function PredmetiList() {
     );
   }
 
+<<<<<<< Updated upstream
+=======
+  function PromijeniUvjetPretrazivanja(e) {
+    setUvjetiPretrazivanja(e.target.value);
+    setStranica(1);
+  }
+
+>>>>>>> Stashed changes
   return (
     <>
       <motion.div
@@ -412,6 +525,7 @@ export default function PredmetiList() {
       >
         <Row xs={1} sm={1} md={2} lg={3} className="g-3">
           {predmetiNaStranici && predmetiNaStranici.length > 0 ? (
+<<<<<<< Updated upstream
             predmetiNaStranici.map((c) => {
               const listaOznaka = c.oznake || c.tagovi || (c.oznaka ? [c.oznaka] : []);
               const listaSlika = c.slike || c.slikaUrls || [];
@@ -420,6 +534,22 @@ export default function PredmetiList() {
               return (
                 <Col key={c.id}>
                   <Card 
+=======
+            predmetiNaStranici.map((c, index) => {
+              const listaOznaka = c.oznake ? c.oznake : [];
+
+              let siroveSlike = c.slike || c.slikaUrls || (c.slika ? [c.slika] : []);
+              if (!Array.isArray(siroveSlike)) {
+                siroveSlike = typeof siroveSlike === "string" ? [siroveSlike] : [];
+              }
+              const listaSlika = siroveSlike;
+
+              const jeZavrseno = zavrseneAukcije[c.id || c.sifra] || false;
+
+              return (
+          <Col key={`${c.id || c.sifra}-${index}`}> {/* <-- Osigurava unikatnost ključa */}
+                  <Card
+>>>>>>> Stashed changes
                     className="h-100 shadow-sm border-0 overflow-hidden position-relative"
                     style={{
                       filter: jeZavrseno ? "blur(1.5px) grayscale(30%)" : "none",
@@ -516,6 +646,7 @@ export default function PredmetiList() {
                           <small className="text-muted d-block">
                             <strong>U kategoriji:</strong> {prikaziNazivKategorije(c.kategorija)}
                           </small>
+<<<<<<< Updated upstream
                           
                           <AukcijaOdbrojavanje 
                             zavrsavaDatum={c.zavrsava || c.dodano} 
@@ -526,6 +657,21 @@ export default function PredmetiList() {
                         </div>
                       </div>
 
+=======
+                          <Odbrojavanje zavrsava={c.zavrsava} />
+                        </div>
+                      </div>
+
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="w-100 mb-2"
+                        disabled={jeZavrseno}
+                        onClick={() => otvoriModalZaPonudu(c)}>
+                        Tvoja ponuda
+                      </Button>
+
+>>>>>>> Stashed changes
                       <div className="d-flex gap-2 pt-2 border-top">
                         <FaEdit size={40} style={{color:"orange"}} onClick={() => navigate(`/predmeti/promijeni/${c.id}`)} />
                       <MdDeleteForever   size={40} style={{color:"red"}} onClick={() => obrisi(c.id)}/>
@@ -610,6 +756,41 @@ export default function PredmetiList() {
           </div>
         )}
       </motion.div>
+<<<<<<< Updated upstream
+=======
+
+    <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Unos ponude</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {odabraniPredmet && (
+            <Form>
+              <Form.Group>
+                <Form.Label>Vaša ponuda za: {odabraniPredmet.naziv}</Form.Label>
+                <Form.Control
+                  type="number"
+                  min={Number(odabraniPredmet.pocetnaCijena) + 1}
+                  value={iznosPonude}
+                  onChange={(e) => setIznosPonude(Number(e.target.value))}
+                />
+                <Form.Text className="text-muted">
+                  Minimalni iznos je {Number(odabraniPredmet.pocetnaCijena) + 1} €.
+                </Form.Text>
+              </Form.Group>
+            </Form>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Odustani
+          </Button>
+          <Button variant="primary" onClick={potvrdiPonudu}>
+            Potvrdi ponudu
+          </Button>
+        </Modal.Footer>
+      </Modal>
+>>>>>>> Stashed changes
     </>
   );
 }

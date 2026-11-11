@@ -8,7 +8,7 @@ async function get() {
 }
 
 async function getByID(id) {
-  const predmet = memorijaPredmeta.find(c => c.id === parseInt(id));
+  const predmet = memorijaPredmeta.find(c => NUmber(c.id) === parseInt(id));
   return { data: predmet };
 }
 
@@ -24,7 +24,7 @@ async function dodaj(predmet) {
 }
 
 async function promijeni(id, predmet) {
-  const index = memorijaPredmeta.findIndex(c => c.id === parseInt(id));
+  const index = memorijaPredmeta.findIndex(c =>Number( c.id) === parseInt(id));
 
   if (index !== -1) {
     memorijaPredmeta[index] = { ...memorijaPredmeta[index], ...predmet };
@@ -32,7 +32,7 @@ async function promijeni(id, predmet) {
 }
 
 async function obrisi(id) {
-  memorijaPredmeta = memorijaPredmeta.filter(c => c.id !== parseInt(id));
+  memorijaPredmeta = memorijaPredmeta.filter(c => Number(c.id) !== parseInt(id));
 }
 
 async function dohvatiStranicu(stranica = 1, velicinaStranice = 12) {

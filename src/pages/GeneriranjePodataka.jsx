@@ -7,7 +7,7 @@ import OznakeServices from "../services/oznake/OznakeServices";
 import KorisniciServices from "../services/korisnici/KorisniciServices";
 
 export default function GeneriranjePodataka() {
-  const [brojKategorije, setBrojKategorije] = useState(12);
+  const [brojKategorije, setBrojKategorije] = useState(13);
   const [brojPredmeta, setBrojPredmeta] = useState(20);
   const [brojOznaka, setBrojOznaka] = useState(5);
   const [brojKorisnika, setBrojKorisnika] = useState(10);
@@ -24,12 +24,12 @@ export default function GeneriranjePodataka() {
     const nazivKategorijeList = [
       "Auti Oldtimers", "Računala", "Motocikli", "Nakit", "Umjetnine",
       "Satovi", "Filatelija", "Numizmatika", "Ploče", "Starinsko oružje",
-      "Alati", "Beletristika", "Stari stripovi", "Stari filmovi",
+      "Alati", "Beletristika", "Omiljeni predmeti", "Stari filmovi",
     ];
     const ikoneList = [
       "auti", "racunala", "motori", "nakit", "umjetnine",
       "satovi", "filatelija", "numizmatika", "lp", "oruzje",
-      "alati", "beletristika", "stripovi", "filmovi"
+      "alati", "beletristika", "omiljeni", "filmovi"
     ];
     for (let i = 0; i < broj; i++) {
       await KategorijeServices.dodaj({

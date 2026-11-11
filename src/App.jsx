@@ -17,6 +17,7 @@ import KategorijePromjena from "./pages/kategorije/KategorijePromjena.jsx";
 import PredmetiLista from "./pages/predmeti/PredmetiLista.jsx";
 import PredmetNovi from "./pages/predmeti/PredmetNovi.jsx";
 import PredmetiPromjena from "./pages/predmeti/PredmetiPromjena.jsx";
+import PredmetOmiljeni from "./pages/predmeti/PredmetOmiljeni.jsx";
 
 import KorisniciLista from "./pages/korisnici/KorisniciLista.jsx";
 import KorisniciPromijena from "./pages/korisnici/KorisniciPromjena.jsx";
@@ -66,6 +67,10 @@ function App() {
 					<Route
 						path={RouteNames.PREDMETI_KATEGORIJA}
 						element={<PredmetiLista />}
+          />
+          		<Route
+						path={RouteNames.PREDMETI_OMILJENI}
+						element={<PredmetOmiljeni/>}
 					/>
 
 					{/* 4. Općenita ruta za listu svih predmeta */}

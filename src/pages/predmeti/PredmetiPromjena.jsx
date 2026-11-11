@@ -127,8 +127,9 @@ export default function PredmetiPromjena() {
 
           setPredmet(s);
 
-          // Podrška za niz slika (c.slike) ili staru pojedinačnu sliku (c.slika)
-          let postojećeSlike = s.slike || s.slikaUrls || (s.slika ? [s.slika] : []);
+          // SIGURNO UČITAVANJE SLIKA: uvijek osiguravamo da je 'slike' niz (Array)
+          let rawSlike = s.slike || s.slikaUrls || (s.slika ? [s.slika] : []);
+          let postojećeSlike = Array.isArray(rawSlike) ? rawSlike : [rawSlike];
           setSlike(postojećeSlike);
           
           if (s.oznake) {
@@ -211,13 +212,11 @@ export default function PredmetiPromjena() {
     }
   }
 
-  // Funkcija za odabir više slika s računala
   function onChangeImages(e) {
     e.preventDefault();
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // Uzimamo prvu sliku za crop, a ostale možemo redom ili staviti u cropper
     const reader = new FileReader();
     reader.onload = () => {
       setAktivnaSlikaZaCrop(reader.result);
@@ -225,7 +224,6 @@ export default function PredmetiPromjena() {
     reader.readAsDataURL(files[0]);
   }
 
-  // Spremanje obrezane slike u niz slika
   function spremiCropanuSliku() {
     if (cropperRef.current && cropperRef.current.cropper) {
       const cropper = cropperRef.current.cropper;
@@ -237,13 +235,12 @@ export default function PredmetiPromjena() {
       });
       if (canvas) {
         const dataUrl = canvas.toDataURL('image/png');
-        setSlike(prev => [...prev, dataUrl]); // Dodajemo u niz slika
-        setAktivnaSlikaZaCrop(null); // Gasimo cropper za tu sliku
+        setSlike(prev => [...prev, dataUrl]); 
+        setAktivnaSlikaZaCrop(null); 
       }
     }
   }
 
-  // Brisanje pojedinačne slike iz niza
   function obrisiSliku(indexZaBrisanje) {
     setSlike(prev => prev.filter((_, index) => index !== indexZaBrisanje));
   }
@@ -262,8 +259,8 @@ export default function PredmetiPromjena() {
       zavrsava: predmet.zavrsava || "",
       kategorija: odabranaKategorija || null,
       oznake: odabraneOznake,
-      slike: slike, // Spremamo niz slika
-      slika: slike.length > 0 ? slike[0] : null // Zadržavamo i kompatibilnost s primarnom slikom
+      slike: slike, 
+      slika: slike.length > 0 ? slike[0] : null 
     };
 
     try {
@@ -472,7 +469,6 @@ export default function PredmetiPromjena() {
               <Form.Control className='mb-3' type='file' onChange={onChangeImages} accept="image/*" />
             </Form.Group>
 
-            {/* Ako je odabrana nova slika za obrezivanje */}
             {aktivnaSlikaZaCrop && (
               <div className="mb-3 p-2 border bg-light rounded">
                 <p className="small text-muted mb-1">Obreži novu sliku:</p>
@@ -503,9 +499,9 @@ export default function PredmetiPromjena() {
               </div>
             )}
 
-            {/* Prikaz svih spremljenih/postojećih slika s mogućnošću brisanja */}
+            {/* Prikaz spremljenih slika s provjerom tipa Array */}
             <div className="d-flex flex-wrap gap-2 mt-3">
-              {slike.map((slikaSrc, index) => (
+              {Array.isArray(slike) && slike.map((slikaSrc, index) => (
                 <div key={index} className="position-relative border rounded p-1 bg-white shadow-sm" style={{ width: "100px", height: "100px" }}>
                   <img 
                     src={slikaSrc.startsWith("data:") || slikaSrc.startsWith("http") ? slikaSrc : `data:image/jpeg;base64,${slikaSrc}`} 
@@ -526,7 +522,7 @@ export default function PredmetiPromjena() {
                   </Button>
                 </div>
               ))}
-              {slike.length === 0 && !aktivnaSlikaZaCrop && (
+              {(!Array.isArray(slike) || slike.length === 0) && !aktivnaSlikaZaCrop && (
                 <small className="text-muted">Nema priloženih slika.</small>
               )}
             </div>

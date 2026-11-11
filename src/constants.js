@@ -18,7 +18,7 @@ export const RouteNames = {
 	PREDMETI: "/predmeti",
 	PREDMETI_KATEGORIJA: "/predmeti/kategorija/:id",
 	PREDMET_NOVI: "/predmeti/dodajpredmet",
-
+  PREDMETI_OMILJENI:"/predmet/omiljeni",
 	// Vinili
 
 	UVJETI: "/uvjeti",

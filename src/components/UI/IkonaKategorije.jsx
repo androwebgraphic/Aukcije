@@ -1,6 +1,5 @@
 // Uvoz ikona za kategorije
 import { FaComputer } from "react-icons/fa6";
-import { FaArrowTurnUp } from "react-icons/fa6";
 import { TbCarSuv } from "react-icons/tb";
 import { GiDiamondRing } from "react-icons/gi"; // Ikona za nakit
 import { GiPostStamp } from "react-icons/gi";
@@ -12,7 +11,8 @@ import { IoImagesOutline } from "react-icons/io5";
 import { LiaMotorcycleSolid } from "react-icons/lia";
 import { PiVinylRecord } from "react-icons/pi";
 import { VscWorkspaceUnknown } from "react-icons/vsc";
-
+import { FaHeart } from "react-icons/fa";
+import { CiHeart } from "react-icons/ci";
 import { FaGun } from "react-icons/fa6";
 
 export default function IkonaKategorije({nazivIkona}){
@@ -41,7 +41,9 @@ export default function IkonaKategorije({nazivIkona}){
            case 'motori':
         return <LiaMotorcycleSolid size={25} color="#27ec1d" />
       case 'oruzje':
-        return <FaGun size={25} color="#ec581d"/>
+        return <FaGun size={25} color="#ec581d" />
+      case 'omiljeni': 
+        return <CiHeart size={25} color="#b70707" />
      
      
      

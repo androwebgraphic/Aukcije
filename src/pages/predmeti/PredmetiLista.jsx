@@ -21,6 +21,11 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import Odbrojavanje from "../../components/Odbrojavanje";
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+
+//ovog nema
 >>>>>>> Stashed changes
 
 function ExpandableText({ text, maxLength = 100 }) {

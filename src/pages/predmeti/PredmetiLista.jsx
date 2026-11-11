@@ -377,8 +377,8 @@ export default function PredmetiList() {
   setOmiljeniIds(noviOmiljeni);
   localStorage.setItem("omiljeniPredmeti", JSON.stringify(noviOmiljeni));
 }
-const pId = c.id || c.sifra;
-const jeOmiljen = omiljeniIds.includes(pId);
+
+//const jeOmiljen = omiljeniIds.includes(pId);
   return (
     <>
       <motion.div

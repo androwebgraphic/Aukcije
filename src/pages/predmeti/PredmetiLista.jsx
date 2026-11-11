@@ -69,12 +69,6 @@ function formatirajDatum(datumVrijednost) {
   });
 }
 
-// Pomoćna funkcija za provjeru je li aukcija završila
-function jeAukcijaZavrsena(datumZavrsetka) {
-  if (!datumZavrsetka) return false;
-  return new Date(datumZavrsetka).getTime() <= new Date().getTime();
-}
-
 function dohvatiIzvorSlike(slikaItem) {
   if (!slikaItem) return "";
   const slika =
@@ -110,6 +104,10 @@ export default function PredmetiList() {
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
 
+//omiljeni predmeti
+  const [omiljeniIds, setOmiljeniIds] = useState(() => {
+  return JSON.parse(localStorage.getItem("omiljeniPredmeti")) || [];
+});
   useEffect(() => {
     setStranica(1);
   }, [params.id, kategorijaFilter]);
@@ -183,11 +181,9 @@ export default function PredmetiList() {
   }
 
   function otvoriModalZaPonudu(predmet) {
-    // Dodatna zaštita da se modal ne otvara ako je aukcija završila
-    if (jeAukcijaZavrsena(predmet.zavrsava)) return;
-
     setOdabraniPredmet(predmet);
     
+    // Utvrđujemo trenutnu važeću cijenu (zadnja ponuda ako postoji, inače početna cijena)
     const imaPonuda = Array.isArray(predmet.ponude) && predmet.ponude.length > 0;
     const trenutnaCijena = imaPonuda
       ? Number(predmet.ponude[predmet.ponude.length - 1].cijena)
@@ -225,8 +221,10 @@ export default function PredmetiList() {
     };
 
     try {
+      // 1. Slanje promjene na server
       await PredmetiServices.promijeni(odabraniPredmet.id || odabraniPredmet.sifra, azuriraniPredmet);
 
+      // 2. Trenutno ažuriranje lokalnog stanja da se promjena vidi ODMAH bez refresha
       setPredmeti((prevPredmeti) =>
         prevPredmeti.map((p) => {
           if (!p) return p;
@@ -287,7 +285,7 @@ export default function PredmetiList() {
 
   const filtriraniPredmeti = predmeti
     .filter((c) => {
-      if (!c) return false;
+      if (!c) return false; // Sigurnosna zaštita protiv undefined objekata
 
       let zadovoljavaKategoriju = true;
       if (params.id) {
@@ -369,6 +367,18 @@ export default function PredmetiList() {
     setStranica(1);
   }
 
+  function toggleOmiljeni(predmetId) {
+  let noviOmiljeni;
+  if (omiljeniIds.includes(predmetId)) {
+    noviOmiljeni = omiljeniIds.filter((id) => id !== predmetId);
+  } else {
+    noviOmiljeni = [...omiljeniIds, predmetId];
+  }
+  setOmiljeniIds(noviOmiljeni);
+  localStorage.setItem("omiljeniPredmeti", JSON.stringify(noviOmiljeni));
+}
+const pId = c.id || c.sifra;
+const jeOmiljen = omiljeniIds.includes(pId);
   return (
     <>
       <motion.div
@@ -477,9 +487,7 @@ export default function PredmetiList() {
               }
               const listaSlika = siroveSlike;
 
-              // Provjeravamo je li aukcija završena (kombinacija stanja iz objekta ili izračuna datuma)
-              const zavrsenoPoDatumu = jeAukcijaZavrsena(c.zavrsava);
-              const jeZavrseno = zavrseneAukcije[c.id || c.sifra] || zavrsenoPoDatumu;
+              const jeZavrseno = zavrseneAukcije[c.id || c.sifra] || false;
 
               // Provjera ponuda
               const imaPonuda = Array.isArray(c.ponude) && c.ponude.length > 0;
@@ -490,6 +498,7 @@ export default function PredmetiList() {
               return (
                 <Col key={c.id || c.sifra}>
                   <Card
+                    
                     className="h-100 shadow-sm border-0 overflow-hidden position-relative"
                     style={{
                       filter: jeZavrseno
@@ -637,14 +646,13 @@ export default function PredmetiList() {
                         </div>
                       </div>
 
-                      {/* Gumb postavljen na disabled ako je aukcija završena */}
                       <Button
-                        variant={jeZavrseno ? "secondary" : "primary"}
+                        variant="primary"
                         size="sm"
                         className="w-100 mb-2"
                         disabled={jeZavrseno}
                         onClick={() => otvoriModalZaPonudu(c)}>
-                        {jeZavrseno ? "Aukcija je završila" : "Tvoja ponuda"}
+                        Tvoja ponuda
                       </Button>
 
                       <div className="d-flex gap-2 pt-2 border-top">
@@ -799,7 +807,7 @@ export default function PredmetiList() {
                 return Number(iznosPonude) <= trenutnaCijena;
               })()
             }>
-            Potvrdi ponuda
+            Potvrdi ponudu
           </Button>
         </Modal.Footer>
       </Modal>

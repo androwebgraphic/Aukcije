@@ -74,7 +74,16 @@ export default function KategorijaList() {
     await KategorijeServices.obrisi(id)
     ucitajKategorije()
   }
+const deklinirajOglas = (broj) => {
+  const kolicina = Number(broj) || 0; // Osigurava da je uvijek broj
+  const mod100 = kolicina % 100;
+  const mod10 = kolicina % 10;
 
+  if (mod10 === 1 && mod100 !== 11) {
+    return `${kolicina} oglas`;
+  }
+  return `${kolicina} oglasa`;
+};
   return (
     <>
 
@@ -130,8 +139,9 @@ export default function KategorijaList() {
                           <IkonaKategorije nazivIkona={c.ikona} />
                         </div>
                         <div>
-                          <Card.Title style={{ color: "#1a3580" }}>{c.naziv} ({brojPredmeta }) oglasa</Card.Title>
-                        </div>
+<Card.Title style={{ color: "#1a3580" }}>
+  {c.naziv} ({deklinirajOglas(brojPredmeta)})
+</Card.Title>                      </div>
                       </div>
 
                       {/* Opis kategorije */}
@@ -139,12 +149,12 @@ export default function KategorijaList() {
                         <strong>Opis:</strong>  <ExpandableText text={c.opis} maxLength={60} />
                       </Card.Text>
 
-                      {/* Broj predmeta badge */}
-                      {/* <div className="mb-3">
+                     {/* Broj predmeta badge */}
+                   {/* <div className="mb-3">
                         <Badge bg="secondary" className="text-light px-2 py-2">
                           Broj predmeta: {brojPredmeta}
                         </Badge>
-                      </div> */}
+                      </div>  */}
 
                       {/* Akcijski gumbi */}
                    

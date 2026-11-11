@@ -14,14 +14,14 @@ const Odbrojavanje = ({ zavrsava }) => {
     return () => clearInterval(timer);
   }, [zavrsava]);
 
-  if (preostalo <= 0) return <span>Isteklo</span>;
+  if (preostalo <= 0) return <span style={{color:'red', fontWeight:'bold', fontStyle:'italic'}}>Aukcija završila!!!</span>;
 
   const s = Math.floor((preostalo / 1000) % 60).toString().padStart(2, '0');
   const m = Math.floor((preostalo / (1000 * 60)) % 60).toString().padStart(2, '0');
   const h = Math.floor((preostalo / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
   const d = Math.floor(preostalo / (1000 * 60 * 60 * 24));
 
-  return <span>{d > 0 ? `${d}d ` : ''}{h}:{m}:{s}</span>;
+  return <span>{d > 0 ? `${d}d ` : ''}{h}h:{m}:{s}</span>;
 };
 
 export default Odbrojavanje;

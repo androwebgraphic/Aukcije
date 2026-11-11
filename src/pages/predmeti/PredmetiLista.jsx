@@ -27,7 +27,7 @@ import { FaSearch } from "react-icons/fa";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
-import { LordIcon } from "@lordicon/react";
+
 import Odbrojavanje from "../../components/Odbrojavanje";
 
 

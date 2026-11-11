@@ -51,16 +51,9 @@ async function promijeni(id, predmet) {
 }
 
 async function obrisi(id) {
-<<<<<<< Updated upstream
   let predmeti = dohvatiSveIzStorage()
   predmeti = predmeti.filter(c=> c.id !== parseInt(id))
   spremiUStorage(predmeti)
-=======
-  let predmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
-  predmeti = predmeti.filter(p => Number(p.id || p.sifra) !== parseInt(id));
-  localStorage.setItem("predmeti", JSON.stringify(predmeti));
-  return true;
->>>>>>> Stashed changes
 }
 
 async function dohvatiStranicu(stranica = 1, velicinaStranice = 12) {

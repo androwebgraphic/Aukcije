@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+     "start": "oMLX",
+    "watch": "oMLX watch"
   },
   "dependencies": {
     "@faker-js/faker": "^10.6.0",
@@ -24,7 +26,8 @@
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
     "react-router-dom": "^7.18.4",
-    "react-toastify": "^11.1.0"
+    "react-toastify": "^11.1.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

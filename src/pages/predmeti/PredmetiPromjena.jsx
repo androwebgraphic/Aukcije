@@ -9,6 +9,7 @@ import Heading from "../../components/UI/Heading";
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import { ShemaPredmet } from "../../schemas/SchemaPredmet";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
@@ -299,6 +300,9 @@ export default function PredmetiPromjena() {
                 value={predmet.naziv || ""}
                 onChange={handleChange}
                 required
+   
+
+           
               />
             </Form.Group>
           </Col>

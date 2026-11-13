@@ -67,11 +67,6 @@ export default function PredmetNovi() {
   const [greska, setGreska] = useState(null);
   const [errors, setErrors] = useState({});
 
-  const formatZaDateTimeLocal = (date) => {
-    const d = new Date(date);
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  };
 
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);                      // [{ id, naziv }]
@@ -87,8 +82,6 @@ export default function PredmetNovi() {
     godinaNastanka: "",
     stanje: "",
     pocetnaCijena: "",
-    dodano: formatZaDateTimeLocal(new Date()),
-    zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
   });
 
   const [slikaZaCrop, setSlikaZaCrop] = useState(null);
@@ -280,8 +273,8 @@ export default function PredmetNovi() {
         godinaNastanka: podaciZaValidaciju.godinaNastanka,
         stanje: predmet.stanje,
         pocetnaCijena: podaciZaValidaciju.pocetnaCijena,
-        dodano: predmet.dodano ? new Date(predmet.dodano).toISOString() : null,
-        zavrsava: predmet.zavrsava ? new Date(predmet.zavrsava).toISOString() : null,
+        dodano: new Date().toISOString(),
+        zavrsava: new Date(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
         kategorija: podaciZaValidaciju.kategorija,
         oznake: odabraneOznake.map(o => Number(o.id)).filter(id => Number.isFinite(id)),
         slike: isjecenaSlikaUrl
@@ -448,17 +441,11 @@ export default function PredmetNovi() {
           </Col>
 
           <Col sm={6}>
-            <Form.Group controlId="dodano">
-              <FormLabel>Dodano</FormLabel>
-              <FormControl type="datetime-local" name="dodano" value={predmet.dodano} onChange={handleChange} />
-            </Form.Group>
+           tu je bio datum počinje
           </Col>
 
           <Col sm={6}>
-            <Form.Group controlId="zavrsava">
-              <FormLabel>Završava</FormLabel>
-              <FormControl type="datetime-local" name="zavrsava" value={predmet.zavrsava} onChange={handleChange} />
-            </Form.Group>
+            tu je bio datum kraj
           </Col>
 
           {/* SEKCIJA ZA SLIKU I CROPPER */}

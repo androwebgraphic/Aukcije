@@ -1,0 +1,146 @@
+
+import bcrypt from 'bcryptjs'
+const STORAGE_KEY='administratori' // ključ pod kojim se čuvaju podaci u local storage-u
+
+
+// Pomoćna funkcija za dohvaćanje podataka iz local storage-a
+function dohvatiSveIzStorage() {
+    const podaci = localStorage.getItem(STORAGE_KEY)
+    return podaci ? JSON.parse(podaci) : []
+}
+
+// Pomoćna funkcija za spremanje podataka
+function spremiUStorage(podaci) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+}
+
+// 1/4 Read - dohvati sve
+async function get() {
+    const administratori = dohvatiSveIzStorage()
+    // Ne vraćamo lozinke u listi
+    const administratoriBezcLozinki = administratori.map(op => ({
+        id: op.id,
+        email: op.email,
+        uloga: op.uloga
+    }))
+    return {success: true, data: [...administratoriBezcLozinki]}
+}
+
+// Dohvati jedan po šifri
+async function getById(id) {
+    const administratori = dohvatiSveIzStorage()
+    const administrator = administratori.find(o => o.id === id)
+    if (!administrator) {
+        return {success: false, data: null}
+    }
+    // Ne vraćamo lozinku
+    return {success: true, data: {
+        id: administrator.id,
+        email: administrator.email,
+        uloga: administrator.uloga
+    }}
+}
+
+// 2/4 Create - dodaj novi
+async function dodaj(administrator) {
+    const administratori = dohvatiSveIzStorage()
+    
+    if (administratori.length === 0) {
+        administrator.id = '1'
+    } else {
+        // Pronalaženje najveće šifre da izbjegnemo duplikate
+        administrator.id = String(parseInt(administratori[administratori.length - 1].id) + 1)
+    }
+    
+    // Hashiraj lozinku prije spremanja
+    administrator.lozinka = bcrypt.hashSync(administrator.lozinka, 10)
+    
+    administratori.push(administrator)
+    spremiUStorage(administratori)
+    return {success: true, data: {id: administrator.id, email: administrator.email}}
+}
+
+// 3/4 Update - promjeni postojeći
+async function promjeni(id, administrator) {
+    const administratori = dohvatiSveIzStorage()
+    const index = administratori.findIndex(o => o.id === id)
+    
+    if (index === -1) {
+        return {success: false, message: "Administrator nije pronađen"}
+    }
+    
+    // Ažuriraj email i ulogu, ne lozinku
+    administratori[index] = {
+        ...administratori[index],
+        email: administrator.email,
+        uloga: administrator.uloga,
+        id: id
+    }
+    spremiUStorage(administratori)
+    return {success: true, data: {id: administratori[index].id, email: administratori[index].email, uloga: administratori[index].uloga}}
+}
+
+// Posebna funkcija za promjenu lozinke
+async function promjeniLozinku(id, novaLozinka) {
+    const administratori = dohvatiSveIzStorage()
+    const index = administratori.findIndex(o => o.id === id)
+    
+    if (index === -1) {
+        return {success: false, message: "Administrator nije pronađen"}
+    }
+    
+    // Hashiraj novu lozinku
+    administratori[index].lozinka = bcrypt.hashSync(novaLozinka, 10)
+    spremiUStorage(administratori)
+    
+    return {success: true, message: "Lozinka uspješno promijenjena"}
+}
+
+// 4/4 Delete - obriši
+async function obrisi(id) {
+    let administratori = dohvatiSveIzStorage()
+    const initialLength = administratori.length
+    administratori = administratori.filter(o => o.id !== id)
+    
+    if (administratori.length === initialLength) {
+        return {success: false, message: "Administrator nije pronađen"}
+    }
+    
+    spremiUStorage(administratori)
+    return {success: true, message: 'Administrator obrisan'}
+}
+
+// Funkcija za prijavu
+async function prijava(email, lozinka) {
+    const administratori = dohvatiSveIzStorage()
+    const administrator = administratori.find(o => o.email === email)
+    if (!administrator) {
+        return {success: false, message: "Email i lozinka ne odgovaraju"} // iako bi ovdje mogli napisati i da email ne postoji ali to onda napadačima omogućuje da zna tko je a tko nije registriran
+    }
+    
+    // Provjeri lozinku pomoću bcrypt
+    const isMatch = bcrypt.compareSync(lozinka, administrator.lozinka)
+    if (!isMatch) {
+        return {success: false, message: "Email i lozinka ne odgovaraju"}
+    }
+    
+    // Vrati administratora bez lozinke
+    return {
+        success: true, 
+        data: {
+            id: administrator.id,
+            email: administrator.email,
+            uloga: administrator.uloga
+        }
+    }
+}
+
+export default {
+    get,
+    dodaj,
+    getById,
+    promjeni,
+    promjeniLozinku,
+    obrisi,
+    prijava
+}

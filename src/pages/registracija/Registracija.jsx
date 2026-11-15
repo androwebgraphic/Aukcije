@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import Heading from "../../components/UI/Heading";
-
+import Upute from "../../components/Upute";
 export default function KorisnikoNovi() {
     const navigate = useNavigate();
 
@@ -35,7 +35,8 @@ export default function KorisnikoNovi() {
 
     return (
       <>
-           <Heading as='h2' color='azure'>Registracija</Heading>
+        <Heading as='h2' color='azure'>Registracija</Heading>
+        <Upute>upute</Upute>
      
             <Row>
               <Form onSubmit={handleSubmit}>

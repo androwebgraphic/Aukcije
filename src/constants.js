@@ -9,7 +9,7 @@ export const RouteNames = {
 	KATEGORIJA_NOVA: "/kategorije/dodajkategoriju",
 
 	//auth
-	REGISTRACIJA: "/registracija",
+	REGISTRACIJA: "/registracija/",
 	LOGIRANJE: "/logiranje",
 
 	//Predmeti

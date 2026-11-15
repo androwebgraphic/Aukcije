@@ -16,7 +16,7 @@ export default function GeneriranjePodataka() {
   const [brojPredmeta, setBrojPredmeta] = useState(20);
   const [brojOznaka, setBrojOznaka] = useState(5);
   const [brojKorisnika, setBrojKorisnika] = useState(10);
-  const [brojAdministratora, setBrojAdministratora] = useState(5);
+
 
 
   const [poruka, setPoruka] = useState(null);
@@ -350,7 +350,7 @@ export default function GeneriranjePodataka() {
       <Row>
         <Col md={3} className="mb-3">
           <Form onSubmit={handleGenerirajKategorije}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="brojKategorija">
               <Form.Label>Broj kategorija</Form.Label>
               <Form.Control
                 type="number"
@@ -369,7 +369,7 @@ export default function GeneriranjePodataka() {
 
         <Col md={3} className="mb-3">
           <Form onSubmit={handleGenerirajOznake}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="brojOznaka">
               <Form.Label>Broj oznaka</Form.Label>
               <Form.Control
                 type="number"
@@ -388,7 +388,7 @@ export default function GeneriranjePodataka() {
 
         <Col md={3} className="mb-3">
           <Form onSubmit={handleGenerirajPredmete}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="brojPredmeta">
               <Form.Label>Broj predmeta</Form.Label>
               <Form.Control
                 type="number"
@@ -407,7 +407,7 @@ export default function GeneriranjePodataka() {
 
         <Col md={3} className="mb-3">
           <Form onSubmit={handleGenerirajKorisnike}>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" controlId="brojKorisnika">
               <Form.Label>Broj korisnika</Form.Label>
               <Form.Control
                 type="number"

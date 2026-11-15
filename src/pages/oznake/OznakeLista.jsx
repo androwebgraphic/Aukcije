@@ -63,6 +63,7 @@ export default function OznakeList() {
 
           <Form.Control
             type="text"
+            aria-label="Pretraži oznake"
             placeholder="Pretraži oznake..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}

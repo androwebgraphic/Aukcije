@@ -160,6 +160,7 @@ export default function KorisniciLista() {
             <Pagination.Item
                 key={number}
                 active={number === stranica}
+                aria-current={number === stranica ? "page" : undefined}
                 onClick={() => setStranica(number)}
             >
                 {number}
@@ -299,6 +300,7 @@ export default function KorisniciLista() {
                         <Button
                             variant="secondary"
                             size="sm"
+                            aria-label="Prva stranica"
                             onClick={() => setStranica(1)}
                             disabled={stranica === 1}
                         >
@@ -307,6 +309,7 @@ export default function KorisniciLista() {
                         <Button
                             variant="secondary"
                             size="sm"
+                            aria-label="Prethodna stranica"
                             onClick={() => setStranica((prev) => Math.max(prev - 1, 1))}
                             disabled={stranica === 1}
                         >
@@ -320,6 +323,7 @@ export default function KorisniciLista() {
                         <Button
                             variant="secondary"
                             size="sm"
+                            aria-label="Sljedeća stranica"
                             onClick={() =>
                                 setStranica((prev) => Math.min(prev + 1, ukupnoStranica))
                             }
@@ -330,6 +334,7 @@ export default function KorisniciLista() {
                         <Button
                             variant="secondary"
                             size="sm"
+                            aria-label="Posljednja stranica"
                             onClick={() => setStranica(ukupnoStranica)}
                             disabled={stranica === ukupnoStranica}
                         >
@@ -339,24 +344,24 @@ export default function KorisniciLista() {
 
                     <div className="d-none d-sm-block">
                         <Pagination style={{ padding: "1rem" }}>
-                            <Pagination.First
+                            <Pagination.First aria-label="Prva stranica"
                                 onClick={() => setStranica(1)}
                                 disabled={stranica === 1}
                             />
-                            <Pagination.Prev
+                            <Pagination.Prev aria-label="Prethodna stranica"
                                 onClick={() => setStranica((prev) => Math.max(prev - 1, 1))}
                                 disabled={stranica === 1}
                             />
 
                             {items}
 
-                            <Pagination.Next
+                            <Pagination.Next aria-label="Sljedeća stranica"
                                 onClick={() =>
                                     setStranica((prev) => Math.min(prev + 1, ukupnoStranica))
                                 }
                                 disabled={stranica === ukupnoStranica}
                             />
-                            <Pagination.Last
+                            <Pagination.Last aria-label="Posljednja stranica"
                                 onClick={() => setStranica(ukupnoStranica)}
                                 disabled={stranica === ukupnoStranica}
                             />

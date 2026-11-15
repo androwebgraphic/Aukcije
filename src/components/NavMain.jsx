@@ -34,7 +34,7 @@ function NavMain() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto align-items-sm-center">
+          <Nav className="me-auto align-items-sm-center" aria-label="Glavna navigacija">
             <Nav.Link onClick={() => { navigate(RouteNames.HOME); setExpanded(false); }}>
               Početna
             </Nav.Link>

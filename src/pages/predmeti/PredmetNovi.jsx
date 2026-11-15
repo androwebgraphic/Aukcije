@@ -1,4 +1,4 @@
-import { Button, Col, Form, FormSelect, FormControl, FormLabel, Row, Alert, Card, Image as BsImage } from "react-bootstrap";
+import { Button, Col, Form, FormSelect, FormControl, FormLabel, Row, Alert, Image as BsImage } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState, useRef } from "react";
@@ -319,16 +319,16 @@ export default function PredmetNovi() {
   }
 
   return (
-    <>
+    <div className="mt-4 mb-5">
       <Heading as="h2" color="azure" className="mb-4">Dodavanje novog predmeta</Heading>
 
       {greska && <Alert variant="danger">{greska}</Alert>}
 
       <Form onSubmit={handleSubmit}>
         <Row className="g-3">
-          <Col sm={6}>
+          <Col xs={12} md={6}>
             <Form.Group controlId="naziv">
-              <FormLabel><strong>Naziv</strong></FormLabel>
+              <FormLabel>Naziv</FormLabel>
               <FormControl
                 type="text"
                 name="naziv"
@@ -344,9 +344,9 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={6}>
+          <Col xs={12} md={6}>
             <Form.Group controlId="kategorija">
-              <FormLabel><strong>Kategorija</strong></FormLabel>
+              <FormLabel>Kategorija</FormLabel>
               <FormSelect
                 value={odabranaKategorija}
                 onChange={(e) => {
@@ -364,15 +364,29 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          {/* SEKCIJA ZA OZNAKE S AUTOCOMPLETE-OM */}
-          <Col sm={6}>
-            <Card className="p-1 bg-light border" ref={autoCompleteRef}>
-              <Form.Group controlId="oznakePretraga" className="position-relative">
-                <FormLabel><strong style={{ color: "#ccc", fontSize: ".6rem" }}>Oznake (Pretraži ili dodaj novu)</strong></FormLabel>
+          {/* Oznake – isti izgled kao na Promjeni predmeta */}
+          <Col xs={12} md={6}>
+            <Form.Group controlId="oznakePretraga" className="position-relative" ref={autoCompleteRef}>
+              <FormLabel>Oznake</FormLabel>
+              <div className="d-flex flex-wrap gap-2 mb-2">
+                {odabraneOznake.map((o) => (
+                  <span key={o.id} className="badge bg-secondary d-flex align-items-center gap-1 p-2">
+                    {o.naziv}
+                    <button
+                      type="button"
+                      className="btn-close btn-close-white btn-sm"
+                      aria-label={`Ukloni oznaku ${o.naziv}`}
+                      onClick={() => ukloniOznaku(o.id)}
+                    ></button>
+                  </span>
+                ))}
+              </div>
+
+              <div className="position-relative">
                 <FormControl
                   type="text"
                   value={pretragaOznaka}
-                  placeholder="Upišite naziv oznake..."
+                  placeholder="Pretraži ili dodaj novu oznaku..."
                   autoComplete="off"
                   onChange={(e) => { setPretragaOznaka(e.target.value); setPrikaziAutoComplete(true); }}
                   onFocus={() => setPrikaziAutoComplete(true)}
@@ -380,43 +394,35 @@ export default function PredmetNovi() {
                 />
 
                 {prikaziAutoComplete && (
-                  <ul className="list-group position-absolute w-100 shadow bg-white" style={{ zIndex: 1050, maxHeight: '200px', overflowY: 'auto', left: 0, top: '100%' }}>
+                  <div className="list-group position-absolute w-100 shadow bg-white border rounded mt-1" style={{ zIndex: 1050, maxHeight: "200px", overflowY: "auto" }}>
                     {filtrirajOznake().map((o) => (
-                      <li key={o.id} className="list-group-item list-group-item-action" style={{ cursor: 'pointer' }} onClick={() => dodajOznaku(o)}>
+                      <button
+                        type="button"
+                        key={o.id}
+                        className="list-group-item list-group-item-action"
+                        onClick={() => dodajOznaku(o)}
+                      >
                         {o.naziv}
-                      </li>
+                      </button>
                     ))}
                     {pretragaOznaka.trim() !== "" && !oznakaVecPostoji(pretragaOznaka) && (
-                      <li className="list-group-item list-group-item-success fw-bold" style={{ cursor: 'pointer' }} onClick={() => kreirajI_DodajOznaku()}>
-                        ➕ Dodaj novu oznaku: "{pretragaOznaka}"
-                      </li>
+                      <button
+                        type="button"
+                        className="list-group-item list-group-item-action text-primary fw-bold border-top"
+                        onClick={() => kreirajI_DodajOznaku()}
+                      >
+                        + Dodaj novu oznaku: "{pretragaOznaka}"
+                      </button>
                     )}
-                  </ul>
+                  </div>
                 )}
-              </Form.Group>
-
-              <div className="mt-3 d-flex flex-wrap gap-1">
-                {odabraneOznake.length === 0 && <small className="text-muted" style={{ fontSize: ".6rem" }}>Nema odabranih oznaka.</small>}
-                {odabraneOznake.map((o) => (
-                  <span key={o.id} className="badge bg-secondary p-2 d-flex align-items-center gap-1">
-                    {o.naziv}
-                    <span
-                      role="button"
-                      aria-label={`Ukloni oznaku ${o.naziv}`}
-                      style={{ cursor: 'pointer', fontWeight: 'bold', marginLeft: '5px' }}
-                      onClick={() => ukloniOznaku(o.id)}
-                    >
-                      &times;
-                    </span>
-                  </span>
-                ))}
               </div>
-            </Card>
+            </Form.Group>
           </Col>
 
-          <Col sm={6}>
+          <Col xs={12} md={6}>
             <Form.Group controlId="opis">
-              <FormLabel><strong>Opis</strong></FormLabel>
+              <FormLabel>Opis</FormLabel>
               <FormControl as="textarea" name="opis" rows={3} value={predmet.opis} onChange={handleChange} placeholder="Unesite opis predmeta" isInvalid={!!errors.opis} />
               <Form.Control.Feedback type="invalid">
                 {errors.opis}
@@ -424,7 +430,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={3} lg={2}>
+          <Col xs={12} sm={4}>
             <Form.Group controlId="godinaNastanka">
               <FormLabel>Godina nastanka</FormLabel>
               <FormControl type="number" name="godinaNastanka" value={predmet.godinaNastanka} onChange={handleChange} isInvalid={!!errors.godinaNastanka} />
@@ -432,7 +438,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={3} lg={2}>
+          <Col xs={12} sm={4}>
             <Form.Group controlId="stanje">
               <FormLabel>Stanje</FormLabel>
               <FormControl type="text" name="stanje" maxLength="30" value={predmet.stanje} onChange={handleChange} placeholder="npr. Odlično" isInvalid={!!errors.stanje} />
@@ -440,7 +446,7 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={3} lg={2}>
+          <Col xs={12} sm={4}>
             <Form.Group controlId="pocetnaCijena">
               <FormLabel>Početna cijena (€)</FormLabel>
               <FormControl type="number" step="0.01" name="pocetnaCijena" value={predmet.pocetnaCijena} onChange={handleChange} isInvalid={!!errors.pocetnaCijena} />
@@ -448,24 +454,24 @@ export default function PredmetNovi() {
             </Form.Group>
           </Col>
 
-          <Col sm={6}>
+          {/* <Col xs={12} md={6}>
             <Form.Group controlId="dodano">
               <FormLabel>Dodano</FormLabel>
               <FormControl type="datetime-local" name="dodano" value={predmet.dodano} onChange={handleChange} />
             </Form.Group>
           </Col>
 
-          <Col sm={6}>
+          <Col xs={12} md={6}>
             <Form.Group controlId="zavrsava">
               <FormLabel>Završava</FormLabel>
               <FormControl type="datetime-local" name="zavrsava" value={predmet.zavrsava} onChange={handleChange} />
             </Form.Group>
-          </Col>
+          </Col> */}
 
           {/* SEKCIJA ZA SLIKU I CROPPER */}
           <Col lg={6}>
             <Form.Group controlId="slikaPredmeta">
-              <FormLabel><strong>Slika predmeta</strong></FormLabel>
+              <FormLabel>Slika predmeta</FormLabel>
               <FormControl className="mb-3" type="file" onChange={onChangeImage} accept="image/*" />
             </Form.Group>
 
@@ -525,6 +531,6 @@ export default function PredmetNovi() {
           </Button>
         </div>
       </Form>
-    </>
+    </div>
   );
 }

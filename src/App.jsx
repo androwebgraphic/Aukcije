@@ -5,34 +5,35 @@ import Footer from "./components/Footer.jsx";
 import "./App.css";
 import { Container } from "react-bootstrap";
 import { RouteNames } from "./constants.js";
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import Home from "./pages/Home.jsx";
-import Registracija from "./pages/registracija/Registracija.jsx";
-import Logiranje from "./pages/logiranje/Logiranje.jsx";
+const Home = lazy(() => import("./pages/Home.jsx"));
+const Registracija = lazy(() => import("./pages/registracija/Registracija.jsx"));
+const Logiranje = lazy(() => import("./pages/logiranje/Logiranje.jsx"));
 
-import KategorijaList from "./pages/kategorije/KategorijaList.jsx";
-import KategorijaNova from "./pages/kategorije/KategorijaNova.jsx";
-import KategorijePromjena from "./pages/kategorije/KategorijePromjena.jsx";
+const KategorijaList = lazy(() => import("./pages/kategorije/KategorijaList.jsx"));
+const KategorijaNova = lazy(() => import("./pages/kategorije/KategorijaNova.jsx"));
+const KategorijePromjena = lazy(() => import("./pages/kategorije/KategorijePromjena.jsx"));
 
-import PredmetiLista from "./pages/predmeti/PredmetiLista.jsx";
-import PredmetNovi from "./pages/predmeti/PredmetNovi.jsx";
-import PredmetiPromjena from "./pages/predmeti/PredmetiPromjena.jsx";
+const PredmetiLista = lazy(() => import("./pages/predmeti/PredmetiLista.jsx"));
+const PredmetNovi = lazy(() => import("./pages/predmeti/PredmetNovi.jsx"));
+const PredmetiPromjena = lazy(() => import("./pages/predmeti/PredmetiPromjena.jsx"));
 
-import KorisniciLista from "./pages/korisnici/KorisniciLista.jsx";
-import KorisniciPromijena from "./pages/korisnici/KorisniciPromijena.jsx";
-import KorisniciPromijenaLozinke from "./pages/korisnici/KorisniciPromijenaLozinke.jsx";
-import KorisniciNovi from "./pages/korisnici/KorisniciNovi.jsx";
+const KorisniciLista = lazy(() => import("./pages/korisnici/KorisniciLista.jsx"));
+const KorisniciPromijena = lazy(() => import("./pages/korisnici/KorisniciPromijena.jsx"));
+const KorisniciPromijenaLozinke = lazy(() => import("./pages/korisnici/KorisniciPromijenaLozinke.jsx"));
+const KorisniciNovi = lazy(() => import("./pages/registracija/Registracija.jsx"));
 
-import GeneriranjePodataka from "./pages/GeneriranjePodataka";
+const GeneriranjePodataka = lazy(() => import("./pages/GeneriranjePodataka"));
 
-import OznakeLista from "./pages/oznake/OznakeLista.jsx";
-import OznakaNova from "./pages/oznake/OznakaNova.jsx";
-import OznakePromjena from "./pages/oznake/OznakePromjena.jsx";
+const OznakeLista = lazy(() => import("./pages/oznake/OznakeLista.jsx"));
+const OznakaNova = lazy(() => import("./pages/oznake/OznakaNova.jsx"));
+const OznakePromjena = lazy(() => import("./pages/oznake/OznakePromjena.jsx"));
 
-import Uvjeti from "./pages/Uvjeti.jsx";
+const Uvjeti = lazy(() => import("./pages/Uvjeti.jsx"));
 
 function App() {
 	return (
@@ -40,6 +41,7 @@ function App() {
 			<Container>
 				<Header />
 
+				<Suspense fallback={<div className="text-center py-5 text-white">Učitavanje…</div>}>
 				<Routes>
 					<Route path={RouteNames.HOME} element={<Home />} />
 					<Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
@@ -91,6 +93,7 @@ function App() {
 
 					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />
 				</Routes>
+				</Suspense>
 
 				<ToastContainer
 					position="top"

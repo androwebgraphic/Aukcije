@@ -14,7 +14,7 @@ function Footer() {
     <>
       <footer >
          <ScrollToTopButton />
-          <Nav>
+          <Nav aria-label="Navigacija podnožja">
               <Nav.Link onClick={() => { navigate(RouteNames.UVJETI); }}>
                  Uvjeti korištenja
              

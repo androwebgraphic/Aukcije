@@ -14,8 +14,8 @@ function Header() {
  
             
                <div className="h">
-          <Link to="/">
-            <img className="logo" src={aukcijelogo} />
+          <Link to="/" aria-label="Aukcije – početna stranica">
+            <img className="logo" src={aukcijelogo} alt="Aukcije logo" />
                  
                    </Link>             {/* <h1>Aukcije</h1> */}
                         

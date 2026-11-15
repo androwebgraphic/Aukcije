@@ -1,10 +1,11 @@
-import { Form, Button, Row, Col, Card } from "react-bootstrap"
+import { Form, Button, Row, Col } from "react-bootstrap"
 import { FaPlus } from "react-icons/fa"
 import { RouteNames } from "../../constants"
 import { useNavigate } from "react-router-dom"
 import KorisniciService from "../../services/korisnici/KorisniciService" // 1. Uklonjeno 's' s kraja
 import SchemaKorisnik  from "../../schemas/SchemaKorisnik"
 import { useState } from "react"
+import Heading from "../../components/Upute"
 
 export default function korisnikiiNovi(){
 
@@ -70,12 +71,11 @@ export default function korisnikiiNovi(){
   }
   return (
         <>
-            <h3>Dodaj novog Korisnika</h3>
-            <Form onSubmit={handleSubmit}>
-      
-                    <Card className="shadow-sm">
-                        <Card.Body>
-                            <Card.Title className="mb-4">Podaci o korisniku</Card.Title>
+            <Heading as='h2' color='azure'>Registracija</Heading>
+
+      <Form onSubmit={handleSubmit}>
+        
+  
 
                             <Row>
                                 <Col xs={12}>
@@ -151,9 +151,6 @@ export default function korisnikiiNovi(){
                                     Odustani
                                 </Button>
                             </div>
-                        </Card.Body>
-                    </Card>
-             
             </Form>
         </>
     )

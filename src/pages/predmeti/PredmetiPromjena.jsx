@@ -279,13 +279,14 @@ export default function PredmetiPromjena() {
         <Row className="g-3">
           {/* Naziv */}
           <Col xs={12} md={6}>
-            <Form.Group>
+            <Form.Group controlId="naziv">
               <Form.Label>Naziv</Form.Label>
               <Form.Control
                 type="text"
                 name="naziv"
                 value={predmet.naziv || ""}
                 onChange={handleChange}
+                placeholder="Unesite naziv predmeta"
                 required
    
 
@@ -296,7 +297,7 @@ export default function PredmetiPromjena() {
 
           {/* Kategorija */}
           <Col xs={12} md={6}>
-            <Form.Group>
+            <Form.Group controlId="kategorija">
               <Form.Label>Kategorija</Form.Label>
               <FormSelect
                 value={odabranaKategorija}
@@ -312,88 +313,9 @@ export default function PredmetiPromjena() {
             </Form.Group>
           </Col>
 
-          {/* Opis */}
-          <Col xs={12}>
-            <Form.Group>
-              <Form.Label>Opis</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="opis"
-                value={predmet.opis || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          {/* Godina nastanka */}
-          <Col xs={12} md={4}>
-            <Form.Group>
-              <Form.Label>Godina nastanka</Form.Label>
-              <Form.Control
-                type="number"
-                name="godinaNastanka"
-                value={predmet.godinaNastanka || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          {/* Stanje */}
-          <Col xs={12} md={4}>
-            <Form.Group>
-              <Form.Label>Stanje</Form.Label>
-              <Form.Control
-                type="text"
-                name="stanje"
-                value={predmet.stanje || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          {/* Početna cijena */}
-          <Col xs={12} md={4}>
-            <Form.Group>
-              <Form.Label>Početna cijena</Form.Label>
-              <Form.Control
-                type="number"
-                step="0.01"
-                name="pocetnaCijena"
-                value={predmet.pocetnaCijena || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col>
-
-          {/* <Col xs={12} md={6}>
-            <Form.Group>
-              <Form.Label>Dodano</Form.Label>
-              <Form.Control
-                type="datetime-local"
-                name="dodano"
-                value={predmet.dodano || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col> */}
-
-          
-          {/* <Col xs={12} md={6}>
-            <Form.Group>
-              <Form.Label>Završava</Form.Label>
-              <Form.Control
-                type="datetime-local"
-                name="zavrsava"
-                value={predmet.zavrsava || ""}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Col> */}
-
           {/* Oznake */}
           <Col xs={12} md={6}>
-            <Form.Group className="position-relative" ref={autoCompleteRef}>
+            <Form.Group controlId="oznake" className="position-relative" ref={autoCompleteRef}>
               <Form.Label>Oznake</Form.Label>
               <div className="d-flex flex-wrap gap-2 mb-2">
                 {odabraneOznake.map((oznaka, index) => (
@@ -402,6 +324,7 @@ export default function PredmetiPromjena() {
                     <button
                       type="button"
                       className="btn-close btn-close-white btn-sm"
+                      aria-label={`Ukloni oznaku ${oznaka.naziv}`}
                       onClick={() => setOdabraneOznake(odabraneOznake.filter((_, i) => i !== index))}
                     ></button>
                   </span>
@@ -411,7 +334,7 @@ export default function PredmetiPromjena() {
               <div className="position-relative">
                 <Form.Control
                   type="text"
-                  placeholder="Klikni za popis oznaka ili upiši za pretragu..."
+                  placeholder="Pretraži ili dodaj novu oznaku..."
                   value={pretragaOznaka}
                   onChange={(e) => {
                     setPretragaOznaka(e.target.value);
@@ -452,10 +375,91 @@ export default function PredmetiPromjena() {
             </Form.Group>
           </Col>
 
+          {/* Opis */}
+          <Col xs={12} md={6}>
+            <Form.Group controlId="opis">
+              <Form.Label>Opis</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="opis"
+                value={predmet.opis || ""}
+                onChange={handleChange}
+                placeholder="Unesite opis predmeta"
+              />
+            </Form.Group>
+          </Col>
+
+          {/* Godina nastanka */}
+          <Col xs={12} sm={4}>
+            <Form.Group controlId="godinaNastanka">
+              <Form.Label>Godina nastanka</Form.Label>
+              <Form.Control
+                type="number"
+                name="godinaNastanka"
+                value={predmet.godinaNastanka || ""}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+
+          {/* Stanje */}
+          <Col xs={12} sm={4}>
+            <Form.Group controlId="stanje">
+              <Form.Label>Stanje</Form.Label>
+              <Form.Control
+                type="text"
+                name="stanje"
+                value={predmet.stanje || ""}
+                onChange={handleChange}
+                placeholder="npr. Odlično"
+              />
+            </Form.Group>
+          </Col>
+
+          {/* Početna cijena */}
+          <Col xs={12} sm={4}>
+            <Form.Group controlId="pocetnaCijena">
+              <Form.Label>Početna cijena (€)</Form.Label>
+              <Form.Control
+                type="number"
+                step="0.01"
+                name="pocetnaCijena"
+                value={predmet.pocetnaCijena || ""}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col>
+
+          {/* <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label>Dodano</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                name="dodano"
+                value={predmet.dodano || ""}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col> */}
+
+          
+          {/* <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label>Završava</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                name="zavrsava"
+                value={predmet.zavrsava || ""}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Col> */}
+
           {/* SEKCIJA ZA SLIKE I CROPPER */}
           <Col lg={6}>
-            <Form.Group>
-              <Form.Label><strong>Slike predmeta</strong></Form.Label>
+            <Form.Group controlId="slike">
+              <Form.Label>Slike predmeta</Form.Label>
               <Form.Control className='mb-3' type='file' onChange={onChangeImages} accept="image/*" />
             </Form.Group>
 
@@ -495,7 +499,7 @@ export default function PredmetiPromjena() {
                 <div key={index} className="position-relative border rounded p-1 bg-white shadow-sm" style={{ width: "100px", height: "100px" }}>
                   <img 
                     src={slikaSrc.startsWith("data:") || slikaSrc.startsWith("http") ? slikaSrc : `data:image/jpeg;base64,${slikaSrc}`} 
-                    alt={`Slika ${index + 1}`} 
+                    alt={`${predmet.naziv || "Predmet"} – slika ${index + 1}`} 
                     style={{ width: "100%", height: "100%", objectFit: "cover" }} 
                     className="rounded"
                   />
@@ -507,6 +511,7 @@ export default function PredmetiPromjena() {
                     type="button"
                     onClick={() => obrisiSliku(index)}
                     title="Obriši sliku"
+                    aria-label={`Obriši sliku ${index + 1}`}
                   >
                     &times;
                   </Button>

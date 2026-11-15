@@ -430,6 +430,7 @@ export default function PredmetiList() {
       <Pagination.Item
         key={number}
         active={number === stranica}
+        aria-current={number === stranica ? "page" : undefined}
         onClick={() => setStranica(number)}>
         {number}
       </Pagination.Item>,
@@ -487,6 +488,7 @@ export default function PredmetiList() {
               </span>
               <Form.Select
                 size="sm"
+                aria-label="Sortiraj predmete"
                 value={sortiranje}
                 onChange={(e) => {
                   setSortiranje(e.target.value);
@@ -518,6 +520,7 @@ export default function PredmetiList() {
               </span>
               <Form.Select
                 size="sm"
+                aria-label="Broj predmeta po stranici"
                 value={velicinaStranice}
                 onChange={(e) => {
                   setVelicinaStranice(parseInt(e.target.value));
@@ -541,6 +544,7 @@ export default function PredmetiList() {
               </InputGroup.Text>
               <Form.Control
                 type="text"
+                aria-label="Pretraži predmete"
                 placeholder="Pretraži predmete"
                 value={uvjetiPretrazivanja}
                 onChange={PromijeniUvjetPretrazivanja}
@@ -578,13 +582,17 @@ export default function PredmetiList() {
                 <Col key={c.id || c.sifra}>
                   <Card className="h-100 shadow-sm border-0 overflow-hidden position-relative">
                     {listaSlika.length > 1 ? (
-                      <Carousel data-bs-theme="dark" interval={null} className="bg-light">
+                      <Carousel
+                        data-bs-theme="dark"
+                        interval={null}
+                        className="bg-light"
+                        aria-label={`Galerija slika predmeta ${c.naziv}`}>
                         {listaSlika.map((slikaItem, idx) => (
                           <Carousel.Item key={idx}>
                             <img
                               className="d-block w-100"
                               src={dohvatiIzvorSlike(slikaItem)}
-                              alt={`Slika ${idx + 1}`}
+                              alt={`${c.naziv} – slika ${idx + 1}`}
                               style={{ height: "140px", objectFit: "cover" }}
                             />
                           </Carousel.Item>
@@ -737,6 +745,7 @@ export default function PredmetiList() {
               <Button
                 variant="secondary"
                 size="sm"
+                aria-label="Prva stranica"
                 onClick={() => setStranica(1)}
                 disabled={stranica === 1}>
                 &laquo;&laquo;
@@ -744,6 +753,7 @@ export default function PredmetiList() {
               <Button
                 variant="secondary"
                 size="sm"
+                aria-label="Prethodna stranica"
                 onClick={() => setStranica((prev) => Math.max(prev - 1, 1))}
                 disabled={stranica === 1}>
                 &lsaquo;
@@ -758,6 +768,7 @@ export default function PredmetiList() {
               <Button
                 variant="secondary"
                 size="sm"
+                aria-label="Sljedeća stranica"
                 onClick={() =>
                   setStranica((prev) => Math.min(prev + 1, ukupnoStranica))
                 }
@@ -767,6 +778,7 @@ export default function PredmetiList() {
               <Button
                 variant="secondary"
                 size="sm"
+                aria-label="Posljednja stranica"
                 onClick={() => setStranica(ukupnoStranica)}
                 disabled={stranica === ukupnoStranica}>
                 &raquo;&raquo;
@@ -775,24 +787,24 @@ export default function PredmetiList() {
 
             <div className="d-none d-sm-block">
               <Pagination style={{ padding: "1rem" }}>
-                <Pagination.First
+                <Pagination.First aria-label="Prva stranica"
                   onClick={() => setStranica(1)}
                   disabled={stranica === 1}
                 />
-                <Pagination.Prev
+                <Pagination.Prev aria-label="Prethodna stranica"
                   onClick={() => setStranica((prev) => Math.max(prev - 1, 1))}
                   disabled={stranica === 1}
                 />
 
                 {items}
 
-                <Pagination.Next
+                <Pagination.Next aria-label="Sljedeća stranica"
                   onClick={() =>
                     setStranica((prev) => Math.min(prev + 1, ukupnoStranica))
                   }
                   disabled={stranica === ukupnoStranica}
                 />
-                <Pagination.Last
+                <Pagination.Last aria-label="Posljednja stranica"
                   onClick={() => setStranica(ukupnoStranica)}
                   disabled={stranica === ukupnoStranica}
                 />
@@ -821,6 +833,7 @@ export default function PredmetiList() {
                   <Form.Label>Vaša ponuda za: {odabraniPredmet.naziv}</Form.Label>
                   <Form.Control
                     type="number"
+                    aria-label="Iznos ponude"
                     min={minimalnaCijena}
                     value={iznosPonude}
                     onChange={(e) => setIznosPonude(e.target.value)}

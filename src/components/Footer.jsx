@@ -20,10 +20,10 @@ function Footer() {
              
                 </Nav.Link>
           </Nav>
-      <p className="copy">&copy; {APP_NAME} Sva prava pridržana {currentYear}.</p>
+      <p className="copy">&copy; {APP_NAME} Sva prava pridržana {currentYear} <strong style={{color:"orange"}}>({DATA_SOURCE})</strong>.</p>
       
 
- <p className="storage"><span>Koristi se:</span>{DATA_SOURCE}</p> 
+
      
 
        

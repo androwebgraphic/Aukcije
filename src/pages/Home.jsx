@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 import { APP_NAME } from "../constants";
 import MenHighFive from "../components/MenHighFive";
 import { Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 import KategorijeServices from "../services/kategorije/KategorijeServices";
 import PredmetiServices from "../services/predmeti/PredmetiServices";
-import KorisniciServices from "../services/korisnici/KorisniciServices";
+import KorisniciService from "../services/korisnici/KorisniciService";
 import { LordIcon } from "@lordicon/react";
 
 // Inicijalizacija LordIcon elementa s Lottie engineom
@@ -27,7 +27,7 @@ export default function Home() {
       try {
         const kategorijeRezultat = await KategorijeServices.get();
         const predmetiRezultat = await PredmetiServices.get();
-        const korisniciRezultat = await KorisniciServices.get();
+        const korisniciRezultat = await KorisniciService.get();
 
         setBrojKategorija(kategorijeRezultat.data.length);
         setBrojPredmeta(predmetiRezultat.data.length);

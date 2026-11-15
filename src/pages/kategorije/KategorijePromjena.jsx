@@ -175,17 +175,17 @@ export default function KategorijePromijena() {
 
   
   
-                                <div className="d-flex gap-2 mt-predmet pt-2 ">
-
-            <Button type="submit" variant="outline-warning" className=" w-100" size="sm">
-              Promijeni
-            </Button>
-      
-   
-           <Button size="sm" variant="outline-danger" className=" w-100 " onClick={() => navigate(RouteNames.KATEGORIJE)}>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
+          <Button type="submit" variant="outline-warning">
+            Promijeni
+          </Button>
+          <Button
+            type="button"
+            variant="outline-danger"
+            onClick={() => navigate(RouteNames.KATEGORIJE)}>
             Odustani
-            </Button>
-            </div>
+          </Button>
+        </div>
      
      
       </Form>

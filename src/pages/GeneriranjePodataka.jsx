@@ -1,16 +1,23 @@
-import { useState } from "react";
-import { Button, Form, Alert, Container, Row, Col } from "react-bootstrap";
+
+import { useEffect,useState } from "react";
+import { Button, Form, Alert, Row, Col } from "react-bootstrap";
 import { Faker, hr, en } from "@faker-js/faker";
 import KategorijeServices from "../services/kategorije/KategorijeServices";
 import PredmetiServices from "../services/predmeti/PredmetiServices";
+import KorisniciService from "../services/korisnici/KorisniciService";
 import OznakeServices from "../services/oznake/OznakeServices";
-import KorisniciServices from "../services/korisnici/KorisniciServices";
+import { APP_NAME } from "../constants";
+
+const ADMIN_EMAIL = "admin@edunova.hr";
+const TESTNA_LOZINKA = "Edunova123!";
 
 export default function GeneriranjePodataka() {
   const [brojKategorije, setBrojKategorije] = useState(13);
   const [brojPredmeta, setBrojPredmeta] = useState(20);
   const [brojOznaka, setBrojOznaka] = useState(5);
   const [brojKorisnika, setBrojKorisnika] = useState(10);
+  const [brojAdministratora, setBrojAdministratora] = useState(5);
+
 
   const [poruka, setPoruka] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,7 +26,9 @@ export default function GeneriranjePodataka() {
   const faker = new Faker({
     locale: [hr, en],
   });
-
+  useEffect(() => {
+  document.title = 'Generiranje podatak' + APP_NAME
+})
   const generirajKategorije = async (broj) => {
     const nazivKategorijeList = [
       "Auti Oldtimers", "Računala", "Motocikli", "Nakit", "Umjetnine",
@@ -105,12 +114,10 @@ export default function GeneriranjePodataka() {
      
   const generirajKorisnike = async (broj) => {
     for (let i = 0; i < broj; i++) {
-      await KorisniciServices.dodaj({
-        ime: faker.person.firstName(),
-        prezime: faker.person.lastName(),
+      await KorisniciService.dodaj({
         email: faker.internet.email(),
-        dodano: new Date().toISOString(),
-
+        lozinka: TESTNA_LOZINKA,
+        uloga: "korisnik",
       });
     }
   };
@@ -158,27 +165,7 @@ export default function GeneriranjePodataka() {
     }
   };
 
-  const handleGenerirajKorisnike = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setPoruka(null);
-
-    try {
-      await generirajKorisnike(brojKorisnika);
-      setPoruka({
-        tip: "success",
-        tekst: `Uspješno generirano ${brojKorisnika} korisnika!`,
-      });
-    } catch (error) {
-      setPoruka({
-        tip: "danger",
-        tekst: "Greška pri generiranju korisnika: " + error.message,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   const handleGenerirajOznake = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -194,6 +181,27 @@ export default function GeneriranjePodataka() {
       setPoruka({
         tip: "danger",
         tekst: "Greška pri generiranju oznaka: " + error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerirajKorisnike = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setPoruka(null);
+
+    try {
+      await generirajKorisnike(brojKorisnika);
+      setPoruka({
+        tip: "success",
+        tekst: `Uspješno generirano ${brojKorisnika} korisnika!`,
+      });
+    } catch (error) {
+      setPoruka({
+        tip: "danger",
+        tekst: "Greška pri generiranju korisnika: " + error.message,
       });
     } finally {
       setLoading(false);
@@ -299,11 +307,13 @@ export default function GeneriranjePodataka() {
     setPoruka(null);
 
     try {
-      const rezultat = await KorisniciServices.get();
-      const korisnici = rezultat.data;
+      const rezultat = await KorisniciService.get();
+      const korisnici = (rezultat.data ?? []).filter(
+        (korisnik) => korisnik.uloga !== "admin"
+      );
 
       for (const korisnik of korisnici) {
-        await KorisniciServices.obrisi(korisnik.id);
+        await KorisniciService.obrisi(korisnik.id);
       }
 
       setPoruka({
@@ -320,8 +330,11 @@ export default function GeneriranjePodataka() {
     }
   };
 
+  
+
+
   return (
-    <Container className="mt-4">
+    <div className="mt-4">
       <h1>Generiranje podataka</h1>
       <p className="text-muted">
         Koristite ovaj alat za generiranje testnih podataka s lažnim (fake)
@@ -409,7 +422,16 @@ export default function GeneriranjePodataka() {
               {loading ? "Generiranje..." : "Generiraj korisnike"}
             </Button>
           </Form>
+
+
+    
         </Col>
+      </Row>
+      <Row>
+
+   
+
+
       </Row>
 
       <Alert className="mt-3" style={{ backgroundColor: "orange" }}>
@@ -467,6 +489,6 @@ export default function GeneriranjePodataka() {
         <strong>Oprez!</strong> Brisanje podataka je trajna akcija i ne može se
         poništiti.
       </Alert>
-    </Container>
+    </div>
   );
 }

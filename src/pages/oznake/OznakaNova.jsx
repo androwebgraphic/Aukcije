@@ -1,8 +1,9 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
+import { FaPlus } from "react-icons/fa";
 
 export default function OznakaNova() {
   const navigate = useNavigate();
@@ -45,20 +46,18 @@ export default function OznakaNova() {
           </Col>
         </Row>
 
-        <Row className="mt-4">
-          <Col xs={6} md={3}>
-            <Button type="submit" variant="outline-success" size="sm" className="w-100">
-              Dodaj
-            </Button>
-          </Col>
-          <Col xs={6} md={3}>
-        
-              <Link to={RouteNames.OZNAKE} style={{ color: 'white', textDecoration: 'none' }}>
-                <Button size="sm" variant="outline-danger"  className="w-100">Odustani</Button>
-              </Link>
-          
-          </Col>
-        </Row>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
+          <Button type="submit" variant="success">
+            <FaPlus className="me-2" aria-hidden="true" />
+            Dodaj
+          </Button>
+          <Button
+            type="button"
+            variant="outline-danger"
+            onClick={() => navigate(RouteNames.OZNAKE)}>
+            Odustani
+          </Button>
+        </div>
       </Form>
       </>
    

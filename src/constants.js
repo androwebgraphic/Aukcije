@@ -19,13 +19,15 @@ export const RouteNames = {
 	PREDMETI_KATEGORIJA: "/predmeti/kategorija/:id",
 	PREDMET_NOVI: "/predmeti/dodajpredmet",
   PREDMETI_OMILJENI:"/predmet/omiljeni",
-	// Vinili
+  
+
 
 	UVJETI: "/uvjeti",
 
 	//korisnici
 
-	KORISNIK_PROMJENA: "/korisnici/:id",
+  KORISNIK_PROMJENA: "/korisnici/:id",
+  KORISNIK_PROMJENA_LOZINKE: '/korisnici/:id/lozinka',
 	KORISNIK_NOVI: "/korisnici/dodajkorisnika",
 	KORISNICI: "/korisnici",
 

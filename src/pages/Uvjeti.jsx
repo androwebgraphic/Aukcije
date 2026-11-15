@@ -1,4 +1,4 @@
-import { Button, Container,Row,Col } from "react-bootstrap";
+import { Button,Row,Col } from "react-bootstrap";
 
 export default function Uvjeti() {
   

@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, FormSelect, FormControl, FormLabel, Row, Alert, Card, Image as BsImage } from "react-bootstrap";
+import { Button, Col, Form, FormSelect, FormControl, FormLabel, Row, Alert, Card, Image as BsImage } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState, useRef } from "react";
@@ -9,6 +9,7 @@ import Heading from "../../components/UI/Heading";
 import { Cropper } from "react-cropper";
 import 'cropperjs/dist/cropper.css';
 import { ShemaPredmet } from "../../schemas/SchemaPredmet";
+import { FaPlus } from "react-icons/fa";
 
 // ---------------------------------------------------------------------------
 // Pomoćne funkcije za normalizaciju oznaka.
@@ -67,6 +68,11 @@ export default function PredmetNovi() {
   const [greska, setGreska] = useState(null);
   const [errors, setErrors] = useState({});
 
+  const formatZaDateTimeLocal = (date) => {
+    const d = new Date(date);
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
 
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);                      // [{ id, naziv }]
@@ -82,6 +88,8 @@ export default function PredmetNovi() {
     godinaNastanka: "",
     stanje: "",
     pocetnaCijena: "",
+    dodano: formatZaDateTimeLocal(new Date()),
+    zavrsava: formatZaDateTimeLocal(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
   });
 
   const [slikaZaCrop, setSlikaZaCrop] = useState(null);
@@ -273,8 +281,8 @@ export default function PredmetNovi() {
         godinaNastanka: podaciZaValidaciju.godinaNastanka,
         stanje: predmet.stanje,
         pocetnaCijena: podaciZaValidaciju.pocetnaCijena,
-        dodano: new Date().toISOString(),
-        zavrsava: new Date(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)).toISOString(),
+        dodano: predmet.dodano ? new Date(predmet.dodano).toISOString() : null,
+        zavrsava: predmet.zavrsava ? new Date(predmet.zavrsava).toISOString() : null,
         kategorija: podaciZaValidaciju.kategorija,
         oznake: odabraneOznake.map(o => Number(o.id)).filter(id => Number.isFinite(id)),
         slike: isjecenaSlikaUrl
@@ -311,7 +319,7 @@ export default function PredmetNovi() {
   }
 
   return (
-    <Container className="mt-4 mb-5">
+    <>
       <Heading as="h2" color="azure" className="mb-4">Dodavanje novog predmeta</Heading>
 
       {greska && <Alert variant="danger">{greska}</Alert>}
@@ -441,11 +449,17 @@ export default function PredmetNovi() {
           </Col>
 
           <Col sm={6}>
-           tu je bio datum počinje
+            <Form.Group controlId="dodano">
+              <FormLabel>Dodano</FormLabel>
+              <FormControl type="datetime-local" name="dodano" value={predmet.dodano} onChange={handleChange} />
+            </Form.Group>
           </Col>
 
           <Col sm={6}>
-            tu je bio datum kraj
+            <Form.Group controlId="zavrsava">
+              <FormLabel>Završava</FormLabel>
+              <FormControl type="datetime-local" name="zavrsava" value={predmet.zavrsava} onChange={handleChange} />
+            </Form.Group>
           </Col>
 
           {/* SEKCIJA ZA SLIKU I CROPPER */}
@@ -498,11 +512,19 @@ export default function PredmetNovi() {
           </Col>
         </Row>
 
-        <Row className="mt-4 mb-4">
-          <Col xs={6} md={3}><Button type="submit" variant="outline-success" className="w-100" size="sm">Dodaj</Button></Col>
-          <Col xs={6} md={3}><Button variant="outline-danger" className="w-100" size="sm" onClick={() => navigate(RouteNames.PREDMETI)}>Odustani</Button></Col>
-        </Row>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-4 forma-akcije">
+          <Button type="submit" variant="success">
+            <FaPlus className="me-2" aria-hidden="true" />
+            Dodaj
+          </Button>
+          <Button
+            type="button"
+            variant="outline-danger"
+            onClick={() => navigate(RouteNames.PREDMETI)}>
+            Odustani
+          </Button>
+        </div>
       </Form>
-    </Container>
+    </>
   );
 }

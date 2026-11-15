@@ -1,15 +1,32 @@
+import { useEffect, useState } from "react";
 import { MdVerticalAlignTop } from "react-icons/md";
 
-// ScrollToTopButton.jsx example
 function ScrollToTopButton() {
+  const [vidljiv, setVidljiv] = useState(false);
+
+  useEffect(() => {
+    const provjeriPomak = () => setVidljiv(window.scrollY > 200);
+
+    provjeriPomak();
+    window.addEventListener("scroll", provjeriPomak, { passive: true });
+    return () => window.removeEventListener("scroll", provjeriPomak);
+  }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <button className="scroll-to-top-btn" onClick={scrollToTop}>
-     <MdVerticalAlignTop color="#1a3580" size={30}/>
-  </button>
+    <button
+      type="button"
+      className={`scroll-to-top-btn${vidljiv ? " is-visible" : ""}`}
+      onClick={scrollToTop}
+      title="Povratak na vrh"
+      aria-label="Povratak na vrh"
+      aria-hidden={!vidljiv}
+      tabIndex={vidljiv ? 0 : -1}>
+      <MdVerticalAlignTop color="#1a3580" size={28} />
+    </button>
   );
 }
 

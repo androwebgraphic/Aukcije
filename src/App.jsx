@@ -6,9 +6,12 @@ import "./App.css";
 import { Container } from "react-bootstrap";
 import { RouteNames } from "./constants.js";
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Home from "./pages/Home.jsx";
-import Registracija from "./pages/korisnici/Registracija.jsx";
-import Logiranje from "./pages/Logiranje.jsx";
+import Registracija from "./pages/registracija/Registracija.jsx";
+import Logiranje from "./pages/logiranje/Logiranje.jsx";
 
 import KategorijaList from "./pages/kategorije/KategorijaList.jsx";
 import KategorijaNova from "./pages/kategorije/KategorijaNova.jsx";
@@ -17,10 +20,11 @@ import KategorijePromjena from "./pages/kategorije/KategorijePromjena.jsx";
 import PredmetiLista from "./pages/predmeti/PredmetiLista.jsx";
 import PredmetNovi from "./pages/predmeti/PredmetNovi.jsx";
 import PredmetiPromjena from "./pages/predmeti/PredmetiPromjena.jsx";
-import PredmetOmiljeni from "./pages/predmeti/PredmetOmiljeni.jsx";
 
 import KorisniciLista from "./pages/korisnici/KorisniciLista.jsx";
-import KorisniciPromijena from "./pages/korisnici/KorisniciPromjena.jsx";
+import KorisniciPromijena from "./pages/korisnici/KorisniciPromijena.jsx";
+import KorisniciPromijenaLozinke from "./pages/korisnici/KorisniciPromijenaLozinke.jsx";
+import KorisniciNovi from "./pages/korisnici/KorisniciNovi.jsx";
 
 import GeneriranjePodataka from "./pages/GeneriranjePodataka";
 
@@ -29,10 +33,6 @@ import OznakaNova from "./pages/oznake/OznakaNova.jsx";
 import OznakePromjena from "./pages/oznake/OznakePromjena.jsx";
 
 import Uvjeti from "./pages/Uvjeti.jsx";
-
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 
 function App() {
 	return (
@@ -43,6 +43,7 @@ function App() {
 				<Routes>
 					<Route path={RouteNames.HOME} element={<Home />} />
 					<Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
+					<Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
 
 					<Route path={RouteNames.KATEGORIJE} element={<KategorijaList />} />
 					<Route
@@ -54,33 +55,26 @@ function App() {
 						element={<KategorijePromjena />}
 					/>
 
-					{/* 1. Specifična ruta za promjenu */}
 					<Route
 						path={RouteNames.PREDMETI_PROMJENA}
 						element={<PredmetiPromjena />}
 					/>
-
-					{/* 2. Ruta za novi predmet */}
 					<Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
-
-					{/* 3. Ruta za prikaz predmeta po kategoriji (OVO JE NEDOSTAJALO!) */}
 					<Route
 						path={RouteNames.PREDMETI_KATEGORIJA}
 						element={<PredmetiLista />}
-          />
-          		<Route
-						path={RouteNames.PREDMETI_OMILJENI}
-						element={<PredmetOmiljeni/>}
 					/>
-
-					{/* 4. Općenita ruta za listu svih predmeta */}
 					<Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
 
 					<Route path={RouteNames.KORISNICI} element={<KorisniciLista />} />
-					<Route path={RouteNames.KORISNIK_NOVI} element={<Registracija />} />
+					<Route path={RouteNames.KORISNIK_NOVI} element={<KorisniciNovi />} />
 					<Route
 						path={RouteNames.KORISNIK_PROMJENA}
 						element={<KorisniciPromijena />}
+					/>
+					<Route
+						path={RouteNames.KORISNIK_PROMJENA_LOZINKE}
+						element={<KorisniciPromijenaLozinke />}
 					/>
 
 					<Route
@@ -101,12 +95,10 @@ function App() {
 				<ToastContainer
 					position="top"
 					className="fixed top-50 start-50 translate-middle-x"
-				/>
+        />
+        			<Footer />
+			</Container>
 
-        <Footer />
-       
-      </Container>
-     
 		</>
 	);
 }

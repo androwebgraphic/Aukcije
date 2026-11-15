@@ -1,7 +1,7 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants"
-import KorisniciServices from "../../services/korisnici/KorisniciServices"
+import KorisniciService from "../../services/korisnici/KorisniciService"
 import Heading from "../../components/UI/Heading";
 
 export default function KorisnikoNovi() {
@@ -9,7 +9,7 @@ export default function KorisnikoNovi() {
 
     async function dodaj(korisnik) {
         try {
-            await KorisniciServices.dodaj(korisnik);
+            await KorisniciService.dodaj(korisnik);
             navigate(RouteNames.KORISNICI); // Preusmjeravanje nakon uspješnog slanja
         } catch (error) {
             console.error("Greška prilikom registracije korisnika:", error);
@@ -28,6 +28,7 @@ export default function KorisnikoNovi() {
             ime: podatci.get('ime') || '',
             email: podatci.get('email') || '',
             lozinka: podatci.get('lozinka') || '',
+            uloga: 'korisnik',
             dodano: dateAdded, // Ovdje šaljemo automatski generirani datum (prilagodi naziv 'dodano' ako backend traži npr. 'datum')
         });
     }

@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, FormSelect, Row } from "react-bootstrap";
+import { Button, Col, Form, FormSelect, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState, useRef } from "react";
@@ -110,19 +110,16 @@ export default function PredmetiPromjena() {
 
       if (params.id) {
         let s = null;
-        const lokalniPredmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
-        s = lokalniPredmeti.find(p => String(p.id || p.sifra) === String(params.id));
-
-        if (!s) {
-          try {
-            const odgovorPredmet = await PredmetiServices.getByID(params.id);
-            s = odgovorPredmet?.data !== undefined ? odgovorPredmet.data : odgovorPredmet;
-          } catch (err) {
-            console.warn("Predmet nije pronađen preko servisa:", err);
-          }
+        try {
+          const odgovorPredmet = await PredmetiServices.getByID(params.id);
+          s = odgovorPredmet?.data !== undefined ? odgovorPredmet.data : odgovorPredmet;
+        } catch (err) {
+          console.warn("Predmet nije pronađen preko servisa:", err);
         }
 
         if (s && Object.keys(s).length > 0) {
+          // kopija – memorijski servis vraća referencu pa je ne smijemo mijenjati
+          s = { ...s };
           if (s.dodano && typeof s.dodano === 'string') s.dodano = s.dodano.substring(0, 16);
           if (s.zavrsava && typeof s.zavrsava === 'string') s.zavrsava = s.zavrsava.substring(0, 16);
 
@@ -250,7 +247,6 @@ export default function PredmetiPromjena() {
     e.preventDefault();
 
     const azuriraniPredmet = {
-      id: params.id,
       naziv: predmet.naziv || "",
       opis: predmet.opis || "",
       godinaNastanka: predmet.godinaNastanka ? Number(predmet.godinaNastanka) : null,
@@ -265,16 +261,7 @@ export default function PredmetiPromjena() {
     };
 
     try {
-      const pohranjeniPredmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
-      const indeks = pohranjeniPredmeti.findIndex(p => String(p.id || p.sifra) === String(params.id));
-
-      if (indeks !== -1) {
-        pohranjeniPredmeti[indeks] = azuriraniPredmet;
-      } else {
-        pohranjeniPredmeti.push(azuriraniPredmet);
-      }
-
-      localStorage.setItem("predmeti", JSON.stringify(pohranjeniPredmeti));
+      await PredmetiServices.promijeni(params.id, azuriraniPredmet);
       navigate(RouteNames.PREDMETI);
     } catch (error) {
       console.error("Greška prilikom spremanja:", error);
@@ -283,7 +270,7 @@ export default function PredmetiPromjena() {
   }
 
   return (
-    <Container className="mt-4 mb-5">
+    <div className="mt-4 mb-5">
       <Heading as="h2" color="azure" className="mb-4">
         Promjena predmeta: {predmet?.naziv || ""}
       </Heading>
@@ -379,8 +366,7 @@ export default function PredmetiPromjena() {
             </Form.Group>
           </Col>
 
-          {/* Dodano */}
-          <Col xs={12} md={6}>
+          {/* <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Dodano</Form.Label>
               <Form.Control
@@ -390,10 +376,10 @@ export default function PredmetiPromjena() {
                 onChange={handleChange}
               />
             </Form.Group>
-          </Col>
+          </Col> */}
 
-          {/* Završava */}
-          <Col xs={12} md={6}>
+          
+          {/* <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Završava</Form.Label>
               <Form.Control
@@ -403,7 +389,7 @@ export default function PredmetiPromjena() {
                 onChange={handleChange}
               />
             </Form.Group>
-          </Col>
+          </Col> */}
 
           {/* Oznake */}
           <Col xs={12} md={6}>
@@ -532,31 +518,20 @@ export default function PredmetiPromjena() {
             </div>
           </Col>
 
-          {/* Gumbi za akciju */}
-          <Col xs={6} md={3} className="mt-4">
-            <Button
-              variant="outline-success"
-              type="submit"
-              className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
-              size="sm"
-            >
-              Promijeni
-            </Button>
-          </Col>
-
-          <Col xs={6} md={3} className="mt-4">
-            <Button
-              variant="outline-danger"
-              type="button"
-              className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
-              size="sm"
-              onClick={() => navigate(RouteNames.PREDMETI)}
-            >
-              Odustani
-            </Button>
-          </Col>
         </Row>
+
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
+          <Button type="submit" variant="outline-warning">
+            Promijeni
+          </Button>
+          <Button
+            type="button"
+            variant="outline-danger"
+            onClick={() => navigate(RouteNames.PREDMETI)}>
+            Odustani
+          </Button>
+        </div>
       </Form>
-    </Container>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Form, Alert } from "react-bootstrap";
+import { Row, Col, Button, Form, Alert } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import Heading from "../../components/UI/Heading";
@@ -64,7 +64,7 @@ export default function OznakePromijena() {
   }
 
   return (
-    <Container className="my-4">
+    <div className="my-4">
       <Heading as="h2" color="azure" className="mb-3">
         Promjena oznake: {naziv}
       </Heading>
@@ -105,24 +105,18 @@ export default function OznakePromijena() {
 
         <hr className="my-4" />
 
-        <Row>
-          <Col xs={6} md={6}>
-            <Button type="submit" variant="outline-warning" size="sm" className="100">
-              Promijeni
-            </Button>
-          </Col>
-          <Col xs={6} md={6}>
-            <Button
-              variant="outline-danger"
-              size="sm"
-              className="100"
-              onClick={() => navigate(RouteNames.OZNAKE)}
-            >
-              Odustani
-            </Button>
-          </Col>
-        </Row>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
+          <Button type="submit" variant="outline-warning">
+            Promijeni
+          </Button>
+          <Button
+            type="button"
+            variant="outline-danger"
+            onClick={() => navigate(RouteNames.OZNAKE)}>
+            Odustani
+          </Button>
+        </div>
       </Form>
-    </Container>
+    </div>
   );
 }

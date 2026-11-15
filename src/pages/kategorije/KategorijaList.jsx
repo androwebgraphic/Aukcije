@@ -5,6 +5,7 @@ import { Button, Row, Col, Card } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants"
 import { FaArrowTurnUp } from "react-icons/fa6"
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
 
 import Heading from "../../components/UI/Heading"
 import { motion } from "framer-motion"
@@ -95,7 +96,10 @@ const deklinirajOglas = (broj) => {
           <Heading as='h2'> Lista Kategorija <small>({kategorije.length})</small> </Heading>
 
           <Link to={RouteNames.KATEGORIJA_NOVA}>
-            <Button variant="success" size="sm" className="mb-3">Dodaj kategoriju</Button>
+            <Button variant="success" className="mb-3">
+              <FaPlus className="me-2" aria-hidden="true" />
+              Dodaj kategoriju
+            </Button>
           </Link>
         </motion.div>
 
@@ -156,30 +160,29 @@ const deklinirajOglas = (broj) => {
                         </Badge>
                       </div>  */}
 
-                      {/* Akcijski gumbi */}
-                   
-                                            <div className="d-flex gap-2 mt-predmet pt-2 border-top">
-
-                      <Button
-                            variant="outline-warning"
-                            className="w-100"
-                            size="sm"
-                            onClick={() => navigate(`/kategorije/${c.id}`)}
-                          >
-                            Promijeni
-                          </Button>
-                  
-                        
-               
-                        <Button 
-                          variant="outline-danger" 
-                          className="w-100"
+                      {/* Akcijski gumbi – isti stil kao na listi korisnika */}
+                      <div className="d-flex gap-2 pt-2 border-top">
+                        <Button
+                          variant="outline-warning"
+                          className="flex-fill"
+                          size="sm"
+                          onClick={() => navigate(`/kategorije/${c.id}`)}
+                          title="Promjena kategorije"
+                          aria-label={`Promjena kategorije: ${c.naziv}`}
+                        >
+                          <FaEdit aria-hidden="true" />
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          className="flex-fill"
                           size="sm"
                           onClick={() => obrisi(c.id)}
+                          title="Brisanje kategorije"
+                          aria-label={`Brisanje kategorije: ${c.naziv}`}
                         >
-                          Obriši
+                          <FaTrash aria-hidden="true" />
                         </Button>
-                        </div>
+                      </div>
          
 
                     </Card.Body>

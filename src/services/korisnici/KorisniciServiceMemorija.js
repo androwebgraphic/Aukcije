@@ -1,4 +1,4 @@
-import { administratori } from './AdminData.js';
+import { administratori } from './KorisniciData.js';
 import bcrypt from 'bcryptjs';
 
 async function get(){

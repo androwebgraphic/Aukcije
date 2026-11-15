@@ -1,5 +1,5 @@
-// import AdminServicesLocalStorage from "./AdmiServicesLocalStorage.js";
-// import AdminServicesmmemorija from "./AdminServicesMemorija.js"
+import AdminServiceLocalStorage from "./KorisniciServiceLocalStorage.js";
+import AdminServicemmemorija from "./KorisniciServiceMemorija.js"
 import { DATA_SOURCE } from "../../constants.js";
 
 
@@ -7,10 +7,10 @@ import { DATA_SOURCE } from "../../constants.js";
 let Servis = null
 switch (DATA_SOURCE) {
   case 'localStorage':
-    Servis = AdminServicesLocalStorage
+    Servis = AdminServiceLocalStorage
     break
   case 'memorija':
-    Servis = AdminServicesmmemorija
+    Servis = AdminServicemmemorija
     break
   default:
     Servis = null

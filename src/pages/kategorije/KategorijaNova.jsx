@@ -5,14 +5,13 @@ import {
   Form,
   FormControl,
   FormLabel,
-  Row,
-  Container
-
+  Row
 } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KategorijeServices from '../../services/kategorije/KategorijeServices';
 import Heading from "../../components/UI/Heading";
+import { FaPlus } from "react-icons/fa";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -110,7 +109,6 @@ export default function KategorijaNova() {
 
   return (
     <>
-      <Container>
       <Heading as='h2' color='azure'>Dodavanje nove kategorije</Heading>
 
       <Form onSubmit={handleSubmit} noValidate>
@@ -149,21 +147,19 @@ export default function KategorijaNova() {
          </Row>
 
         <hr />
-        <Row>
-          <Col xs={6} md={3} className="mb-2">
-            <Button type="submit"  variant="success" className="w-50" size="sm">
-              Dodaj
-            </Button>
-          </Col>
-          <Col>
-            <Link to={RouteNames.KATEGORIJE}  className="w-50" size="sm">
-              <Button  variant="danger"className="w-50" size="sm">
-             Odustani</Button>
-            </Link>
-          </Col>
-        </Row>
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
+          <Button type="submit" variant="success">
+            <FaPlus className="me-2" aria-hidden="true" />
+            Dodaj
+          </Button>
+          <Button
+            type="button"
+            variant="outline-danger"
+            onClick={() => navigate(RouteNames.KATEGORIJE)}>
+            Odustani
+          </Button>
+        </div>
         </Form>
-        </Container>
     </>
   );
 }

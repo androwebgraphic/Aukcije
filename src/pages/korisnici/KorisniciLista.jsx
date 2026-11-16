@@ -11,7 +11,7 @@ import {
     Table,
 } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
-import { FaEdit, FaKey, FaPlus, FaSearch, FaTrash } from "react-icons/fa"
+import { FaEdit, FaFilePdf, FaKey, FaPlus, FaSearch, FaTrash } from "react-icons/fa"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import { APP_NAME, RouteNames } from "../../constants"
 
@@ -72,6 +72,7 @@ export default function KorisniciLista() {
     const [korisnici, setKorisnici] = useState([])
     const [ucitavanje, setUcitavanje] = useState(true)
     const [upit, setUpit] = useState("")
+    const [pdfSeGenerira, setPdfSeGenerira] = useState(false)
 
     const [stranica, setStranica] = useState(1)
     const [velicinaStranice, setVelicinaStranice] = useState(10)
@@ -110,6 +111,22 @@ export default function KorisniciLista() {
             ucitajKorisnike()
         } else {
             alert(rezultat.message || "Greška pri brisanju")
+        }
+    }
+
+    async function preuzmiPdf(korisniciZaPdf, naslov) {
+        if (pdfSeGenerira || korisniciZaPdf.length === 0) return
+
+        setPdfSeGenerira(true)
+        try {
+            // jsPDF je velik, pa ga učitavamo tek kada korisnik zatraži PDF.
+            const { generirajKorisniciPDF } = await import("../../components/KorisniciPdfGenerator")
+            await generirajKorisniciPDF(korisniciZaPdf, { naslov })
+        } catch (error) {
+            console.error("Greška pri generiranju PDF-a:", error)
+            alert("PDF nije moguće generirati. Pokušajte ponovno.")
+        } finally {
+            setPdfSeGenerira(false)
         }
     }
 
@@ -173,6 +190,17 @@ export default function KorisniciLista() {
             <Row className="g-2 align-items-center my-3">
                 <Col xs={12} lg={6}>
                     <div className="d-grid d-lg-flex gap-2">
+                        <Button
+                            type="button"
+                            variant="outline-danger"
+                            onClick={() => preuzmiPdf(prikazani)}
+                            disabled={pdfSeGenerira || prikazani.length === 0}
+                            title="Preuzmi PDF popis korisnika"
+                            aria-label="Preuzmi PDF popis korisnika"
+                        >
+                            <FaFilePdf className="me-2" aria-hidden="true" />
+                            PDF
+                        </Button>
                         <Button as={Link} to={RouteNames.KORISNIK_NOVI} variant="success">
                             <FaPlus className="me-2" aria-hidden="true" />
                             Novi korisnik
@@ -261,7 +289,20 @@ export default function KorisniciLista() {
                         <tbody>
                             {naStranici.map((korisnik) => (
                                 <tr key={korisnik.id}>
-                                    <td className="text-break">{korisnik.email}</td>
+                                    <td className="text-break">
+                                        {korisnik.email}
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            className="p-0 ms-2 align-baseline text-danger"
+                                            onClick={() => preuzmiPdf([korisnik], "Podaci o korisniku")}
+                                            disabled={pdfSeGenerira}
+                                            title={`Preuzmi PDF za ${korisnik.email}`}
+                                            aria-label={`Preuzmi PDF za ${korisnik.email}`}
+                                        >
+                                            <FaFilePdf aria-hidden="true" />
+                                        </Button>
+                                    </td>
                                     <td>
                                         <BedzUloge uloga={korisnik.uloga} />
                                     </td>
@@ -281,7 +322,20 @@ export default function KorisniciLista() {
                     {naStranici.map((korisnik) => (
                         <Card key={korisnik.id} className="mb-3 border-0 shadow-sm">
                             <Card.Body>
-                                <div className="fw-bold text-break">{korisnik.email}</div>
+                                <div className="fw-bold text-break">
+                                    {korisnik.email}
+                                    <Button
+                                        type="button"
+                                        variant="link"
+                                        className="p-0 ms-2 align-baseline text-danger"
+                                        onClick={() => preuzmiPdf([korisnik], "Podaci o korisniku")}
+                                        disabled={pdfSeGenerira}
+                                        title={`Preuzmi PDF za ${korisnik.email}`}
+                                        aria-label={`Preuzmi PDF za ${korisnik.email}`}
+                                    >
+                                        <FaFilePdf aria-hidden="true" />
+                                    </Button>
+                                </div>
                                 <div className="my-2">
                                     <BedzUloge uloga={korisnik.uloga} />
                                 </div>

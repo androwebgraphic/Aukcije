@@ -522,3 +522,25 @@ textarea::-moz-selection {
   background-color: #ffc107;
   border-color: rgba(0, 0, 0, 0.7);
 }
+
+
+/* Info kartica na naslovnici – svaka stavka (ikona + naziv + broj)
+   vertikalno je centrirana u svom redu. */
+.info .row {
+  align-items: center;
+  min-height: 3rem;
+}
+
+.info h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.info .entitet p {
+  margin: 0;
+  line-height: 1.2;
+}

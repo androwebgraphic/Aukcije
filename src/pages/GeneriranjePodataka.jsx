@@ -6,10 +6,14 @@ import KategorijeServices from "../services/kategorije/KategorijeServices";
 import PredmetiServices from "../services/predmeti/PredmetiServices";
 import KorisniciService from "../services/korisnici/KorisniciService";
 import OznakeServices from "../services/oznake/OznakeServices";
-import { APP_NAME } from "../constants";
-
-const ADMIN_EMAIL = "admin@edunova.hr";
-const TESTNA_LOZINKA = "Edunova123!";
+import {
+  ADMIN_EMAIL,
+  ADMIN_LOZINKA,
+  APP_NAME,
+  KORISNIK_EMAIL,
+  KORISNIK_LOZINKA,
+  TESTNA_LOZINKA,
+} from "../constants";
 
 export default function GeneriranjePodataka() {
   const [brojKategorije, setBrojKategorije] = useState(13);
@@ -112,7 +116,29 @@ export default function GeneriranjePodataka() {
     }
   };
      
+  // Demo računi (admin i obični korisnik) moraju postojati da bi se prijava
+  // mogla isprobati. Kreiraju se samo ako već ne postoje, pa se postojeće
+  // lozinke ne mijenjaju.
+  const osigurajDemoRacune = async () => {
+    const rezultat = await KorisniciService.get();
+    const postojeci = rezultat.data ?? [];
+
+    const demoRacuni = [
+      { email: ADMIN_EMAIL, lozinka: ADMIN_LOZINKA, uloga: "admin" },
+      { email: KORISNIK_EMAIL, lozinka: KORISNIK_LOZINKA, uloga: "korisnik" },
+    ];
+
+    for (const racun of demoRacuni) {
+      const postoji = postojeci.some((korisnik) => korisnik.email === racun.email);
+      if (postoji) continue;
+
+      await KorisniciService.dodaj(racun);
+    }
+  };
+
   const generirajKorisnike = async (broj) => {
+    await osigurajDemoRacune();
+
     for (let i = 0; i < broj; i++) {
       await KorisniciService.dodaj({
         email: faker.internet.email(),
@@ -196,7 +222,7 @@ export default function GeneriranjePodataka() {
       await generirajKorisnike(brojKorisnika);
       setPoruka({
         tip: "success",
-        tekst: `Uspješno generirano ${brojKorisnika} korisnika!`,
+        tekst: `Uspješno generirano ${brojKorisnika} korisnika i osigurani demo računi (admin, korisnik)!`,
       });
     } catch (error) {
       setPoruka({

@@ -5,9 +5,11 @@ import { APP_NAME, RouteNames } from '../constants';
 import { Link, useNavigate } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
 import KategorijeServices from '../services/kategorije/KategorijeServices';
+import useAuth from '../hooks/useAuth';
 
 function NavMain() {
   const navigate = useNavigate();
+  const { isLoggedIn, authUser, logout } = useAuth();
   const [expanded, setExpanded] = useState(false);
   const [kategorije, setKategorije] = useState([]);
 
@@ -76,12 +78,25 @@ function NavMain() {
               ))}
             </NavDropdown>
 
-            <Nav.Link onClick={() => { navigate(RouteNames.KORISNIK_NOVI); setExpanded(false); }}>
-              Registracija
-            </Nav.Link>
-            <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE); setExpanded(false); }}>
-              Logiranje
-            </Nav.Link>
+            {isLoggedIn ? (
+              <>
+                <Nav.Link disabled aria-label="Prijavljeni korisnik">
+                  {authUser?.email}
+                </Nav.Link>
+                <Nav.Link onClick={() => { logout(); setExpanded(false); }}>
+                  Odjava
+                </Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link onClick={() => { navigate(RouteNames.KORISNIK_NOVI); setExpanded(false); }}>
+                  Registracija
+                </Nav.Link>
+                <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE); setExpanded(false); }}>
+                  Logiranje
+                </Nav.Link>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
         </Navbar>

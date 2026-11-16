@@ -212,6 +212,10 @@ a.dropdown-item:hover{
   color: orange;
 }
 
+/* .card:hover {
+  transform:rotate( 12deg);
+ animation: 2s ease-in;
+} */
 .card-body p.text-secondary {
   color: var(--primary-txt);
   font-size: 0.8rem;

@@ -7,8 +7,6 @@ import { Container } from "react-bootstrap";
 import { RouteNames } from "./constants.js";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Registracija = lazy(() => import("./pages/registracija/Registracija.jsx"));
@@ -95,10 +93,6 @@ function App() {
 				</Routes>
 				</Suspense>
 
-				<ToastContainer
-					position="top"
-					className="fixed top-50 start-50 translate-middle-x"
-        />
         			<Footer />
 			</Container>
 

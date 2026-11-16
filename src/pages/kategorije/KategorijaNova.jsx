@@ -13,8 +13,6 @@ import KategorijeServices from '../../services/kategorije/KategorijeServices';
 import Heading from "../../components/UI/Heading";
 import { FaPlus } from "react-icons/fa";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function KategorijaNova() {
   const navigate = useNavigate();
@@ -37,76 +35,25 @@ export default function KategorijaNova() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    // 1. Dohvati trenutne vrijednosti
-    const naziv = nazivRef.current.value;
-    const opis = opisRef.current.value;
-    // const datumMoj = datumRef.current.value;
-    
-
-    // 2. Validacija
+    const naziv = nazivRef.current.value.trim();
+    const opis = opisRef.current.value.trim();
     const newErrors = {};
-    if (naziv.trim().length < 3 || naziv.trim().length > 30 || naziv.trim.length ==="") {
-    
-            toast.error("naziv ne smije biti prazno polje, broj znakova veci od 2 a manji od 30", {
-    
-              position: "top-center",
-              autoclose: 2500,
-            
-            })
-            return
-          
-          }  else {
-                toast.success("Naziv prihvaćen", {
-          
-                    position: "top-center",
-                    autoclose: 2500,
-                  
-                  })
-              }
-    if (opis.trim().length < 3 || opis.trim().length > 100) {
-    
-            toast.error("Opis ne smije biti prazno polje, broj znakova veci od 2 a mnji od 100", {
-    
-              position: "top-center",
-              autoclose: 2500,
-            
-            })
-            return
-          
-          }  else {
-                toast.success("Opis prihvaćen", {
-          
-                    position: "top-center",
-                    autoclose: 2500,
-                  
-                  })
-              }
-    if (!naziv.trim()) {
-      newErrors.naziv = "Naziv je obavezan.";
-    }
-    if (!opis.trim()) {
-      newErrors.opis = "Opis je obavezan.";
-    }
-    // if (!datumMoj) {
-    //   newErrors.datumMoj = "Datum objave je obavezan.";
-    // }
-  
 
-    // 3. Ako ima grešaka, postavi ih u stanje i prekini slanje
+    if (naziv.length < 3 || naziv.length > 30) {
+      newErrors.naziv = "Naziv mora imati između 3 i 30 znakova.";
+    }
+    if (opis.length < 3 || opis.length > 100) {
+      newErrors.opis = "Opis mora imati između 3 i 100 znakova.";
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // 4. Ako je sve u redu, pošalji podatke
-    dodaj({
-      naziv,
-      opis,
-
-      // datumMoj: new Date(datumMoj).toISOString(),
-    });
+    setErrors({});
+    dodaj({ naziv, opis });
   }
-
   return (
     <>
       <Heading as='h2' color='azure'>Dodavanje nove kategorije</Heading>

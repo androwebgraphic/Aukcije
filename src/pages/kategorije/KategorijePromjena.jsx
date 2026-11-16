@@ -12,7 +12,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Heading from "../../components/UI/Heading";
 import { RouteNames } from "../../constants";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
-import {ToastContainer, toast} from "react-toastify"
 
 export default function KategorijePromijena() {
   const navigate = useNavigate();
@@ -60,67 +59,25 @@ export default function KategorijePromijena() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const naziv = nazivRef.current.value;
-    const opis = opisRef.current.value; 
-    if (naziv.trim().length < 2 || naziv.trim().length > 30 || naziv.trim() === "") {
-
-      toast.error("Polja ne smiju biti prazna, broj znakova veci od 2 a mnji od 10", {
-
-        position: "top-center",
-        autoclose: 3000,
-        
-      })
-      return
-      
-    } else {
-      toast.success("Naziv je. prihvaćen")
-    }
-    
-  
-      if (opis.trim().length < 3 || opis.trim().length > 500 || opis.trim().length ==="") {
-
-        toast.error("Opis ne smije biti prazno polje, broj znakova veci od 2 a mnji od 500", {
-
-          position: "top-center",
-          autoclose: 2500,
-        
-        })
-        return
-      
-      }
-    
-     else {
-      toast.success("Opis prihvaćen", {
-
-          position: "top-center",
-          autoclose: 2500,
-        
-        })
-    }
-
+    const naziv = nazivRef.current.value.trim();
+    const opis = opisRef.current.value.trim();
     const newErrors = {};
 
-    if (!naziv.trim()) {
-      newErrors.naziv = "Naziv je obavezan.";
-      
+    if (naziv.length < 2 || naziv.length > 30) {
+      newErrors.naziv = "Naziv mora imati između 2 i 30 znakova.";
     }
-    if (!opis.trim()) {
-      newErrors.opis = "Opis je obavezan.";
+    if (opis.length < 3 || opis.length > 500) {
+      newErrors.opis = "Opis mora imati između 3 i 500 znakova.";
     }
-  
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    promijeni({
-      naziv,
-      opis,
-  
-    });
+    setErrors({});
+    promijeni({ naziv, opis });
   }
-
   if (loading || !kategorija) {
     return (
       <div className="text-center my-5">

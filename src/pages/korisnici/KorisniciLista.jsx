@@ -187,28 +187,34 @@ export default function KorisniciLista() {
 
     return (
         <>
-            <Row className="g-2 align-items-center my-3">
+        <Row className="g-2 align-items-center my-3">
+               <Row>
+                 <Col xs={6}>
+                          <Button as={Link} to={RouteNames.KORISNIK_NOVI} variant="success">
+                              <FaPlus className="me-2" aria-hidden="true" />
+                              Novi korisnik
+                             </Button>
+                             </Col>
+                  <Col xs={6} >
+                      {/* <div className="d-grid d-lg-flex gap-2"> */}
+                          <Button
+                              type="button"
+                              variant="outline-danger"
+                              onClick={() => preuzmiPdf(prikazani)}
+                              disabled={pdfSeGenerira || prikazani.length === 0}
+                              title="Preuzmi PDF popis korisnika"
+                              aria-label="Preuzmi PDF popis korisnika"
+                          >
+                              <FaFilePdf className="me-2" aria-hidden="true" />
+                              PDF
+                               </Button>
+                           </Col>
+               </Row>
+     
+                    {/* </div> */}
+               
                 <Col xs={12} lg={6}>
-                    <div className="d-grid d-lg-flex gap-2">
-                        <Button
-                            type="button"
-                            variant="outline-danger"
-                            onClick={() => preuzmiPdf(prikazani)}
-                            disabled={pdfSeGenerira || prikazani.length === 0}
-                            title="Preuzmi PDF popis korisnika"
-                            aria-label="Preuzmi PDF popis korisnika"
-                        >
-                            <FaFilePdf className="me-2" aria-hidden="true" />
-                            PDF
-                        </Button>
-                        <Button as={Link} to={RouteNames.KORISNIK_NOVI} variant="success">
-                            <FaPlus className="me-2" aria-hidden="true" />
-                            Novi korisnik
-                        </Button>
-                    </div>
-                </Col>
-                <Col xs={12} lg={6}>
-                    <div className="d-flex gap-2 align-items-center">
+                    <div className="d-flex gap-2 align-items-center mt-4">
                         <InputGroup size="sm">
                             <InputGroup.Text>
                                 <FaSearch aria-hidden="true" />

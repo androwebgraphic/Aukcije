@@ -1,4 +1,4 @@
-import { Button, Col, Form, FormSelect, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, FormSelect, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState, useRef } from "react";
@@ -9,7 +9,7 @@ import Heading from "../../components/UI/Heading";
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import { ShemaPredmet } from "../../schemas/SchemaPredmet";
+import { ShemaPredmetPromijena } from "../../schemas/SchemaPredmetPromijena";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
@@ -24,7 +24,8 @@ export default function PredmetiPromjena() {
     dodano: "",
     zavrsava: ""
   });
-  
+  const [errors, setErrors] = useState({});
+  const [greska, setGreska] = useState(null);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
   const [odabranaKategorija, setOdabranaKategorija] = useState("");
@@ -61,7 +62,6 @@ export default function PredmetiPromjena() {
         const pronadjena = oznake.find(o => String(o.id || o.sifra) === String(idTrazenog));
         return pronadjena || item; 
       });
-      
       const trebaAzurirati = JSON.stringify(mapirane) !== JSON.stringify(odabraneOznake);
       if (trebaAzurirati) {
         setOdabraneOznake(mapirane);
@@ -129,7 +129,6 @@ export default function PredmetiPromjena() {
           let rawSlike = s.slike || s.slikaUrls || (s.slika ? [s.slika] : []);
           let postojećeSlike = Array.isArray(rawSlike) ? rawSlike : [rawSlike];
           setSlike(postojećeSlike);
-          
           if (s.oznake) {
             const mapiraneOznake = s.oznake.map(item => {
               if (typeof item === 'object' && item !== null && item.naziv) {
@@ -140,7 +139,6 @@ export default function PredmetiPromjena() {
             });
             setOdabraneOznake(mapiraneOznake);
           }
-          
           if (s.kategorija) {
             const katId = typeof s.kategorija === 'object' ? (s.kategorija.id || s.kategorija.sifra) : s.kategorija;
             setOdabranaKategorija(String(katId));
@@ -156,6 +154,14 @@ export default function PredmetiPromjena() {
     const { name, value } = e.target;
     setPredmet(prev => ({ ...prev, [name]: value }));
   }
+
+  const ocistiGresku = (nazivPolja) => {
+    if (errors[nazivPolja]) {
+      const noveGreske = { ...errors };
+      delete noveGreske[nazivPolja];
+      setErrors(noveGreske);
+    }
+  };
 
   function oznakaVecPostoji(naziv) {
     return oznake.some(o => o.naziv && o.naziv.toLowerCase() === naziv.trim().toLowerCase());
@@ -245,8 +251,10 @@ export default function PredmetiPromjena() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setErrors({});
+    setGreska(null);
 
-    const azuriraniPredmet = {
+    const podaciZaValidaciju = {
       naziv: predmet.naziv || "",
       opis: predmet.opis || "",
       godinaNastanka: predmet.godinaNastanka ? Number(predmet.godinaNastanka) : null,
@@ -254,18 +262,35 @@ export default function PredmetiPromjena() {
       pocetnaCijena: predmet.pocetnaCijena ? Number(predmet.pocetnaCijena) : null,
       dodano: predmet.dodano,
       zavrsava: predmet.zavrsava,
-      kategorija: odabranaKategorija || null,
+      kategorija: odabranaKategorija ? Number(odabranaKategorija) : null,
       oznake: odabraneOznake,
-      slike: slike, 
-      slika: slike.length > 0 ? slike[0] : null 
+      slike: slike,
+      slika: slike.length > 0 ? slike[0] : null
     };
+
+    const rezultat = ShemaPredmetPromijena.safeParse(podaciZaValidaciju);
+
+    if (!rezultat.success) {
+      const noveGreske = {};
+      rezultat.error.issues.forEach((issue) => {
+        const kljuc = issue.path[0];
+        if (!noveGreske[kljuc]) {
+          noveGreske[kljuc] = issue.message;
+        }
+      });
+      setErrors(noveGreske);
+      setGreska("Molimo ispravite pogreške u formi prije spremanja.");
+      return;
+    }
+
+    const azuriraniPredmet = { ...podaciZaValidaciju, ...rezultat.data };
 
     try {
       await PredmetiServices.promijeni(params.id, azuriraniPredmet);
       navigate(RouteNames.PREDMETI);
     } catch (error) {
       console.error("Greška prilikom spremanja:", error);
-      alert("Greška prilikom spremanja: " + error.message);
+      setGreska("Greška prilikom spremanja: " + error.message);
     }
   }
 
@@ -275,7 +300,9 @@ export default function PredmetiPromjena() {
         Promjena predmeta: {predmet?.naziv || ""}
       </Heading>
 
-      <Form onSubmit={handleSubmit}>
+      {greska && <Alert variant="danger">{greska}</Alert>}
+
+      <Form onSubmit={handleSubmit} noValidate>
         <Row className="g-3">
           {/* Naziv */}
           <Col xs={12} md={6}>
@@ -287,11 +314,12 @@ export default function PredmetiPromjena() {
                 value={predmet.naziv || ""}
                 onChange={handleChange}
                 placeholder="Unesite naziv predmeta"
-                required
-   
-
-           
+                isInvalid={!!errors.naziv}
+                onFocus={() => ocistiGresku("naziv")}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.naziv}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
 
@@ -301,7 +329,11 @@ export default function PredmetiPromjena() {
               <Form.Label>Kategorija</Form.Label>
               <FormSelect
                 value={odabranaKategorija}
-                onChange={(e) => setOdabranaKategorija(e.target.value)}
+                onChange={(e) => {
+                  setOdabranaKategorija(e.target.value);
+                  ocistiGresku("kategorija");
+                }}
+                isInvalid={!!errors.kategorija}
               >
                 <option value="">Odaberi kategoriju</option>
                 {kategorije.map(kat => (
@@ -310,6 +342,9 @@ export default function PredmetiPromjena() {
                   </option>
                 ))}
               </FormSelect>
+              <Form.Control.Feedback type="invalid">
+                {errors.kategorija}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
 
@@ -386,7 +421,12 @@ export default function PredmetiPromjena() {
                 value={predmet.opis || ""}
                 onChange={handleChange}
                 placeholder="Unesite opis predmeta"
+                isInvalid={!!errors.opis}
+                onFocus={() => ocistiGresku("opis")}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.opis}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
 
@@ -427,7 +467,12 @@ export default function PredmetiPromjena() {
                 name="pocetnaCijena"
                 value={predmet.pocetnaCijena || ""}
                 onChange={handleChange}
+                isInvalid={!!errors.pocetnaCijena}
+                onFocus={() => ocistiGresku("pocetnaCijena")}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.pocetnaCijena}
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
 
@@ -443,7 +488,6 @@ export default function PredmetiPromjena() {
             </Form.Group>
           </Col> */}
 
-          
           {/* <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Završava</Form.Label>

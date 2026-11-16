@@ -33,8 +33,8 @@ function Akcije({ korisnik, onUredi, onLozinka, onObrisi, punaSirina = false }) 
                 size="sm"
                 className={razredGumba}
                 onClick={() => onUredi(korisnik)}
-                title="Promjena emaila"
-                aria-label={`Promjena emaila: ${korisnik.email}`}
+                title="Promjena korisnika"
+                aria-label={`Promjena korisnika: ${korisnik.email}`}
             >
                 <FaEdit aria-hidden="true" />
             </Button>

@@ -17,27 +17,13 @@ switch (DATA_SOURCE) {
 }
 //2. Derfinirnje praznog servisa
 const PrazanServis = {
-  get: async () => {
-         ({ success: false, data: null})
-    },
-  getById: async (id) => {
-    return( { success: false, data: null })
-  },
-  dodaj: async (admin) => {
-   return ({ success: false, data: null }  )
-  },
-  promijeni: async (admin) => {
-    return ({ success: false, data: null })
-  },
-  promijeniLozinku: async (id, lozinka) => {
-    return ({ success: false, data: null })
-  },
-  obrisi: async (id) => {
-    return ({ success: false, data: null })
-  },
-  prijava: async (email, lozinka) => {
-    return  ({ success: false, data: null })
-  }
+  get: async () => ({ success: false, data: null }),
+  getById: async () => ({ success: false, data: null }),
+  dodaj: async () => ({ success: false, data: null }),
+  promijeni: async () => ({ success: false, data: null }),
+  promijeniLozinku: async () => ({ success: false, data: null }),
+  obrisi: async () => ({ success: false, data: null }),
+  prijava: async () => ({ success: false, data: null })
 }
 
 //3jedan export nakraju
@@ -47,6 +33,7 @@ export default {
   getById: AktivniServis.getById,
   dodaj: AktivniServis.dodaj,
   promijeni: AktivniServis.promijeni,
+  promijeniLozinku: AktivniServis.promijeniLozinku,
   obrisi: AktivniServis.obrisi,
   prijava: AktivniServis.prijava
 }

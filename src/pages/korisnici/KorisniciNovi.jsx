@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import KorisniciService from "../../services/korisnici/KorisniciService" // 1. Uklonjeno 's' s kraja
 import SchemaKorisnik  from "../../schemas/SchemaKorisnik"
 import { useState } from "react"
-import Heading from "../../components/Upute"
+import Heading from "../../components/UI/Heading"
 
 export default function korisnikiiNovi(){
 

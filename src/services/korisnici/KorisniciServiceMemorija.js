@@ -42,7 +42,7 @@ async function dodaj(administrator){
     return {success: true, data: {id: administrator.id, email: administrator.email}}
 }
 // 3/4 Update od CRUD
-async function promjeni(id, administrator) {
+async function promijeni(id, administrator) {
     const index = nadiIndex(id)
     if (index === -1) {
         return {success: false, message: "Dministrator nije pronađen"}
@@ -59,7 +59,7 @@ async function promjeni(id, administrator) {
     return {success: true, data: {id: administratori[index].id, email: administratori[index].email, uloga: administratori[index].uloga}}
 }
 // Posebna funkcija za promjenu lozinke
-async function promjeniLozinku(id) {
+async function promijeniLozinku(id, novaLozinka) {
     const index = nadiIndex(id)
     if (index === -1) {
         return {success: false, message: "Administrator nije pronađen"}
@@ -111,8 +111,8 @@ export default{
     get,
     dodaj,
     getById,
-    promjeni,
-    promjeniLozinku,
+    promijeni,
+    promijeniLozinku,
     obrisi,
     prijava
 }

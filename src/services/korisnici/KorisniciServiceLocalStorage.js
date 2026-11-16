@@ -60,8 +60,8 @@ async function dodaj(administrator) {
     return {success: true, data: {id: administrator.id, email: administrator.email}}
 }
 
-// 3/4 Update - promjeni postojeći
-async function promjeni(id, administrator) {
+// 3/4 Update - promijeni postojeći
+async function promijeni(id, administrator) {
     const administratori = dohvatiSveIzStorage()
     const index = administratori.findIndex(o => o.id === id)
     
@@ -81,7 +81,7 @@ async function promjeni(id, administrator) {
 }
 
 // Posebna funkcija za promjenu lozinke
-async function promjeniLozinku(id, novaLozinka) {
+async function promijeniLozinku(id, novaLozinka) {
     const administratori = dohvatiSveIzStorage()
     const index = administratori.findIndex(o => o.id === id)
     
@@ -139,8 +139,8 @@ export default {
     get,
     dodaj,
     getById,
-    promjeni,
-    promjeniLozinku,
+    promijeni,
+    promijeniLozinku,
     obrisi,
     prijava
 }

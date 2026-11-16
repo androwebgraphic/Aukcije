@@ -1,108 +1,190 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+import { Alert, Button, Col, Form, Row } from "react-bootstrap"
+import { z } from "zod"
 import KorisniciService from "../../services/korisnici/KorisniciService"
-import { Form, Button, Row, Col, Card } from "react-bootstrap"
 import { RouteNames } from "../../constants"
-import {z} from "zod"
+import Heading from "../../components/UI/Heading"
+
+const ShemaPromjenaKorisnika = z.object({
+  email: z
+    .email({
+      error: (issue) =>
+        !issue.input || (typeof issue.input === "string" && issue.input.trim() === "")
+          ? "Email je obavezan!"
+          : "Unesite ispravan email format!"
+    })
+    .trim(),
+  uloga: z.enum(["admin", "korisnik"], {
+    error: "Uloga mora biti 'admin' ili 'korisnik'!"
+  })
+})
 
 export default function KorisniciPromijena() {
-
   const navigate = useNavigate()
   const params = useParams()
+
   const [korisnik, setKorisnik] = useState({})
-  const [errors, setErros] = useState({})
-  
- const ShemaEmailUloga = z.object({
-        email: z.string()
-            .trim()
-            .min(1, "Email je obavezan!")
-            .email("Unesite ispravan email format!"),
-        uloga: z.enum(['admin', 'korisnik'], {
-            errorMap: () => ({ message: "Uloga mora biti 'admin' ili 'korisnik'!" })
-        })
-    })
+  const [email, setEmail] = useState("")
+  const [uloga, setUloga] = useState("")
+  const [errors, setErrors] = useState({})
+  const [greska, setGreska] = useState("")
+  const [ucitavanje, setUcitavanje] = useState(true)
 
   useEffect(() => {
-    
     ucitajKorisnika()
-  },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id])
 
   async function ucitajKorisnika() {
-  
-    const odgovor = await KorisniciService.getById(params.id)
+    setUcitavanje(true)
 
-    if (!odgovor.success) {
-      
-      alert('Korisnik nije pronadjen')
+    try {
+      const odgovor = await KorisniciService.getById(params.id)
+
+      if (!odgovor.success) {
+        alert("Korisnik nije pronađen")
+        navigate(RouteNames.KORISNICI)
+        return
+      }
+
+      const podaci = odgovor.data || {}
+      setKorisnik(podaci)
+      setEmail(podaci.email || "")
+      setUloga(podaci.uloga || "")
+    } catch (error) {
+      console.error("Greška pri dohvaćanju korisnika:", error)
+      alert("Greška pri dohvaćanju korisnika")
       navigate(RouteNames.KORISNICI)
-      return
-    }
-    setKorisnik(odgovor.data)
-  
-  }
-
-  async function promijeniKorisnika() {
-    
-    const rezultat = await KorisniciService.promijeni(params.id, korisnik)
-
-    if (!rezultat.success) {
-      
-      navigate(RouteNames.KORISNICI)
-    } else {
-      
-      alert(rezultat.message || 'Greska pri promijeni Korisnika')
+    } finally {
+      setUcitavanje(false)
     }
   }
 
-  function handleSubmit(e) {
-    
+  async function handleSubmit(e) {
     e.preventDefault()
+    setGreska("")
 
-    const podatci = new FormData(e.target)
-
-    setErrors({})
-
-    const objektPodataka = Object.fromEntries(podatci)
-
-    const rezultat = SchemaUlogeEmail.safeParse(objektPodataka)
+    const rezultat = ShemaPromjenaKorisnika.safeParse({ email, uloga })
 
     if (!rezultat.success) {
-      
-      const noveGresks = {}
+      const noveGreske = {}
 
       rezultat.error.issues.forEach((issue) => {
-        
         const kljuc = issue.path[0]
         if (!noveGreske[kljuc]) {
-          
           noveGreske[kljuc] = issue.message
         }
       })
+
       setErrors(noveGreske)
       return
     }
-    promijeni(
-      {
-      
-        email: podatci.get('email'),
-        uloga: podatci.get('uloga')
-    })
-}
-  
+
+    setErrors({})
+
+    try {
+      const odgovor = await KorisniciService.promijeni(params.id, rezultat.data)
+
+      if (!odgovor.success) {
+        setGreska(odgovor.message || "Greška pri promjeni korisnika")
+        return
+      }
+
+      navigate(RouteNames.KORISNICI)
+    } catch (error) {
+      console.error("Greška pri promjeni korisnika:", error)
+      setGreska("Greška pri promjeni korisnika")
+    }
+  }
+
   const ocistiGresku = (nazivPolja) => {
-    
     if (errors[nazivPolja]) {
-      
       const noveGreske = { ...errors }
       delete noveGreske[nazivPolja]
       setErrors(noveGreske)
     }
   }
 
+  if (ucitavanje) {
+    return (
+      <>
+        <Heading as="h2" color="azure" className="mb-4">
+          Promjena korisnika
+        </Heading>
+        <p className="text-muted">Učitavanje…</p>
+      </>
+    )
+  }
 
+  return (
+    <>
+      <Heading as="h2" color="azure" className="mb-4">
+        Promjena korisnika{korisnik.email ? `: ${korisnik.email}` : ""}
+      </Heading>
 
+      {greska && <Alert variant="danger">{greska}</Alert>}
 
+      <Form onSubmit={handleSubmit} noValidate>
+        <Row className="g-3">
+          <Col xs={12} md={6}>
+            <Form.Group controlId="email">
+              <Form.Label className="fw-bold">Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={email}
+                placeholder="operater@edunova.hr"
+                isInvalid={!!errors.email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  ocistiGresku("email")
+                }}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
 
+          <Col xs={12} md={6}>
+            <Form.Group controlId="uloga">
+              <Form.Label className="fw-bold">Uloga</Form.Label>
+              <Form.Select
+                name="uloga"
+                value={uloga}
+                isInvalid={!!errors.uloga}
+                onChange={(e) => {
+                  setUloga(e.target.value)
+                  ocistiGresku("uloga")
+                }}
+              >
+                <option value="">Odaberite ulogu...</option>
+                <option value="admin">Admin</option>
+                <option value="korisnik">Korisnik</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.uloga}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        </Row>
 
-  
+        <hr className="my-4" />
+
+        <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
+          <Button type="submit" variant="outline-warning">
+            Promijeni
+          </Button>
+          <Button
+            type="button"
+            variant="outline-danger"
+            onClick={() => navigate(RouteNames.KORISNICI)}
+          >
+            Odustani
+          </Button>
+        </div>
+      </Form>
+    </>
+  )
 }

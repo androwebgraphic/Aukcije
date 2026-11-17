@@ -8,6 +8,10 @@ import KorisniciService from "../services/korisnici/KorisniciService";
 import OznakeServices from "../services/oznake/OznakeServices";
 import { osigurajDemoRacune } from "../services/korisnici/DemoRacuni";
 import { APP_NAME, TESTNA_LOZINKA } from "../constants";
+import { kategorije } from "../services/kategorije/KategorijeData";
+import administratori from "../services/korisnici/KorisniciData";
+import { oznake } from "../services/oznake/OznakeData";
+import { predmeti } from "../services/predmeti/predmetiData";
 
 export default function GeneriranjePodataka() {
   const [brojKategorije, setBrojKategorije] = useState(13);
@@ -332,6 +336,43 @@ export default function GeneriranjePodataka() {
     }
   };
 
+
+  
+const handleMemorijaULocalStorage = async () => {
+        if (!window.confirm('Jeste li sigurni da želite presipati sve podatke iz memorije u localStorage?')) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+
+            localStorage.removeItem('kategorije')
+            localStorage.removeItem('administratori')
+            localStorage.removeItem('oznake')
+            localStorage.removeItem('predmeti')
+
+            localStorage.setItem('kategorije', JSON.stringify(kategorije))
+            localStorage.setItem('administratori', JSON.stringify(administratori))
+            localStorage.setItem('oznake', JSON.stringify(oznake))
+            localStorage.setItem('predmeti', JSON.stringify(predmeti))
+
+           
+            setPoruka({
+                tip: 'success',
+                tekst: `Uspješno presipano!`
+            });
+        } catch (error) {
+            setPoruka({
+                tip: 'danger',
+                tekst: 'Greška pri presipavanju podataka: ' + error.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
   
 
 
@@ -483,6 +524,16 @@ export default function GeneriranjePodataka() {
             disabled={loading}
             className="w-100 mb-2">
             {loading ? "Brisanje..." : "Obriši sve korisnike"}
+          </Button>
+        </Col>
+
+        <Col md={3}>
+          <Button
+            variant="danger"
+            onClick={handleMemorijaULocalStorage}
+            disabled={loading}
+            className="w-100 mb-2">
+            {loading ? "Presipavanje..." : "Memorija u localStorage"}
           </Button>
         </Col>
       </Row>

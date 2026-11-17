@@ -24,6 +24,7 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
 
   const isLoggedIn = authUser !== null;
+  const isAdmin = authUser?.uloga === "admin";
 
   const login = useCallback(
     async (email, lozinka) => {
@@ -52,8 +53,8 @@ export function AuthProvider({ children }) {
   }, [navigate]);
 
   const value = useMemo(
-    () => ({ isLoggedIn, authUser, login, logout }),
-    [isLoggedIn, authUser, login, logout]
+    () => ({ isLoggedIn, isAdmin, authUser, login, logout }),
+    [isLoggedIn, isAdmin, authUser, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

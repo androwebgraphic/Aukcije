@@ -10,7 +10,7 @@ export default function KorisnikoNovi() {
     async function dodaj(korisnik) {
         try {
             await KorisniciService.dodaj(korisnik);
-            navigate(RouteNames.KORISNICI); // Preusmjeravanje nakon uspješnog slanja
+            navigate(RouteNames.LOGIRANJE); // Nakon registracije korisnik se prijavljuje
         } catch (error) {
             console.error("Greška prilikom registracije korisnika:", error);
         }
@@ -71,7 +71,7 @@ export default function KorisnikoNovi() {
                         </Button>
                     </Col>
                     <Col sm={6} md={6}>
-                        <Button variant="danger" size="sm" as={Link} to={RouteNames.KORISNICI}>
+                        <Button variant="danger" size="sm" as={Link} to={RouteNames.HOME}>
                             Odustani
                         </Button>
                     </Col>

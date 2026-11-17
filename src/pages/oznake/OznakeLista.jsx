@@ -5,9 +5,11 @@ import { RouteNames } from "../../constants";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import OznakeServices from "../../services/oznake/OznakeServices";
+import useAuth from "../../hooks/useAuth";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 
 export default function OznakeList() {
+  const { isAdmin } = useAuth();
   const [oznake, setOznake] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -54,12 +56,14 @@ export default function OznakeList() {
         </Heading>
 
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-          <Link to={RouteNames.OZNAKA_NOVA}>
-            <Button variant="success">
-              <FaPlus className="me-2" aria-hidden="true" />
-              Dodaj oznaku
-            </Button>
-          </Link>
+          {isAdmin && (
+            <Link to={RouteNames.OZNAKA_NOVA}>
+              <Button variant="success">
+                <FaPlus className="me-2" aria-hidden="true" />
+                Dodaj oznaku
+              </Button>
+            </Link>
+          )}
 
           <Form.Control
             type="text"
@@ -89,26 +93,28 @@ export default function OznakeList() {
                   {o.naziv}
                 </span>
 
-                <div className="d-flex gap-2">
-                  <Button
-                    variant="outline-warning"
-                    size="sm"
-                    onClick={() => navigate(`/oznake/${o.id}`)}
-                    title="Promjena oznake"
-                    aria-label={`Promjena oznake: ${o.naziv}`}
-                  >
-                    <FaEdit aria-hidden="true" />
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => obrisi(o.id)}
-                    title="Brisanje oznake"
-                    aria-label={`Brisanje oznake: ${o.naziv}`}
-                  >
-                    <FaTrash aria-hidden="true" />
-                  </Button>
-                </div>
+                {isAdmin && (
+                  <div className="d-flex gap-2">
+                    <Button
+                      variant="outline-warning"
+                      size="sm"
+                      onClick={() => navigate(`/oznake/${o.id}`)}
+                      title="Promjena oznake"
+                      aria-label={`Promjena oznake: ${o.naziv}`}
+                    >
+                      <FaEdit aria-hidden="true" />
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      size="sm"
+                      onClick={() => obrisi(o.id)}
+                      title="Brisanje oznake"
+                      aria-label={`Brisanje oznake: ${o.naziv}`}
+                    >
+                      <FaTrash aria-hidden="true" />
+                    </Button>
+                  </div>
+                )}
               </ListGroup.Item>
             ))}
         </ListGroup>

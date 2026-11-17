@@ -6,10 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
 import KategorijeServices from '../services/kategorije/KategorijeServices';
 import useAuth from '../hooks/useAuth';
+import {Badge} from "react-bootstrap"
 
 function NavMain() {
   const navigate = useNavigate();
-  const { isLoggedIn, authUser, logout } = useAuth();
+  const { isLoggedIn, isAdmin, authUser, logout } = useAuth();
   const [expanded, setExpanded] = useState(false);
   const [kategorije, setKategorije] = useState([]);
 
@@ -42,22 +43,25 @@ function NavMain() {
             </Nav.Link>
 
             {/* Glavni izbornik Programi */}
-            <NavDropdown title="Programi" id="programi-dropdown">
+            <NavDropdown title="Programi" id="programi-dropdown"> 
               <NavDropdown.Item as={Link} to={RouteNames.KATEGORIJE} onClick={() => setExpanded(false)}>
                 Kategorije
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to={RouteNames.OZNAKE} onClick={() => setExpanded(false)}>
                 Oznake
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to={RouteNames.KORISNICI} onClick={() => setExpanded(false)}>
-                Korisnici
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item onClick={() => { navigate(RouteNames.GENERIRANJE_PODATAKA); setExpanded(false); }}>
-                Generiraj podatke
-              </NavDropdown.Item>
+              {isAdmin && (
+                <>
+                  <NavDropdown.Item as={Link} to={RouteNames.KORISNICI} onClick={() => setExpanded(false)}>
+                    Korisnici
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={() => { navigate(RouteNames.GENERIRANJE_PODATAKA); setExpanded(false); }}>
+                    Generiraj podatke
+                  </NavDropdown.Item>
+                </>
+              )}
             </NavDropdown>
-
             {/* Zaseban dropdown za Predmete i njihove kategorije da se izbjegne ugniježđivanje */}
             <NavDropdown title="Predmeti" id="predmeti-dropdown">
               <NavDropdown.Item as={Link} to={RouteNames.PREDMETI} onClick={() => setExpanded(false)}>
@@ -81,7 +85,7 @@ function NavMain() {
             {isLoggedIn ? (
               <>
                 <Nav.Link disabled aria-label="Prijavljeni korisnik">
-                  {authUser?.email}
+                <Badge bg="success"> {authUser?.email}</Badge> 
                 </Nav.Link>
                 <Nav.Link onClick={() => { logout(); setExpanded(false); }}>
                   Odjava
@@ -89,7 +93,7 @@ function NavMain() {
               </>
             ) : (
               <>
-                <Nav.Link onClick={() => { navigate(RouteNames.KORISNIK_NOVI); setExpanded(false); }}>
+                <Nav.Link onClick={() => { navigate(RouteNames.REGISTRACIJA); setExpanded(false); }}>
                   Registracija
                 </Nav.Link>
                 <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE); setExpanded(false); }}>

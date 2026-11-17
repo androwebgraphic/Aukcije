@@ -1,6 +1,6 @@
 import { Row, Col, Card } from "react-bootstrap";
 import { APP_NAME } from "../constants";
-import MenHighFive from "../components/MenHighFive";
+// import MenHighFive from "../components/MenHighFive";
 import Heading from "../components/UI/Heading";
 import { useState, useEffect } from "react";
 
@@ -9,7 +9,7 @@ import PredmetiServices from "../services/predmeti/PredmetiServices";
 import KorisniciService from "../services/korisnici/KorisniciService";
 import OznakeServices from "../services/oznake/OznakeServices";
 import { LordIcon } from "@lordicon/react";
-import NadzornaPloca from "./NadzornaPloca";
+// import NadzornaPloca from "./NadzornaPloca";
 
 // Inicijalizacija LordIcon elementa s Lottie engineom
 // defineElement(lottie.loadAnimation);
@@ -194,11 +194,11 @@ export default function Home() {
           </Card>
         </Col>
 
-        <NadzornaPloca />
+        {/* <NadzornaPloca /> */}
       </Row>
 
       <Row>
-        <MenHighFive
+        {/* <MenHighFive
           style={{
             width: "13rem",
             height: "13rem",
@@ -207,7 +207,7 @@ export default function Home() {
             textAlign: "center",
             zIndex: "9999",
           }}
-        />
+        /> */}
 
         <p className="text-center" style={{ margin: "2rem" }}>
           Sretno svima{" "}

@@ -29,7 +29,7 @@ async function get() {
 // Dohvati jedan po šifri
 async function getById(id) {
     const administratori = dohvatiSveIzStorage()
-    const administrator = administratori.find(o => o.id === id)
+    const administrator = administratori.find(o => String(o.id) === String(id))
     if (!administrator) {
         return {success: false, data: null}
     }
@@ -82,7 +82,7 @@ async function dodaj(administrator) {
 // 3/4 Update - promijeni postojeći
 async function promijeni(id, administrator) {
     const administratori = dohvatiSveIzStorage()
-    const index = administratori.findIndex(o => o.id === id)
+    const index = administratori.findIndex(o => String(o.id) === String(id))
     
     if (index === -1) {
         return {success: false, message: "Administrator nije pronađen"}
@@ -102,7 +102,7 @@ async function promijeni(id, administrator) {
 // Posebna funkcija za promjenu lozinke
 async function promijeniLozinku(id, novaLozinka) {
     const administratori = dohvatiSveIzStorage()
-    const index = administratori.findIndex(o => o.id === id)
+    const index = administratori.findIndex(o => String(o.id) === String(id))
     
     if (index === -1) {
         return {success: false, message: "Administrator nije pronađen"}
@@ -119,7 +119,7 @@ async function promijeniLozinku(id, novaLozinka) {
 async function obrisi(id) {
     let administratori = dohvatiSveIzStorage()
     const initialLength = administratori.length
-    administratori = administratori.filter(o => o.id !== id)
+    administratori = administratori.filter(o => String(o.id) !== String(id))
     
     if (administratori.length === initialLength) {
         return {success: false, message: "Administrator nije pronađen"}

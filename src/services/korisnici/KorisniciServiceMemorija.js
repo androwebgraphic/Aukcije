@@ -13,7 +13,7 @@ async function get(){
 
 async function getById(id) {
   {
-    const administrator = administratori.find(o => o.id === id)
+    const administrator = administratori.find(o => String(o.id) === String(id))
     if (!administrator) {
       return { success: false, data: null }
     }
@@ -92,7 +92,7 @@ async function promijeniLozinku(id, novaLozinka) {
 }
 
 function nadiIndex(id){
-    return administratori.findIndex(o=>o.id  === id)
+    return administratori.findIndex(o => String(o.id) === String(id))
 }
   // 4/4 Delete od CRUD
 async function obrisi(sifra) {

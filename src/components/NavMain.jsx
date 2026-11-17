@@ -88,7 +88,10 @@ function NavMain() {
             {isLoggedIn ? (
               <>
                 <Nav.Link disabled aria-label="Prijavljeni korisnik">
-                <Badge bg="success"> {authUser?.email}</Badge> 
+                  <Badge bg={isAdmin ? "success" : "secondary"}>{authUser?.email}</Badge>
+                  <Badge bg={isAdmin ? "info" : "light"} text="dark" className="ms-1">
+                    {authUser?.uloga || "bez uloge"}
+                  </Badge>
                 </Nav.Link>
                 <Nav.Link onClick={() => { logout(); setExpanded(false); }}>
                   Odjava

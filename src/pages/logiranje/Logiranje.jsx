@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ADMIN_EMAIL,
   ADMIN_LOZINKA,
@@ -21,6 +21,8 @@ const DEMO_RACUNI = [
 
 export default function Logiranje() {
   const { login } = useAuth();
+  const location = useLocation();
+  const upravoRegistriran = location.state?.registriran === true;
 
   const [email, setEmail] = useState("");
   const [lozinka, setLozinka] = useState("");
@@ -109,6 +111,12 @@ export default function Logiranje() {
       </p>
 
       <Form onSubmit={odradiSubmit} noValidate>
+        {upravoRegistriran && (
+          <Alert variant="success" role="status">
+            Registracija je uspješna. Prijavi se svojim emailom i lozinkom.
+          </Alert>
+        )}
+
         {greske.opcenito && (
           <Alert variant="danger" role="alert">
             {greske.opcenito}

@@ -59,6 +59,9 @@ function NavMain() {
                   <NavDropdown.Item onClick={() => { navigate(RouteNames.GENERIRANJE_PODATAKA); setExpanded(false); }}>
                     Generiraj podatke
                   </NavDropdown.Item>
+                      <NavDropdown.Item onClick={() => { navigate(RouteNames.NADZORNA_PLOCA); setExpanded(false); }}>
+                    Nadzorna Ploča
+                  </NavDropdown.Item>
                 </>
               )}
             </NavDropdown>

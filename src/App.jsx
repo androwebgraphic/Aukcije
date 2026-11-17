@@ -31,6 +31,7 @@ const GeneriranjePodataka = lazy(() => import("./pages/GeneriranjePodataka"));
 const OznakeLista = lazy(() => import("./pages/oznake/OznakeLista.jsx"));
 const OznakaNova = lazy(() => import("./pages/oznake/OznakaNova.jsx"));
 const OznakePromjena = lazy(() => import("./pages/oznake/OznakePromjena.jsx"));
+const NadzornaPloca = lazy(() => import("./pages/NadzornaPloca.jsx"))
 
 const Uvjeti = lazy(() => import("./pages/Uvjeti.jsx"));
 
@@ -145,7 +146,16 @@ function App() {
 								<GeneriranjePodataka />
 							</ProtectedRoute>
 						}
+            />
+            		<Route
+						path={RouteNames.NADZORNA_PLOCA}
+						element={
+							<ProtectedRoute samoAdmin>
+								<NadzornaPloca />
+							</ProtectedRoute>
+						}
 					/>
+          
 				</Routes>
 				</Suspense>
 

@@ -150,7 +150,7 @@ function dohvatiIzvorSlike(slikaItem) {
 }
 
 export default function PredmetiList() {
-  const { isLoggedIn, authUser } = useAuth();
+  const { isLoggedIn, isAdmin, authUser } = useAuth();
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
@@ -233,7 +233,18 @@ export default function PredmetiList() {
     }
   }
 
+  // Predmet smije mijenjati/brisati njegov vlasnik ili administrator.
+  function mozeUpravljati(predmet) {
+    if (isAdmin) return true;
+    return predmet?.vlasnik != null && String(predmet.vlasnik) === String(authUser?.id);
+  }
+
   async function obrisi(predmetItem) {
+    if (!mozeUpravljati(predmetItem)) {
+      alert("Možete brisati samo svoje predmete.");
+      return;
+    }
+
     const identifikator = predmetItem.id || predmetItem.sifra || predmetItem.predmetId;
 
     if (!identifikator) {
@@ -737,7 +748,7 @@ export default function PredmetiList() {
                             Prijavi se za ponudu
                           </Button>
                         )}
-                        {isLoggedIn && (
+                        {mozeUpravljati(c) && (
                           <>
                             <Button
                               variant="outline-warning"

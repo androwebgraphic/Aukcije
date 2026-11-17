@@ -42,22 +42,41 @@ async function getById(id) {
 }
 
 // 2/4 Create - dodaj novi
+// Sljedeći id = najveći postojeći + 1 (ne oslanja se na redoslijed u listi)
+function sljedeciId(administratori) {
+    const najveci = administratori.reduce((max, o) => Math.max(max, Number(o.id) || 0), 0)
+    return String(najveci + 1)
+}
+
 async function dodaj(administrator) {
-    const administratori = dohvatiSveIzStorage()
-    
-    if (administratori.length === 0) {
-        administrator.id = '1'
-    } else {
-        // Pronalaženje najveće šifre da izbjegnemo duplikate
-        administrator.id = String(parseInt(administratori[administratori.length - 1].id) + 1)
+    const email = String(administrator?.email ?? '').trim().toLowerCase()
+
+    if (!email) {
+        return { success: false, message: 'Email je obavezan' }
     }
-    
+    if (!administrator?.lozinka) {
+        return { success: false, message: 'Lozinka je obavezna' }
+    }
+
+    const administratori = dohvatiSveIzStorage()
+
+    // Provjera duplikata — isti email se ne smije registrirati dva puta
+    const duplikat = administratori.some(
+        (o) => String(o.email ?? '').trim().toLowerCase() === email
+    )
+    if (duplikat) {
+        return { success: false, message: 'Korisnik s tim emailom već postoji' }
+    }
+
+    administrator.email = email
+    administrator.id = sljedeciId(administratori)
+
     // Hashiraj lozinku prije spremanja
     administrator.lozinka = bcrypt.hashSync(administrator.lozinka, 10)
-    
+
     administratori.push(administrator)
     spremiUStorage(administratori)
-    return {success: true, data: {id: administrator.id, email: administrator.email}}
+    return { success: true, data: { id: administrator.id, email: administrator.email } }
 }
 
 // 3/4 Update - promijeni postojeći
@@ -113,7 +132,10 @@ async function obrisi(id) {
 // Funkcija za prijavu
 async function prijava(email, lozinka) {
     const administratori = dohvatiSveIzStorage()
-    const administrator = administratori.find(o => o.email === email)
+    const trazeniEmail = String(email ?? '').trim().toLowerCase()
+    const administrator = administratori.find(
+        (o) => String(o.email ?? '').trim().toLowerCase() === trazeniEmail
+    )
     if (!administrator) {
         return {success: false, message: "Email i lozinka ne odgovaraju"} // iako bi ovdje mogli napisati i da email ne postoji ali to onda napadačima omogućuje da zna tko je a tko nije registriran
     }

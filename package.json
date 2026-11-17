@@ -19,6 +19,8 @@
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
     "framer-motion": "^14.1.0",
+    "highcharts": "^13.1.1",
+    "highcharts-react-official": "^3.2.3",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.9",
     "react": "^19.2.8",

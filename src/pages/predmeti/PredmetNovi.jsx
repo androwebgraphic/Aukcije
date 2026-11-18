@@ -9,7 +9,6 @@ import Heading from "../../components/UI/Heading";
 import { Cropper } from "react-cropper";
 import 'cropperjs/dist/cropper.css';
 import { ShemaPredmet } from "../../schemas/SchemaPredmet";
-import useAuth from "../../hooks/useAuth";
 import { FaPlus } from "react-icons/fa";
 
 // ---------------------------------------------------------------------------
@@ -66,7 +65,6 @@ function izvuciIdIzOdgovora(podaci) {
 
 export default function PredmetNovi() {
   const navigate = useNavigate();
-  const { isLoggedIn, authUser } = useAuth();
   const [greska, setGreska] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -250,13 +248,6 @@ export default function PredmetNovi() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    if (!isLoggedIn) {
-      // Predmet smije dodati samo prijavljeni korisnik.
-      navigate(RouteNames.LOGIRANJE);
-      return;
-    }
-
     setErrors({});
     setGreska(null);
 
@@ -294,10 +285,7 @@ export default function PredmetNovi() {
         zavrsava: predmet.zavrsava ? new Date(predmet.zavrsava).toISOString() : null,
         kategorija: podaciZaValidaciju.kategorija,
         oznake: odabraneOznake.map(o => Number(o.id)).filter(id => Number.isFinite(id)),
-        slike: isjecenaSlikaUrl,
-        // Vlasnik predmeta = prijavljeni korisnik; samo on (i admin) smije ga mijenjati/brisati.
-        vlasnik: authUser?.id != null ? String(authUser.id) : null,
-        vlasnikEmail: authUser?.email ?? null,
+        slike: isjecenaSlikaUrl
       };
 
       console.log("Šaljem payload na server:", payload);

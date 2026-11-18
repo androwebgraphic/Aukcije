@@ -27,7 +27,6 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
-import useAuth from "../../hooks/useAuth";
 
 import Odbrojavanje from "../../components/Odbrojavanje";
 
@@ -150,7 +149,6 @@ function dohvatiIzvorSlike(slikaItem) {
 }
 
 export default function PredmetiList() {
-  const { isLoggedIn, isAdmin, authUser } = useAuth();
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
@@ -233,18 +231,7 @@ export default function PredmetiList() {
     }
   }
 
-  // Predmet smije mijenjati/brisati njegov vlasnik ili administrator.
-  function mozeUpravljati(predmet) {
-    if (isAdmin) return true;
-    return predmet?.vlasnik != null && String(predmet.vlasnik) === String(authUser?.id);
-  }
-
   async function obrisi(predmetItem) {
-    if (!mozeUpravljati(predmetItem)) {
-      alert("Možete brisati samo svoje predmete.");
-      return;
-    }
-
     const identifikator = predmetItem.id || predmetItem.sifra || predmetItem.predmetId;
 
     if (!identifikator) {
@@ -266,12 +253,6 @@ export default function PredmetiList() {
   }
 
   function otvoriModalZaPonudu(predmet) {
-    if (!isLoggedIn) {
-      // Ponudu smije dati samo prijavljeni korisnik.
-      navigate(RouteNames.LOGIRANJE);
-      return;
-    }
-
     if (jeAukcijaZavrsena(predmet.zavrsava)) return;
 
     setOdabraniPredmet(predmet);
@@ -288,13 +269,6 @@ export default function PredmetiList() {
 
   async function potvrdiPonudu() {
     if (!odabraniPredmet) return;
-
-    if (!isLoggedIn) {
-      setShowModal(false);
-      setOdabraniPredmet(null);
-      navigate(RouteNames.LOGIRANJE);
-      return;
-    }
 
     const imaPonuda = Array.isArray(odabraniPredmet.ponude) && odabraniPredmet.ponude.length > 0;
     const trenutnaCijena = imaPonuda
@@ -313,7 +287,7 @@ export default function PredmetiList() {
       ponude: [
         ...(odabraniPredmet.ponude || []),
         {
-          korisnik: authUser?.email ?? null,
+          korisnik: 1,
           datum: new Date().toISOString(),
           cijena: Number(iznosPonude),
         },
@@ -498,14 +472,12 @@ export default function PredmetiList() {
         </p>
 
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-          {isLoggedIn && (
-            <Link to={RouteNames.PREDMET_NOVI} className="me-2">
-              <Button variant="success">
-                <FaPlus className="me-2" aria-hidden="true" />
-                Dodaj predmet
-              </Button>
-            </Link>
-          )}
+          <Link to={RouteNames.PREDMET_NOVI} className="me-2">
+            <Button variant="success">
+              <FaPlus className="me-2" aria-hidden="true" />
+              Dodaj predmet
+            </Button>
+          </Link>
 
           <div className="d-flex align-items-center gap-2 flex-wrap flex-lg-nowrap">
             <div className="d-flex align-items-center gap-1">
@@ -728,46 +700,30 @@ export default function PredmetiList() {
 
                       {/* Ponuda + akcije u istom redu */}
                       <div className="d-flex gap-2 mt-auto pt-2 border-top">
-                        {isLoggedIn ? (
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            className="flex-grow-1"
-                            disabled={jeZavrseno}
-                            onClick={() => otvoriModalZaPonudu(c)}>
-                            Tvoja ponuda
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="flex-grow-1"
-                            disabled={jeZavrseno}
-                            title="Za davanje ponude potrebna je prijava"
-                            onClick={() => navigate(RouteNames.LOGIRANJE)}>
-                            Prijavi se za ponudu
-                          </Button>
-                        )}
-                        {mozeUpravljati(c) && (
-                          <>
-                            <Button
-                              variant="outline-warning"
-                              size="sm"
-                              onClick={() => navigate(`/predmeti/promijeni/${c.id || c.sifra}`)}
-                              title="Promjena predmeta"
-                              aria-label={`Promjena predmeta: ${c.naziv}`}>
-                              <FaEdit aria-hidden="true" />
-                            </Button>
-                            <Button
-                              variant="outline-danger"
-                              size="sm"
-                              onClick={() => obrisi(c)}
-                              title="Brisanje predmeta"
-                              aria-label={`Brisanje predmeta: ${c.naziv}`}>
-                              <FaTrash aria-hidden="true" />
-                            </Button>
-                          </>
-                        )}
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="flex-grow-1"
+                          disabled={jeZavrseno}
+                          onClick={() => otvoriModalZaPonudu(c)}>
+                          Tvoja ponuda
+                        </Button>
+                        <Button
+                          variant="outline-warning"
+                          size="sm"
+                          onClick={() => navigate(`/predmeti/promijeni/${c.id || c.sifra}`)}
+                          title="Promjena predmeta"
+                          aria-label={`Promjena predmeta: ${c.naziv}`}>
+                          <FaEdit aria-hidden="true" />
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => obrisi(c)}
+                          title="Brisanje predmeta"
+                          aria-label={`Brisanje predmeta: ${c.naziv}`}>
+                          <FaTrash aria-hidden="true" />
+                        </Button>
                       </div>
                     </Card.Body>
                   </Card>

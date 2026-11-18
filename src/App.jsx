@@ -7,7 +7,6 @@ import { Container } from "react-bootstrap";
 import { RouteNames } from "./constants.js";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Registracija = lazy(() => import("./pages/registracija/Registracija.jsx"));
@@ -31,7 +30,6 @@ const GeneriranjePodataka = lazy(() => import("./pages/GeneriranjePodataka"));
 const OznakeLista = lazy(() => import("./pages/oznake/OznakeLista.jsx"));
 const OznakaNova = lazy(() => import("./pages/oznake/OznakaNova.jsx"));
 const OznakePromjena = lazy(() => import("./pages/oznake/OznakePromjena.jsx"));
-const NadzornaPloca = lazy(() => import("./pages/NadzornaPloca.jsx"))
 
 const Uvjeti = lazy(() => import("./pages/Uvjeti.jsx"));
 
@@ -43,119 +41,55 @@ function App() {
 
 				<Suspense fallback={<div className="text-center py-5 text-white">Učitavanje…</div>}>
 				<Routes>
-					{/* Javno dostupno */}
 					<Route path={RouteNames.HOME} element={<Home />} />
 					<Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
 					<Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
-					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />
+
 					<Route path={RouteNames.KATEGORIJE} element={<KategorijaList />} />
-					<Route path={RouteNames.OZNAKE} element={<OznakeLista />} />
-					<Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
+					<Route
+						path={RouteNames.KATEGORIJA_NOVA}
+						element={<KategorijaNova />}
+					/>
+					<Route
+						path={RouteNames.KATEGORIJE_PROMJENA}
+						element={<KategorijePromjena />}
+					/>
+
+					<Route
+						path={RouteNames.PREDMETI_PROMJENA}
+						element={<PredmetiPromjena />}
+					/>
+					<Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
 					<Route
 						path={RouteNames.PREDMETI_KATEGORIJA}
 						element={<PredmetiLista />}
 					/>
+					<Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
 
-					{/* Predmeti: svaki prijavljeni korisnik smije dodavati i mijenjati */}
-					<Route
-						path={RouteNames.PREDMET_NOVI}
-						element={
-							<ProtectedRoute>
-								<PredmetNovi />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path={RouteNames.PREDMETI_PROMJENA}
-						element={
-							<ProtectedRoute>
-								<PredmetiPromjena />
-							</ProtectedRoute>
-						}
-					/>
-
-					{/* Kategorije, oznake i korisnici: samo administrator */}
-					<Route
-						path={RouteNames.KATEGORIJA_NOVA}
-						element={
-							<ProtectedRoute samoAdmin>
-								<KategorijaNova />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path={RouteNames.KATEGORIJE_PROMJENA}
-						element={
-							<ProtectedRoute samoAdmin>
-								<KategorijePromjena />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path={RouteNames.OZNAKA_NOVA}
-						element={
-							<ProtectedRoute samoAdmin>
-								<OznakaNova />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path={RouteNames.OZNAKE_PROMJENA}
-						element={
-							<ProtectedRoute samoAdmin>
-								<OznakePromjena />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path={RouteNames.KORISNICI}
-						element={
-							<ProtectedRoute samoAdmin>
-								<KorisniciLista />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path={RouteNames.KORISNIK_NOVI}
-						element={
-							<ProtectedRoute samoAdmin>
-								<KorisniciNovi />
-							</ProtectedRoute>
-						}
-					/>
+					<Route path={RouteNames.KORISNICI} element={<KorisniciLista />} />
+					<Route path={RouteNames.KORISNIK_NOVI} element={<KorisniciNovi />} />
 					<Route
 						path={RouteNames.KORISNIK_PROMJENA}
-						element={
-							<ProtectedRoute samoAdmin>
-								<KorisniciPromijena />
-							</ProtectedRoute>
-						}
+						element={<KorisniciPromijena />}
 					/>
 					<Route
 						path={RouteNames.KORISNIK_PROMJENA_LOZINKE}
-						element={
-							<ProtectedRoute samoAdmin>
-								<KorisniciPromijenaLozinke />
-							</ProtectedRoute>
-						}
+						element={<KorisniciPromijenaLozinke />}
 					/>
+
 					<Route
 						path={RouteNames.GENERIRANJE_PODATAKA}
-						element={
-							<ProtectedRoute samoAdmin>
-								<GeneriranjePodataka />
-							</ProtectedRoute>
-						}
-            />
-            		<Route
-						path={RouteNames.NADZORNA_PLOCA}
-						element={
-							<ProtectedRoute samoAdmin>
-								<NadzornaPloca />
-							</ProtectedRoute>
-						}
+						element={<GeneriranjePodataka />}
 					/>
-          
+
+					<Route path={RouteNames.OZNAKE} element={<OznakeLista />} />
+					<Route path={RouteNames.OZNAKA_NOVA} element={<OznakaNova />} />
+					<Route
+						path={RouteNames.OZNAKE_PROMJENA}
+						element={<OznakePromjena />}
+					/>
+
+					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />
 				</Routes>
 				</Suspense>
 

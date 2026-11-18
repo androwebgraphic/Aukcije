@@ -3,20 +3,17 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  plugins: [react()],
   build: {
     // lottie-web is isolated in its own lazy chunk (~540 kB); it is needed only
     // on pages with Lottie animations, so a slightly higher limit is acceptable.
     chunkSizeWarningLimit: 600,
-    rolldownOptions: {
+    rollupOptions: {
       output: {
-        codeSplitting: {
-          groups: [
-            {
-              name: "lottie",
-              test: /node_modules[\\/](lottie-web|@lottiefiles|@lordicon)[\\/]/,
-              minSize: 0,
-            },
-          ],
+        manualChunks(id) {
+          if (/node_modules[\\/](lottie-web|@lottiefiles|@lordicon)[\\/]/.test(id)) {
+            return "lottie";
+          }
         },
       },
       onwarn(warning, warn) {

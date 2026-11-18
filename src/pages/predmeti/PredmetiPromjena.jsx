@@ -10,13 +10,10 @@ import Heading from "../../components/UI/Heading";
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { ShemaPredmetPromijena } from "../../schemas/SchemaPredmetPromijena";
-import useAuth from "../../hooks/useAuth";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
   const params = useParams();
-  const { isAdmin, authUser } = useAuth();
-  const [nijeVlasnik, setNijeVlasnik] = useState(false);
 
   const [predmet, setPredmet] = useState({
     naziv: "",
@@ -123,14 +120,6 @@ export default function PredmetiPromjena() {
         if (s && Object.keys(s).length > 0) {
           // kopija – memorijski servis vraća referencu pa je ne smijemo mijenjati
           s = { ...s };
-
-          // Samo vlasnik predmeta (i admin) smije ga mijenjati.
-          const jeVlasnik = s.vlasnik != null && String(s.vlasnik) === String(authUser?.id);
-          if (!isAdmin && !jeVlasnik) {
-            setNijeVlasnik(true);
-            return;
-          }
-          setNijeVlasnik(false);
           if (s.dodano && typeof s.dodano === 'string') s.dodano = s.dodano.substring(0, 16);
           if (s.zavrsava && typeof s.zavrsava === 'string') s.zavrsava = s.zavrsava.substring(0, 16);
 
@@ -262,13 +251,6 @@ export default function PredmetiPromjena() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    const jeVlasnik = predmet.vlasnik != null && String(predmet.vlasnik) === String(authUser?.id);
-    if (!isAdmin && !jeVlasnik) {
-      setGreska("Možete mijenjati samo svoje predmete.");
-      return;
-    }
-
     setErrors({});
     setGreska(null);
 
@@ -301,13 +283,7 @@ export default function PredmetiPromjena() {
       return;
     }
 
-    const azuriraniPredmet = {
-      ...podaciZaValidaciju,
-      ...rezultat.data,
-      // Vlasnik se ne mijenja pri uređivanju.
-      vlasnik: predmet.vlasnik ?? null,
-      vlasnikEmail: predmet.vlasnikEmail ?? null,
-    };
+    const azuriraniPredmet = { ...podaciZaValidaciju, ...rezultat.data };
 
     try {
       await PredmetiServices.promijeni(params.id, azuriraniPredmet);
@@ -316,19 +292,6 @@ export default function PredmetiPromjena() {
       console.error("Greška prilikom spremanja:", error);
       setGreska("Greška prilikom spremanja: " + error.message);
     }
-  }
-
-  if (nijeVlasnik) {
-    return (
-      <div className="mt-4 mb-5">
-        <Alert variant="danger" role="alert">
-          Ovaj predmet nije vaš — možete mijenjati i brisati samo predmete koje ste sami dodali.
-        </Alert>
-        <Button variant="secondary" onClick={() => navigate(RouteNames.PREDMETI)}>
-          Natrag na predmete
-        </Button>
-      </div>
-    );
   }
 
   return (

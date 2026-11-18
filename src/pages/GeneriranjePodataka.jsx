@@ -6,12 +6,10 @@ import KategorijeServices from "../services/kategorije/KategorijeServices";
 import PredmetiServices from "../services/predmeti/PredmetiServices";
 import KorisniciService from "../services/korisnici/KorisniciService";
 import OznakeServices from "../services/oznake/OznakeServices";
-import { osigurajDemoRacune } from "../services/korisnici/DemoRacuni";
-import { APP_NAME, TESTNA_LOZINKA } from "../constants";
-import { kategorije } from "../services/kategorije/KategorijeData";
-import administratori from "../services/korisnici/KorisniciData";
-import { oznake } from "../services/oznake/OznakeData";
-import { predmeti } from "../services/predmeti/predmetiData";
+import { APP_NAME } from "../constants";
+
+const ADMIN_EMAIL = "admin@edunova.hr";
+const TESTNA_LOZINKA = "Edunova123!";
 
 export default function GeneriranjePodataka() {
   const [brojKategorije, setBrojKategorije] = useState(13);
@@ -115,10 +113,6 @@ export default function GeneriranjePodataka() {
   };
      
   const generirajKorisnike = async (broj) => {
-    // Demo računi (admin i obični korisnik) moraju postojati da bi se prijava
-    // mogla isprobati; postojeće lozinke se ne mijenjaju.
-    await osigurajDemoRacune();
-
     for (let i = 0; i < broj; i++) {
       await KorisniciService.dodaj({
         email: faker.internet.email(),
@@ -202,7 +196,7 @@ export default function GeneriranjePodataka() {
       await generirajKorisnike(brojKorisnika);
       setPoruka({
         tip: "success",
-        tekst: `Uspješno generirano ${brojKorisnika} korisnika i osigurani demo računi (admin, korisnik)!`,
+        tekst: `Uspješno generirano ${brojKorisnika} korisnika!`,
       });
     } catch (error) {
       setPoruka({
@@ -335,43 +329,6 @@ export default function GeneriranjePodataka() {
       setLoading(false);
     }
   };
-
-
-  
-const handleMemorijaULocalStorage = async () => {
-        if (!window.confirm('Jeste li sigurni da želite presipati sve podatke iz memorije u localStorage?')) {
-            return;
-        }
-
-        setLoading(true);
-        setPoruka(null);
-
-        try {
-
-            localStorage.removeItem('kategorije')
-            localStorage.removeItem('administratori')
-            localStorage.removeItem('oznake')
-            localStorage.removeItem('predmeti')
-
-            localStorage.setItem('kategorije', JSON.stringify(kategorije))
-            localStorage.setItem('administratori', JSON.stringify(administratori))
-            localStorage.setItem('oznake', JSON.stringify(oznake))
-            localStorage.setItem('predmeti', JSON.stringify(predmeti))
-
-           
-            setPoruka({
-                tip: 'success',
-                tekst: `Uspješno presipano!`
-            });
-        } catch (error) {
-            setPoruka({
-                tip: 'danger',
-                tekst: 'Greška pri presipavanju podataka: ' + error.message
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
 
   
 
@@ -524,16 +481,6 @@ const handleMemorijaULocalStorage = async () => {
             disabled={loading}
             className="w-100 mb-2">
             {loading ? "Brisanje..." : "Obriši sve korisnike"}
-          </Button>
-        </Col>
-
-        <Col md={3}>
-          <Button
-            variant="danger"
-            onClick={handleMemorijaULocalStorage}
-            disabled={loading}
-            className="w-100 mb-2">
-            {loading ? "Presipavanje..." : "Memorija u localStorage"}
           </Button>
         </Col>
       </Row>

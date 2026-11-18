@@ -39,26 +39,7 @@ export const RouteNames = {
 	OZNAKE_PROMJENA: "/oznake/:id",
 	OZNAKA_NOVA: "/dodajoznaku",
 	OZNAKE: "/oznake",
-
-	//nadzorna ploča
-	NADZORNA_PLOCA: "/nadzorna-ploca",
 };
 
-// Računi za testiranje / prijavu
-export const ADMIN_EMAIL = "admin@aukcije.hr";
-export const ADMIN_LOZINKA = "Aukcije123!";
-export const KORISNIK_EMAIL = "korisnik@aukcije.hr";
-export const KORISNIK_LOZINKA = "Aukcije123!";
-export const TESTNA_LOZINKA = "Aukcije123!";
-
-
-export const DATA_SOURCE = 'memorija'
-
 //memorija, localStorage, firebase
-export const PrefixStorage = {
-
-  PREDMETI: 'e.predmeti',
-  KATEGORIJE: 'e.kategorije',
-  OZNAKE: 'e.oznake',
-  KORISNICI: 'e.korisnici'
-}
+export const DATA_SOURCE = "localStorage";

@@ -18,8 +18,6 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import Odbrojavanje from "../../components/Odbrojavanje";
-import { RouteNames } from "../../constants";
-import useAuth from "../../hooks/useAuth";
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -58,8 +56,6 @@ function dohvatiIzvorSlike(slikaItem) {
 }
 
 export default function PredmetOmiljeni() {
-  const { isLoggedIn } = useAuth();
-  const navigate = useNavigate();
   const [omiljeniPredmeti, setOmiljeniPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [uvjetiPretrazivanja, setUvjetiPretrazivanja] = useState("");
@@ -105,10 +101,6 @@ export default function PredmetOmiljeni() {
   }
 
   function otvoriModalZaPonudu(predmet) {
-    if (!isLoggedIn) {
-      navigate(RouteNames.LOGIRANJE);
-      return;
-    }
     if (jeAukcijaZavrsena(predmet.zavrsava)) return;
     setOdabraniPredmet(predmet);
     const imaPonuda = Array.isArray(predmet.ponude) && predmet.ponude.length > 0;
@@ -119,12 +111,6 @@ export default function PredmetOmiljeni() {
 
   async function potvrdiPonudu() {
     if (!odabraniPredmet) return;
-    if (!isLoggedIn) {
-      setShowModal(false);
-      setOdabraniPredmet(null);
-      navigate(RouteNames.LOGIRANJE);
-      return;
-    }
     const imaPonuda = Array.isArray(odabraniPredmet.ponude) && odabraniPredmet.ponude.length > 0;
     const trenutnaCijena = imaPonuda ? Number(odabraniPredmet.ponude[odabraniPredmet.ponude.length - 1].cijena) : Number(odabraniPredmet.pocetnaCijena);
     const minimalnaDozvoljenaCijena = trenutnaCijena + 1;
@@ -222,14 +208,8 @@ export default function PredmetOmiljeni() {
                       <small className="text-muted d-block"><strong>Završava:</strong> {formatirajDatum(c.zavrsava)}</small>
                       <Odbrojavanje zavrsava={c.zavrsava} />
                     </div>
-                    <Button
-                      variant={jeZavrseno ? "secondary" : isLoggedIn ? "primary" : "outline-primary"}
-                      size="sm"
-                      className="w-100 mb-2"
-                      disabled={jeZavrseno}
-                      title={isLoggedIn ? undefined : "Za davanje ponude potrebna je prijava"}
-                      onClick={() => otvoriModalZaPonudu(c)}>
-                      {jeZavrseno ? "Aukcija je završila" : isLoggedIn ? "Tvoja ponuda" : "Prijavi se za ponudu"}
+                    <Button variant={jeZavrseno ? "secondary" : "primary"} size="sm" className="w-100 mb-2" disabled={jeZavrseno} onClick={() => otvoriModalZaPonudu(c)}>
+                      {jeZavrseno ? "Aukcija je završila" : "Tvoja ponuda"}
                     </Button>
                   </Card.Body>
                 </Card>

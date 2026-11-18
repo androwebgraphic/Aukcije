@@ -5,7 +5,6 @@ import { z } from "zod"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import { RouteNames } from "../../constants"
 import Heading from "../../components/UI/Heading"
-import useAuth from "../../hooks/useAuth"
 
 const ShemaPromjenaKorisnika = z.object({
   email: z
@@ -24,7 +23,6 @@ const ShemaPromjenaKorisnika = z.object({
 export default function KorisniciPromijena() {
   const navigate = useNavigate()
   const params = useParams()
-  const { authUser, osvjeziSesiju } = useAuth()
 
   const [korisnik, setKorisnik] = useState({})
   const [email, setEmail] = useState("")
@@ -85,36 +83,12 @@ export default function KorisniciPromijena() {
 
     setErrors({})
 
-    // Zaštita od zaključavanja: admin si ne smije ukinuti ulogu dok je prijavljen.
-    if (
-      String(params.id) === String(authUser?.id) &&
-      String(authUser?.uloga ?? "").trim().toLowerCase() === "admin" &&
-      rezultat.data.uloga !== "admin"
-    ) {
-      setGreska("Ne možeš sam sebi ukinuti administratorsku ulogu dok si prijavljen.")
-      return
-    }
-
     try {
       const odgovor = await KorisniciService.promijeni(params.id, rezultat.data)
 
       if (!odgovor.success) {
         setGreska(odgovor.message || "Greška pri promjeni korisnika")
         return
-      }
-
-      // Ako je promijenjen vlastiti račun, odmah osvježi sesiju (email/uloga),
-      // inače navigacija i dalje radi sa starim podacima do ponovne prijave.
-      if (String(params.id) === String(authUser?.id)) {
-        localStorage.setItem(
-          "korisnik",
-          JSON.stringify({
-            ...authUser,
-            email: rezultat.data.email,
-            uloga: rezultat.data.uloga,
-          })
-        )
-        osvjeziSesiju()
       }
 
       navigate(RouteNames.KORISNICI)

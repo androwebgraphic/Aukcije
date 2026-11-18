@@ -10,7 +10,6 @@ import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
 import Heading from "../../components/UI/Heading"
 import { motion } from "framer-motion"
 import IkonaKategorije from "../../components/UI/IkonaKategorije"
-import useAuth from "../../hooks/useAuth"
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -37,7 +36,6 @@ function ExpandableText({ text, maxLength = 100 }) {
 }
 
 export default function KategorijaList() {
-  const { isAdmin } = useAuth()
   const [kategorije, setKategorije] = useState([])
   const [predmeti, setPredmeti] = useState([])
   const navigate = useNavigate()
@@ -97,14 +95,12 @@ const deklinirajOglas = (broj) => {
         >
           <Heading as='h2'> Lista Kategorija <small>({kategorije.length})</small> </Heading>
 
-          {isAdmin && (
-            <Link to={RouteNames.KATEGORIJA_NOVA}>
-              <Button variant="success" className="mb-3">
-                <FaPlus className="me-2" aria-hidden="true" />
-                Dodaj kategoriju
-              </Button>
-            </Link>
-          )}
+          <Link to={RouteNames.KATEGORIJA_NOVA}>
+            <Button variant="success" className="mb-3">
+              <FaPlus className="me-2" aria-hidden="true" />
+              Dodaj kategoriju
+            </Button>
+          </Link>
         </motion.div>
 
         {/* Ako nema kategorija, prikazujemo poruku da korisnik zna da je lista prazna */}
@@ -165,30 +161,28 @@ const deklinirajOglas = (broj) => {
                       </div>  */}
 
                       {/* Akcijski gumbi – isti stil kao na listi korisnika */}
-                      {isAdmin && (
-                        <div className="d-flex gap-2 pt-2 border-top">
-                          <Button
-                            variant="outline-warning"
-                            className="flex-fill"
-                            size="sm"
-                            onClick={() => navigate(`/kategorije/${c.id}`)}
-                            title="Promjena kategorije"
-                            aria-label={`Promjena kategorije: ${c.naziv}`}
-                          >
-                            <FaEdit aria-hidden="true" />
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            className="flex-fill"
-                            size="sm"
-                            onClick={() => obrisi(c.id)}
-                            title="Brisanje kategorije"
-                            aria-label={`Brisanje kategorije: ${c.naziv}`}
-                          >
-                            <FaTrash aria-hidden="true" />
-                          </Button>
-                        </div>
-                      )}
+                      <div className="d-flex gap-2 pt-2 border-top">
+                        <Button
+                          variant="outline-warning"
+                          className="flex-fill"
+                          size="sm"
+                          onClick={() => navigate(`/kategorije/${c.id}`)}
+                          title="Promjena kategorije"
+                          aria-label={`Promjena kategorije: ${c.naziv}`}
+                        >
+                          <FaEdit aria-hidden="true" />
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          className="flex-fill"
+                          size="sm"
+                          onClick={() => obrisi(c.id)}
+                          title="Brisanje kategorije"
+                          aria-label={`Brisanje kategorije: ${c.naziv}`}
+                        >
+                          <FaTrash aria-hidden="true" />
+                        </Button>
+                      </div>
          
 
                     </Card.Body>

@@ -10,13 +10,10 @@ async function get() {
         
         const data = snapshot.docs.map(doc => {
             const podaci = doc.data();
-            // Ako grupa ima datumPočetka, pretvaramo ga u ISO string za frontend
-            const d = podaci.datumPocetka ? podaci.datumPocetka.toDate() : new Date();
-            
+
             return {
                 id: doc.id,
-                ...podaci,
-                datumPocetka: d.toISOString()
+                ...podaci
             };
         });
         
@@ -35,14 +32,11 @@ async function getByid(id) {
         
         if (docSnap.exists()) {
             const podaci = docSnap.data();
-            const d = podaci.datumPocetka ? podaci.datumPocetka.toDate() : new Date();
-            
             return {
                 success: true,
                 data: {
                     id: docSnap.id,
-                    ...podaci,
-                    datumPocetka: d.toISOString()
+                    ...podaci
                 }
             };
         } else {
@@ -54,15 +48,11 @@ async function getByid(id) {
 }
 
 // 2/4 Create - dodaj novu
-async function dodaj(grupa) {
+async function dodaj(kategorija) {
     try {
-        // Pretvorba datuma u Firebase Timestamp prije spremanja
-        if (grupa.datumPocetka) {
-            grupa.datumPocetka = Timestamp.fromDate(new Date(grupa.datumPocetka));
-        }
-
-        const skupKategorija = collection(getFirebaseDB(), PrefixStorage.Kategorije);
-        const docRef = await addDoc(skupKategorija, grupa);
+    
+        const skupKategorija = collection(getFirebaseDB(), PrefixStorage.KATEGORIJE);
+        const docRef = await addDoc(skupKategorija, kategorija);
         
         return {
             success: true,
@@ -77,13 +67,9 @@ async function dodaj(grupa) {
 // 3/4 Update - promjeni postojeću
 async function promijeni(id,kategorija) {
     try {
-        // Pretvorba datuma u Firebase Timestamp prije ažuriranja
-        if (grupa.datumPocetka) {
-            grupa.datumPocetka = Timestamp.fromDate(new Date(grupa.datumPocetka));
-        }
-
-        const docRef = doc(getFirebaseDB(), PrefixStorage.kategorija, id);
-        await updateDoc(docRef, grupa);
+ 
+        const docRef = doc(getFirebaseDB(), PrefixStorage.KATEGORIJE, id);
+        await updateDoc(docRef, kategorija);
 
         return { success: true };
     } catch (e) {
@@ -95,7 +81,7 @@ async function promijeni(id,kategorija) {
 // 4/4 Delete - obriši
 async function obrisi(id) {
     try {
-        const docRef = doc(getFirebaseDB(), PrefixStorage.kategorije, id);
+        const docRef = doc(getFirebaseDB(), PrefixStorage.KATEGORIJE, id);
         await deleteDoc(docRef);
         return {
             success: true,

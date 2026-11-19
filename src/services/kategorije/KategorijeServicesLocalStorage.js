@@ -1,12 +1,12 @@
 import { PrefixStorage } from "../../constants"
 
 function dohvatiSveIzStorage() {
-  const podatci = localStorage.getItem(PrefixStorage)
+  const podatci = localStorage.getItem(PrefixStorage.KATEGORIJE)
   return podatci ? JSON.parse(podatci) : []
 }
 
 function spremiUStorage(podatci) {
-  localStorage.setItem(PrefixStorage, JSON.stringify(podatci))
+  localStorage.setItem(PrefixStorage.KATEGORIJE, JSON.stringify(podatci))
 }
 
 async function get() {

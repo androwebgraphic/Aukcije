@@ -60,6 +60,6 @@ export const PrefixStorage = {
 
   PREDMETI: 'e4.predmeti',
   KATEGORIJE: 'e4.kategorije',
-  ONAKE: 'e4.oznake',
+  OZNAKE: 'e4.oznake',
   KORISNICI: 'e4.korisnici'
 }

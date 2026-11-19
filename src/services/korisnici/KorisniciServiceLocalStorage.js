@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { korisnici as pocetniKorisnici, DEMO_LOZINKA } from './KorisniciData.js'
+import { PrefixStorage } from '../../constants.js'
 
-const STORAGE_KEY = 'korisnici' // ključ pod kojim se čuvaju podaci u local storage-u
 const STORAGE_VERZIJA_KEY = 'korisnici-verzija'
 // Povećaj kad se mijenja logika sjemenja/popravka.
 const STORAGE_VERZIJA = 3
@@ -17,7 +17,7 @@ const SJEME_TOKEN = `${STORAGE_VERZIJA}:${pocetniKorisnici[0]?.lozinka ?? ''}`
 // korisnike iz KorisniciData.js. Verzija se pamti zato da se obrisani demo
 // računi ne vraćaju pri svakom čitanju.
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY)
+    const podaci = localStorage.getItem(PrefixStorage.KORISNICI)
     const lista = podaci !== null ? JSON.parse(podaci) : []
 
     const spremljenaVerzija = localStorage.getItem(STORAGE_VERZIJA_KEY)
@@ -75,7 +75,7 @@ function lozinkaOdgovara(lozinka, hash) {
 
 // Pomoćna funkcija za spremanje podataka
 function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+    localStorage.setItem(PrefixStorage.KORISNICI, JSON.stringify(podaci))
 }
 
 // 1/4 Read - dohvati sve

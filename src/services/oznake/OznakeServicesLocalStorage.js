@@ -1,12 +1,12 @@
-const STORAGE_KEY = 'oznake'
+import { PrefixStorage } from "../../constants"
 
 function dohvatiSveIzStorage() {
-  const podatci = localStorage.getItem(STORAGE_KEY)
+  const podatci = localStorage.getItem(PrefixStorage.OZNAKE)
   return podatci ? JSON.parse(podatci) : []
 }
 
 function spremiUStorage(podatci) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(podatci))
+  localStorage.setItem(PrefixStorage.OZNAKE, JSON.stringify(podatci))
 }
 
 async function get() {

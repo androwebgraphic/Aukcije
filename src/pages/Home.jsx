@@ -194,7 +194,7 @@ export default function Home() {
             </Card.Body>
           </Card>
         </Col>
-              <NadzornaPloca />
+  
       </Row>
 
       <Row>

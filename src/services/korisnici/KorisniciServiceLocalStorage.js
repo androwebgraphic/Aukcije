@@ -1,12 +1,73 @@
-
 import bcrypt from 'bcryptjs'
-const STORAGE_KEY='administratori' // ključ pod kojim se čuvaju podaci u local storage-u
+import { korisnici as pocetniKorisnici, DEMO_LOZINKA } from './KorisniciData.js'
 
+const STORAGE_KEY = 'korisnici' // ključ pod kojim se čuvaju podaci u local storage-u
+const STORAGE_VERZIJA_KEY = 'korisnici-verzija'
+// Povećaj kad se mijenja sjeme ili logika popravka demo računa.
+const STORAGE_VERZIJA = 3
 
-// Pomoćna funkcija za dohvaćanje podataka iz local storage-a
+// Pomoćna funkcija za dohvaćanje podataka iz local storage-a.
+//
+// VAŽNO: local storage se sam ne puni. Ako ga nitko ne inicijalizira, lista je
+// trajno prazna pa svaka prijava završava s "Email i lozinka ne odgovaraju".
+// Zato pri prvom čitanju (ili pri promjeni STORAGE_VERZIJA) upisujemo demo
+// korisnike iz KorisniciData.js. Verzija se pamti zato da se obrisani demo
+// računi ne vraćaju pri svakom čitanju.
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY)
-    return podaci ? JSON.parse(podaci) : []
+    const lista = podaci !== null ? JSON.parse(podaci) : []
+
+    const spremljenaVerzija = Number(localStorage.getItem(STORAGE_VERZIJA_KEY) || 0)
+    if (spremljenaVerzija >= STORAGE_VERZIJA) {
+        return lista
+    }
+
+    const dopunjeno = dopuniPocetnimKorisnicima(lista)
+    spremiUStorage(dopunjeno)
+    localStorage.setItem(STORAGE_VERZIJA_KEY, String(STORAGE_VERZIJA))
+    return dopunjeno
+}
+
+// Dodaje demo korisnike koji još ne postoje (po emailu) i popravlja one koje
+// postoje, ali im lozinka nije DEMO_LOZINKA. Potonje je važno jer je u
+// local storage-u mogao ostati račun s istim emailom i drugom lozinkom (npr.
+// ranije kreiran kroz registraciju) pa kartice "Klikni za Admina/Korisnika"
+// na formi za prijavu ne bi radile.
+// Id-evi postojećih zapisa se ne diraju, a novi dobivaju slobodan id.
+function dopuniPocetnimKorisnicima(lista) {
+    const rezultat = lista.map(korisnik => ({ ...korisnik }))
+    let najveciId = rezultat.reduce(
+        (najveci, korisnik) => Math.max(najveci, parseInt(korisnik.id, 10) || 0),
+        0
+    )
+
+    for (const pocetni of pocetniKorisnici) {
+        const postojeci = rezultat.find(korisnik => korisnik.email === pocetni.email)
+
+        if (!postojeci) {
+            rezultat.push({ ...pocetni, id: String(++najveciId) })
+            continue
+        }
+
+        if (!lozinkaOdgovara(DEMO_LOZINKA, postojeci.lozinka)) {
+            postojeci.lozinka = pocetni.lozinka
+        }
+    }
+
+    return rezultat
+}
+
+// bcrypt.compareSync baca izuzetak ako zapis nije ispravan bcrypt hash,
+// pa to tretiramo kao "lozinka ne odgovara".
+function lozinkaOdgovara(lozinka, hash) {
+    if (typeof hash !== 'string' || hash.length !== 60) {
+        return false
+    }
+    try {
+        return bcrypt.compareSync(lozinka, hash)
+    } catch {
+        return false
+    }
 }
 
 // Pomoćna funkcija za spremanje podataka
@@ -16,121 +77,121 @@ function spremiUStorage(podaci) {
 
 // 1/4 Read - dohvati sve
 async function get() {
-    const administratori = dohvatiSveIzStorage()
+    const korisnici = dohvatiSveIzStorage()
     // Ne vraćamo lozinke u listi
-    const administratoriBezcLozinki = administratori.map(op => ({
+    const korisniciBezcLozinki = korisnici.map(op => ({
         id: op.id,
         email: op.email,
         uloga: op.uloga
     }))
-    return {success: true, data: [...administratoriBezcLozinki]}
+    return {success: true, data: [...korisniciBezcLozinki]}
 }
 
 // Dohvati jedan po šifri
 async function getById(id) {
-    const administratori = dohvatiSveIzStorage()
-    const administrator = administratori.find(o => o.id === id)
-    if (!administrator) {
+    const korisnici = dohvatiSveIzStorage()
+    const korisnik = korisnici.find(o => o.id === id)
+    if (!korisnik) {
         return {success: false, data: null}
     }
     // Ne vraćamo lozinku
     return {success: true, data: {
-        id: administrator.id,
-        email: administrator.email,
-        uloga: administrator.uloga
+        id: korisnik.id,
+        email: korisnik.email,
+        uloga: korisnik.uloga
     }}
 }
 
 // 2/4 Create - dodaj novi
-async function dodaj(administrator) {
-    const administratori = dohvatiSveIzStorage()
+async function dodaj(korisnik) {
+    const korisnici = dohvatiSveIzStorage()
     
-    if (administratori.length === 0) {
-        administrator.id = '1'
+    if (korisnici.length === 0) {
+        korisnik.id = '1'
     } else {
         // Pronalaženje najveće šifre da izbjegnemo duplikate
-        administrator.id = String(parseInt(administratori[administratori.length - 1].id) + 1)
+        korisnik.id = String(parseInt(korisnici[korisnici.length - 1].id) + 1)
     }
     
     // Hashiraj lozinku prije spremanja
-    administrator.lozinka = bcrypt.hashSync(administrator.lozinka, 10)
+    korisnik.lozinka = bcrypt.hashSync(korisnik.lozinka, 10)
     
-    administratori.push(administrator)
-    spremiUStorage(administratori)
-    return {success: true, data: {id: administrator.id, email: administrator.email}}
+    korisnici.push(korisnik)
+    spremiUStorage(korisnici)
+    return {success: true, data: {id: korisnik.id, email: korisnik.email}}
 }
 
 // 3/4 Update - promijeni postojeći
-async function promijeni(id, administrator) {
-    const administratori = dohvatiSveIzStorage()
-    const index = administratori.findIndex(o => o.id === id)
+async function promijeni(id, korisnik) {
+    const korisnici = dohvatiSveIzStorage()
+    const index = korisnici.findIndex(o => o.id === id)
     
     if (index === -1) {
-        return {success: false, message: "Administrator nije pronađen"}
+        return {success: false, message: "korisnik nije pronađen"}
     }
     
     // Ažuriraj email i ulogu, ne lozinku
-    administratori[index] = {
-        ...administratori[index],
-        email: administrator.email,
-        uloga: administrator.uloga,
+    korisnici[index] = {
+        ...korisnici[index],
+        email: korisnik.email,
+        uloga: korisnik.uloga,
         id: id
     }
-    spremiUStorage(administratori)
-    return {success: true, data: {id: administratori[index].id, email: administratori[index].email, uloga: administratori[index].uloga}}
+    spremiUStorage(korisnici)
+    return {success: true, data: {id: korisnici[index].id, email: korisnici[index].email, uloga: korisnici[index].uloga}}
 }
 
 // Posebna funkcija za promjenu lozinke
 async function promijeniLozinku(id, novaLozinka) {
-    const administratori = dohvatiSveIzStorage()
-    const index = administratori.findIndex(o => o.id === id)
+    const korisnici = dohvatiSveIzStorage()
+    const index = korisnici.findIndex(o => o.id === id)
     
     if (index === -1) {
-        return {success: false, message: "Administrator nije pronađen"}
+        return {success: false, message: "korisnik nije pronađen"}
     }
     
     // Hashiraj novu lozinku
-    administratori[index].lozinka = bcrypt.hashSync(novaLozinka, 10)
-    spremiUStorage(administratori)
+    korisnici[index].lozinka = bcrypt.hashSync(novaLozinka, 10)
+    spremiUStorage(korisnici)
     
     return {success: true, message: "Lozinka uspješno promijenjena"}
 }
 
 // 4/4 Delete - obriši
 async function obrisi(id) {
-    let administratori = dohvatiSveIzStorage()
-    const initialLength = administratori.length
-    administratori = administratori.filter(o => o.id !== id)
+    let korisnici = dohvatiSveIzStorage()
+    const initialLength = korisnici.length
+    korisnici = korisnici.filter(o => o.id !== id)
     
-    if (administratori.length === initialLength) {
-        return {success: false, message: "Administrator nije pronađen"}
+    if (korisnici.length === initialLength) {
+        return {success: false, message: "korisnik nije pronađen"}
     }
     
-    spremiUStorage(administratori)
-    return {success: true, message: 'Administrator obrisan'}
+    spremiUStorage(korisnici)
+    return {success: true, message: 'korisnik obrisan'}
 }
 
 // Funkcija za prijavu
 async function prijava(email, lozinka) {
-    const administratori = dohvatiSveIzStorage()
-    const administrator = administratori.find(o => o.email === email)
-    if (!administrator) {
+    const korisnici = dohvatiSveIzStorage()
+    const korisnik = korisnici.find(o => o.email === email)
+    if (!korisnik) {
         return {success: false, message: "Email i lozinka ne odgovaraju"} // iako bi ovdje mogli napisati i da email ne postoji ali to onda napadačima omogućuje da zna tko je a tko nije registriran
     }
     
     // Provjeri lozinku pomoću bcrypt
-    const isMatch = bcrypt.compareSync(lozinka, administrator.lozinka)
+    const isMatch = bcrypt.compareSync(lozinka, korisnik.lozinka)
     if (!isMatch) {
         return {success: false, message: "Email i lozinka ne odgovaraju"}
     }
     
-    // Vrati administratora bez lozinke
+    // Vrati korisnika bez lozinke
     return {
         success: true, 
         data: {
-            id: administrator.id,
-            email: administrator.email,
-            uloga: administrator.uloga
+            id: korisnik.id,
+            email: korisnik.email,
+            uloga: korisnik.uloga
         }
     }
 }

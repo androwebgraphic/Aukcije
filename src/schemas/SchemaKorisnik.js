@@ -3,13 +3,22 @@ import { z } from 'zod';
 // Regex za validaciju lozinke: min 8 znakova, velika i mala slova, brojevi i interpunkcijski znak
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
 
-export const ShemaKorisnik = (z.object({
-  email: z.email({
-    error: (issue) =>
-      !issue.input || (typeof issue.input === 'string' && issue.input.trim() === '')
-        ? "Email je obavezan!"
-        : "Unesite ispravan email format!"
-  }).trim(),
+// Email: prvo trim, pa provjera formata. Redoslijed je bitan - z.email().trim()
+// bi praznine provjerio PRIJE trimanja pa bi "  a@b.hr  " pao kao neispravan.
+const emailPolje = z
+  .string()
+  .trim()
+  .pipe(
+    z.email({
+      error: (issue) =>
+        !issue.input || (typeof issue.input === 'string' && issue.input.trim() === '')
+          ? "Email je obavezan!"
+          : "Unesite ispravan email format!"
+    })
+  );
+
+export const ShemaKorisnik = z.object({
+  email: emailPolje,
 
   lozinka: z.string()
     .min(8, "Lozinka mora imati najmanje 8 znakova!")
@@ -18,22 +27,19 @@ export const ShemaKorisnik = (z.object({
   uloga: z.enum(['admin', 'korisnik'], {
     error: "Uloga mora biti 'admin' ili 'korisnik'!"
   })
-}));
+});
 
 export default ShemaKorisnik;
 
 // Shema za login (samo email i lozinka)
 export const ShemaLogin = z.object({
-  email: z.email({
-    error: (issue) =>
-      !issue.input || (typeof issue.input === 'string' && issue.input.trim() === '')
-        ? "Email je obavezan!"
-        : "Unesite ispravan email format!"
-  }).trim(),
+  email: emailPolje,
 
-  lozinka: z.string()
-    .min(8, "Lozinka mora imati najmanje 8 znakova!")
-    .regex(passwordRegex, "Lozinka mora sadržavati: veliko slovo, malo slovo, broj i interpunkcijski znak!")
+  // Na prijavi se NE provjerava složenost lozinke: postojeći korisnici mogu
+  // imati lozinku koja ne zadovoljava pravila registracije (npr. demo računi
+  // "andro1234!" nemaju veliko slovo). Provjerava se samo da polje nije prazno,
+  // a stvarnu provjeru radi servis (KorisniciService.prijava).
+  lozinka: z.string().min(1, "Lozinka je obavezna!")
 });
 
 // Shema za promjenu lozinke (zahtijeva potvrdu)

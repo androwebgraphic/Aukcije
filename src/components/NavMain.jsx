@@ -76,7 +76,7 @@ function NavMain() {
               ))}
             </NavDropdown>
 
-            <Nav.Link onClick={() => { navigate(RouteNames.KORISNIK_NOVI); setExpanded(false); }}>
+            <Nav.Link onClick={() => { navigate(RouteNames.REGISTRACIJA); setExpanded(false); }}>
               Registracija
             </Nav.Link>
             <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE); setExpanded(false); }}>

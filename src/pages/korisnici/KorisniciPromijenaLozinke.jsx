@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import { Form, Button, Row, Col, Alert } from "react-bootstrap"
 import { RouteNames } from "../../constants"
-import { ShemaPromjenaLozinke } from "../../schemas/SchemaKorisnik"
+import { ShemaPromjenaLozinke } from "../../schemas/SchemaKorisnik.js"
 import Heading from "../../components/UI/Heading"
 
 export default function KorisniciPromijeniLozinka() {

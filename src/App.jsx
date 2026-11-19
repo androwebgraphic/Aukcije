@@ -23,7 +23,7 @@ const PredmetiPromjena = lazy(() => import("./pages/predmeti/PredmetiPromjena.js
 const KorisniciLista = lazy(() => import("./pages/korisnici/KorisniciLista.jsx"));
 const KorisniciPromijena = lazy(() => import("./pages/korisnici/KorisniciPromijena.jsx"));
 const KorisniciPromijenaLozinke = lazy(() => import("./pages/korisnici/KorisniciPromijenaLozinke.jsx"));
-const KorisniciNovi = lazy(() => import("./pages/registracija/Registracija.jsx"));
+const KorisniciNovi = lazy(() => import("./pages/korisnici/KorisniciNovi.jsx"));
 
 const GeneriranjePodataka = lazy(() => import("./pages/GeneriranjePodataka"));
 

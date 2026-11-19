@@ -14,31 +14,46 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const korisnik = localStorage.getItem('korisnik');
 
+    // Nema više navigate(RouteNames.HOME) u else-grani: ona je značila da te
+    // svako osvježavanje stranice (npr. /logiranje ili /registracija) baci na
+    // početnu. Preusmjeravanje pripada zaštiti ruta, a ne ovdje.
     if (korisnik) {
-      setAuthUser(JSON.parse(korisnik));
-      setIsLoggedIn(korisnik);
-    } else {
-      navigate(RouteNames.HOME);
+      try {
+        setAuthUser(JSON.parse(korisnik));
+        setIsLoggedIn(true);
+      } catch {
+        localStorage.removeItem('korisnik');
+        setIsLoggedIn(false);
+      }
     }
   }, []);
 
+  // VAŽNO: prijava ovdje NE preusmjerava. Vraća rezultat, a preusmjeravanje
+  // radi stranica koja je prijavu pokrenula (Logiranje.jsx). Ranije je ovdje
+  // stajalo navigate(RouteNames.NADZORNA_PLOCA), a ta ruta ne postoji pa je
+  // navigate(undefined) bacao TypeError - prijava je zapravo uspjela, ali je
+  // stranica prikazivala "Prijava nije uspjela".
   async function login(email, lozinka) {
     const odgovor = await KorisniciService.prijava(email, lozinka);
-    if (odgovor.success) {
-      localStorage.setItem('korisnik', JSON.stringify(odgovor.data));
-      setAuthUser(odgovor.data);
-      setIsLoggedIn(true);
-      navigate(RouteNames.NADZORNA_PLOCA);
-    } else {
-      alert(odgovor.message);
+
+    if (!odgovor.success) {
       localStorage.setItem('korisnik', '');
       setAuthUser('');
       setIsLoggedIn(false);
+      return {
+        success: false,
+        message: odgovor.message || 'Email i lozinka ne odgovaraju',
+      };
     }
+
+    localStorage.setItem('korisnik', JSON.stringify(odgovor.data));
+    setAuthUser(odgovor.data);
+    setIsLoggedIn(true);
+
+    return { success: true, korisnik: odgovor.data };
   }
 
   function logout() {
-    
     localStorage.removeItem('korisnik');
     setAuthUser('');
     setIsLoggedIn(false);

@@ -12,6 +12,12 @@ import { RouteNames } from "../../constants";
 // ShemaKorisnik (registracija, traži i "uloga"), pa se ovdje ne smije
 // koristiti default import.
 import { ShemaLogin } from "../../schemas/SchemaKorisnik";
+// Demo podaci se čitaju iz istog izvora iz kojeg se pune localStorage, pa se
+// kartice "Klikni za Admina/Korisnika" ne mogu razići s lozinkom u podacima.
+import { korisnici as demoKorisnici, DEMO_LOZINKA } from "../../services/korisnici/KorisniciData";
+
+const demoAdmin = demoKorisnici.find((korisnik) => korisnik.uloga === "admin");
+const demoKorisnik = demoKorisnici.find((korisnik) => korisnik.uloga === "korisnik");
 
 // Zod greške pretvaramo u { nazivPolja: prvaPoruka } kako bi svako polje
 // prikazalo svoju poruku (email, lozinka), umjesto jedne zajedničke.
@@ -99,20 +105,20 @@ export default function Login() {
           <Card
             className="p-2 mb-2 bg-light border-dashed cursor-pointer text-center"
             style={{ cursor: "pointer", borderStyle: "dashed" }}
-            onClick={() => popuniPodatke("admin@aukcije.hr", "andro1234!")}
+            onClick={() => popuniPodatke(demoAdmin?.email, DEMO_LOZINKA)}
           >
             <small className="text-muted">Klikni za Admina</small>
-            <div className="fw-bold">admin@aukcije.hr</div>
+            <div className="fw-bold">{demoAdmin?.email}</div>
           </Card>
         </Col>
         <Col md={6}>
           <Card
             className="p-2 mb-2 bg-light border-dashed cursor-pointer text-center"
             style={{ cursor: "pointer", borderStyle: "dashed" }}
-            onClick={() => popuniPodatke("korisnik@aukcije.hr", "andro1234!")}
+            onClick={() => popuniPodatke(demoKorisnik?.email, DEMO_LOZINKA)}
           >
             <small className="text-muted">Klikni za Korisnika</small>
-            <div className="fw-bold">korisnik@aukcije.hr</div>
+            <div className="fw-bold">{demoKorisnik?.email}</div>
           </Card>
         </Col>
       </Row>

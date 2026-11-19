@@ -49,6 +49,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('korisnik', JSON.stringify(odgovor.data));
     setAuthUser(odgovor.data);
     setIsLoggedIn(true);
+    navigate(RouteNames.NADZORNA_PLOCA)
 
     return { success: true, korisnik: odgovor.data };
   }

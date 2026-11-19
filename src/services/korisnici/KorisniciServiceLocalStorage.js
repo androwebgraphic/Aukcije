@@ -3,8 +3,11 @@ import { korisnici as pocetniKorisnici, DEMO_LOZINKA } from './KorisniciData.js'
 
 const STORAGE_KEY = 'korisnici' // ključ pod kojim se čuvaju podaci u local storage-u
 const STORAGE_VERZIJA_KEY = 'korisnici-verzija'
-// Povećaj kad se mijenja sjeme ili logika popravka demo računa.
+// Povećaj kad se mijenja logika sjemenja/popravka.
 const STORAGE_VERZIJA = 3
+// Token sadrži i hash demo lozinke, pa promjena DEMO_LOZINKA u KorisniciData.js
+// sama pokreće popravak demo računa - nema ručnog dizanja verzije.
+const SJEME_TOKEN = `${STORAGE_VERZIJA}:${pocetniKorisnici[0]?.lozinka ?? ''}`
 
 // Pomoćna funkcija za dohvaćanje podataka iz local storage-a.
 //
@@ -17,14 +20,14 @@ function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY)
     const lista = podaci !== null ? JSON.parse(podaci) : []
 
-    const spremljenaVerzija = Number(localStorage.getItem(STORAGE_VERZIJA_KEY) || 0)
-    if (spremljenaVerzija >= STORAGE_VERZIJA) {
+    const spremljenaVerzija = localStorage.getItem(STORAGE_VERZIJA_KEY)
+    if (spremljenaVerzija === SJEME_TOKEN) {
         return lista
     }
 
     const dopunjeno = dopuniPocetnimKorisnicima(lista)
     spremiUStorage(dopunjeno)
-    localStorage.setItem(STORAGE_VERZIJA_KEY, String(STORAGE_VERZIJA))
+    localStorage.setItem(STORAGE_VERZIJA_KEY, SJEME_TOKEN)
     return dopunjeno
 }
 

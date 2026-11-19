@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 
 // Lozinka demo računa. Izvezena je kako bi servis mogao provjeriti da demo
 // računi u local storage-u stvarno imaju tu lozinku (i popraviti ih ako ne).
-export const DEMO_LOZINKA = 'Andro1234!';
+export const DEMO_LOZINKA = 'Aukcije1234!';
 
 const hashedPassword = bcrypt.hashSync(DEMO_LOZINKA, 10);
 

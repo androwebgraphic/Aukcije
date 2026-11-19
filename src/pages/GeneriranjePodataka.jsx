@@ -6,12 +6,37 @@ import KategorijeServices from "../services/kategorije/KategorijeServices";
 import PredmetiServices from "../services/predmeti/PredmetiServices";
 import KorisniciService from "../services/korisnici/KorisniciService";
 import OznakeServices from "../services/oznake/OznakeServices";
-import { APP_NAME } from "../constants";
 
-const ADMIN_EMAIL = "admin@edunova.hr";
-const TESTNA_LOZINKA = "Edunova123!";
+import {
+  ADMIN_EMAIL,
+  ADMIN_LOZINKA,
+  APP_NAME,
+  KORISNIK_EMAIL,
+  KORISNIK_LOZINKA,
+  TESTNA_LOZINKA,
+} from "../constants";
+// const ADMIN_EMAIL = "admin@aukcije.hr";
+// const TESTNA_LOZINKA = "Aukcije1234!!";
 
 export default function GeneriranjePodataka() {
+
+
+   const osigurajDemoRacune = async () => {
+    const rezultat = await KorisniciService.get();
+    const postojeci = rezultat.data ?? [];
+
+    const demoRacuni = [
+      { email: ADMIN_EMAIL, lozinka: ADMIN_LOZINKA, uloga: "admin" },
+      { email: KORISNIK_EMAIL, lozinka: KORISNIK_LOZINKA, uloga: "korisnik" },
+    ];
+
+    for (const racun of demoRacuni) {
+      const postoji = postojeci.some((korisnik) => korisnik.email === racun.email);
+      if (postoji) continue;
+
+      await KorisniciService.dodaj(racun);
+    }
+  };
   const [brojKategorije, setBrojKategorije] = useState(13);
   const [brojPredmeta, setBrojPredmeta] = useState(20);
   const [brojOznaka, setBrojOznaka] = useState(5);

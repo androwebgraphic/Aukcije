@@ -8,6 +8,10 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authUser, setAuthUser] = useState({});
+  // Dok se sesija ne pročita iz localStorage, zaštita ruta ne smije
+  // zaključiti da korisnik nije prijavljen (inače osvježavanje stranice
+  // baci prijavljenog korisnika na /logiranje).
+  const [spremno, setSpremno] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,13 +30,12 @@ export function AuthProvider({ children }) {
         setIsLoggedIn(false);
       }
     }
+
+    setSpremno(true);
   }, []);
 
   // VAŽNO: prijava ovdje NE preusmjerava. Vraća rezultat, a preusmjeravanje
-  // radi stranica koja je prijavu pokrenula (Logiranje.jsx). Ranije je ovdje
-  // stajalo navigate(RouteNames.NADZORNA_PLOCA), a ta ruta ne postoji pa je
-  // navigate(undefined) bacao TypeError - prijava je zapravo uspjela, ali je
-  // stranica prikazivala "Prijava nije uspjela".
+  // radi stranica koja je prijavu pokrenula (Logiranje.jsx).
   async function login(email, lozinka) {
     const odgovor = await KorisniciService.prijava(email, lozinka);
 
@@ -49,7 +52,6 @@ export function AuthProvider({ children }) {
     localStorage.setItem('korisnik', JSON.stringify(odgovor.data));
     setAuthUser(odgovor.data);
     setIsLoggedIn(true);
-    navigate(RouteNames.NADZORNA_PLOCA)
 
     return { success: true, korisnik: odgovor.data };
   }
@@ -64,6 +66,8 @@ export function AuthProvider({ children }) {
   const value = {
     isLoggedIn,
     authUser,
+    spremno,
+    isAdmin: authUser?.uloga === 'admin',
     login,
     logout,
   };

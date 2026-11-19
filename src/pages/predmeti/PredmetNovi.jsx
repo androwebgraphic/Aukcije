@@ -9,6 +9,7 @@ import Heading from "../../components/UI/Heading";
 import { Cropper } from "react-cropper";
 import 'cropperjs/dist/cropper.css';
 import { ShemaPredmet } from "../../schemas/SchemaPredmet";
+import useAuth from "../../hooks/useAuth";
 import { FaPlus } from "react-icons/fa";
 
 // ---------------------------------------------------------------------------
@@ -64,6 +65,7 @@ function izvuciIdIzOdgovora(podaci) {
 }
 
 export default function PredmetNovi() {
+  const { authUser } = useAuth();
   const navigate = useNavigate();
   const [greska, setGreska] = useState(null);
   const [errors, setErrors] = useState({});
@@ -285,7 +287,9 @@ export default function PredmetNovi() {
         zavrsava: predmet.zavrsava ? new Date(predmet.zavrsava).toISOString() : null,
         kategorija: podaciZaValidaciju.kategorija,
         oznake: odabraneOznake.map(o => Number(o.id)).filter(id => Number.isFinite(id)),
-        slike: isjecenaSlikaUrl
+        slike: isjecenaSlikaUrl,
+        // vlasnik predmeta - po tome se zna tko ga smije mijenjati/brisati
+        korisnikId: authUser?.id ?? null
       };
 
       console.log("Šaljem payload na server:", payload);

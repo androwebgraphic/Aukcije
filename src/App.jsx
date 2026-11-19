@@ -8,6 +8,7 @@ import { RouteNames } from "./constants.js";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import NadzornaPloca from "./pages/NadzornaPloca.jsx";
+import ZasticenaRuta from "./components/ZasticenaRuta.jsx";
 
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Registracija = lazy(() => import("./pages/registracija/Registracija.jsx"));
@@ -46,49 +47,70 @@ function App() {
 					<Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
 					<Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
 
-					<Route path={RouteNames.KATEGORIJE} element={<KategorijaList />} />
+					<Route
+						path={RouteNames.KATEGORIJE}
+						element={<ZasticenaRuta adminOnly><KategorijaList /></ZasticenaRuta>}
+					/>
 					<Route
 						path={RouteNames.KATEGORIJA_NOVA}
-						element={<KategorijaNova />}
+						element={<ZasticenaRuta adminOnly><KategorijaNova /></ZasticenaRuta>}
 					/>
 					<Route
 						path={RouteNames.KATEGORIJE_PROMJENA}
-						element={<KategorijePromjena />}
+						element={<ZasticenaRuta adminOnly><KategorijePromjena /></ZasticenaRuta>}
 					/>
 
 					<Route
 						path={RouteNames.PREDMETI_PROMJENA}
-						element={<PredmetiPromjena />}
+						element={<ZasticenaRuta><PredmetiPromjena /></ZasticenaRuta>}
 					/>
-					<Route path={RouteNames.PREDMET_NOVI} element={<PredmetNovi />} />
+					<Route
+						path={RouteNames.PREDMET_NOVI}
+						element={<ZasticenaRuta><PredmetNovi /></ZasticenaRuta>}
+					/>
 					<Route
 						path={RouteNames.PREDMETI_KATEGORIJA}
 						element={<PredmetiLista />}
 					/>
 					<Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
 
-					<Route path={RouteNames.KORISNICI} element={<KorisniciLista />} />
-					<Route path={RouteNames.KORISNIK_NOVI} element={<KorisniciNovi />} />
+					<Route
+						path={RouteNames.KORISNICI}
+						element={<ZasticenaRuta adminOnly><KorisniciLista /></ZasticenaRuta>}
+					/>
+					<Route
+						path={RouteNames.KORISNIK_NOVI}
+						element={<ZasticenaRuta adminOnly><KorisniciNovi /></ZasticenaRuta>}
+					/>
 					<Route
 						path={RouteNames.KORISNIK_PROMJENA}
-						element={<KorisniciPromijena />}
+						element={<ZasticenaRuta adminOnly><KorisniciPromijena /></ZasticenaRuta>}
 					/>
 					<Route
 						path={RouteNames.KORISNIK_PROMJENA_LOZINKE}
-						element={<KorisniciPromijenaLozinke />}
+						element={<ZasticenaRuta adminOnly><KorisniciPromijenaLozinke /></ZasticenaRuta>}
 					/>
 
 					<Route
 						path={RouteNames.GENERIRANJE_PODATAKA}
-						element={<GeneriranjePodataka />}
-            />
-            <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
+						element={<ZasticenaRuta adminOnly><GeneriranjePodataka /></ZasticenaRuta>}
+					/>
+            <Route
+						path={RouteNames.NADZORNA_PLOCA}
+						element={<ZasticenaRuta adminOnly><NadzornaPloca /></ZasticenaRuta>}
+					/>
 
-					<Route path={RouteNames.OZNAKE} element={<OznakeLista />} />
-					<Route path={RouteNames.OZNAKA_NOVA} element={<OznakaNova />} />
+					<Route
+						path={RouteNames.OZNAKE}
+						element={<ZasticenaRuta adminOnly><OznakeLista /></ZasticenaRuta>}
+					/>
+					<Route
+						path={RouteNames.OZNAKA_NOVA}
+						element={<ZasticenaRuta adminOnly><OznakaNova /></ZasticenaRuta>}
+					/>
 					<Route
 						path={RouteNames.OZNAKE_PROMJENA}
-						element={<OznakePromjena />}
+						element={<ZasticenaRuta adminOnly><OznakePromjena /></ZasticenaRuta>}
 					/>
 
 					<Route path={RouteNames.UVJETI} element={<Uvjeti />} />

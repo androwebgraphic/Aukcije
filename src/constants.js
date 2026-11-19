@@ -44,7 +44,7 @@ export const RouteNames = {
   OZNAKE: "/oznake",
   
   //nadzorna ploca
-  NADZORNA_PLOCA:"nadzorna-ploca"
+  NADZORNA_PLOCA:"/nadzorna-ploca"
 };
 
 //memorija, localStorage, firebase

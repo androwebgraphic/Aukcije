@@ -10,10 +10,14 @@ import Heading from "../../components/UI/Heading";
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { ShemaPredmetPromijena } from "../../schemas/SchemaPredmetPromijena";
+import useAuth from "../../hooks/useAuth";
+import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
   const params = useParams();
+  const { authUser } = useAuth();
+  const [zabranjeno, setZabranjeno] = useState(false);
 
   const [predmet, setPredmet] = useState({
     naziv: "",
@@ -122,6 +126,11 @@ export default function PredmetiPromjena() {
           s = { ...s };
           if (s.dodano && typeof s.dodano === 'string') s.dodano = s.dodano.substring(0, 16);
           if (s.zavrsava && typeof s.zavrsava === 'string') s.zavrsava = s.zavrsava.substring(0, 16);
+
+          // Samo vlasnik predmeta ili admin smije ga mijenjati.
+          if (!smijeMijenjatiPredmet(s, authUser)) {
+            setZabranjeno(true);
+          }
 
           setPredmet(s);
 
@@ -251,6 +260,8 @@ export default function PredmetiPromjena() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (zabranjeno) return;
     setErrors({});
     setGreska(null);
 
@@ -302,6 +313,18 @@ export default function PredmetiPromjena() {
 
       {greska && <Alert variant="danger">{greska}</Alert>}
 
+      {zabranjeno ? (
+        <Alert variant="warning" className="text-center">
+          <Alert.Heading>Nemate ovlasti</Alert.Heading>
+          <p className="mb-3">
+            Ovaj predmet je dodao drugi korisnik, pa ga možete samo pregledati.
+            Mijenjati ga mogu njegov vlasnik ili administrator.
+          </p>
+          <Button variant="outline-dark" onClick={() => navigate(RouteNames.PREDMETI)}>
+            Povratak na predmete
+          </Button>
+        </Alert>
+      ) : (
       <Form onSubmit={handleSubmit} noValidate>
         <Row className="g-3">
           {/* Naziv */}
@@ -581,6 +604,7 @@ export default function PredmetiPromjena() {
           </Button>
         </div>
       </Form>
+      )}
     </div>
   );
 }

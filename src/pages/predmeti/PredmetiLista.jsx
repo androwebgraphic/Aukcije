@@ -29,6 +29,8 @@ import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
 
 import Odbrojavanje from "../../components/Odbrojavanje";
+import useAuth from "../../hooks/useAuth";
+import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
 
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
@@ -149,6 +151,7 @@ function dohvatiIzvorSlike(slikaItem) {
 }
 
 export default function PredmetiList() {
+  const { isLoggedIn, authUser } = useAuth();
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
@@ -255,6 +258,12 @@ export default function PredmetiList() {
   function otvoriModalZaPonudu(predmet) {
     if (jeAukcijaZavrsena(predmet.zavrsava)) return;
 
+    // Ponudu može dati samo prijavljeni korisnik (inače nemamo id ponuđača).
+    if (!isLoggedIn) {
+      navigate(RouteNames.LOGIRANJE);
+      return;
+    }
+
     setOdabraniPredmet(predmet);
     
     // Utvrđujemo trenutnu važeću cijenu (zadnja ponuda ako postoji, inače početna cijena)
@@ -287,7 +296,7 @@ export default function PredmetiList() {
       ponude: [
         ...(odabraniPredmet.ponude || []),
         {
-          korisnik: 1,
+          korisnik: authUser?.id ?? authUser?.email ?? null,
           datum: new Date().toISOString(),
           cijena: Number(iznosPonude),
         },
@@ -472,12 +481,14 @@ export default function PredmetiList() {
         </p>
 
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-          <Link to={RouteNames.PREDMET_NOVI} className="me-2">
-            <Button variant="success">
-              <FaPlus className="me-2" aria-hidden="true" />
-              Dodaj predmet
-            </Button>
-          </Link>
+          {isLoggedIn && (
+            <Link to={RouteNames.PREDMET_NOVI} className="me-2">
+              <Button variant="success">
+                <FaPlus className="me-2" aria-hidden="true" />
+                Dodaj predmet
+              </Button>
+            </Link>
+          )}
 
           <div className="d-flex align-items-center gap-2 flex-wrap flex-lg-nowrap">
             <div className="d-flex align-items-center gap-1">
@@ -708,22 +719,26 @@ export default function PredmetiList() {
                           onClick={() => otvoriModalZaPonudu(c)}>
                           Tvoja ponuda
                         </Button>
-                        <Button
-                          variant="outline-warning"
-                          size="sm"
-                          onClick={() => navigate(`/predmeti/promijeni/${c.id || c.sifra}`)}
-                          title="Promjena predmeta"
-                          aria-label={`Promjena predmeta: ${c.naziv}`}>
-                          <FaEdit aria-hidden="true" />
-                        </Button>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => obrisi(c)}
-                          title="Brisanje predmeta"
-                          aria-label={`Brisanje predmeta: ${c.naziv}`}>
-                          <FaTrash aria-hidden="true" />
-                        </Button>
+                        {smijeMijenjatiPredmet(c, authUser) && (
+                          <>
+                            <Button
+                              variant="outline-warning"
+                              size="sm"
+                              onClick={() => navigate(`/predmeti/promijeni/${c.id || c.sifra}`)}
+                              title="Promjena predmeta"
+                              aria-label={`Promjena predmeta: ${c.naziv}`}>
+                              <FaEdit aria-hidden="true" />
+                            </Button>
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => obrisi(c)}
+                              title="Brisanje predmeta"
+                              aria-label={`Brisanje predmeta: ${c.naziv}`}>
+                              <FaTrash aria-hidden="true" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </Card.Body>
                   </Card>

@@ -97,6 +97,8 @@ export default {
     get,
     dodaj,
     getByid,
+    // Dispečer i stranice (KategorijaPromjena.jsx) zovu getByID s velikim D
+    getByID: getByid,
     promijeni,
     obrisi
 };

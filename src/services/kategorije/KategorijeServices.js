@@ -1,6 +1,7 @@
 import { DATA_SOURCE } from "../../constants";
 import KategorijeServicesMemorija  from './KategorijeServicesMemorija'
 import KategorijeServicesLocalStorage from "./KategorijeServicesLocalStorage";
+import KategorijeServicesFirebase from "./KategorijeServicesFirebase";
 
 
 
@@ -14,6 +15,7 @@ switch (DATA_SOURCE ){
 
     break
   case 'firebase':
+    Servis = KategorijeServicesFirebase
     break
   
   case 'localStorage' :

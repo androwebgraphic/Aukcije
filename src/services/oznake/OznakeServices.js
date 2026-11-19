@@ -1,6 +1,7 @@
 import { DATA_SOURCE } from "../../constants";
 import OznakeServicesMemorija  from './OznakeServicesMemorija'
 import OznakeServicesLocalStorage from "./OznakeServicesLocalStorage";
+import OznakeServicesFirebase from "./OznakeServicesFirebase";
 
 
 let Servis = null
@@ -16,6 +17,12 @@ switch (DATA_SOURCE ){
   case 'localStorage' :
     
     Servis = OznakeServicesLocalStorage
+
+    break
+
+  case 'firebase' :
+
+    Servis = OznakeServicesFirebase
 
     break
   

@@ -45,10 +45,11 @@ async function promijeni(id, predmet) {
 }
 // Ako koristiš localStorage unutar servisa:
 async function obrisi(id) {
-  let predmeti = JSON.parse(localStorage.getItem("predmeti")) || [];
-  predmeti = predmeti.filter(p => String(p.id || p.sifra) !== String(id));
-  localStorage.setItem("predmeti", JSON.stringify(predmeti));
-  return true;
+  const predmeti = dohvatiSveIzStorage()
+  spremiUStorage(
+    predmeti.filter(p => String(p.id) !== String(id))
+  )
+  return true
 }
 
 async function dohvatiStranicu(stranica = 1, velicinaStranice = 12,uvjetiPretrazivanja = ' ') {

@@ -75,8 +75,8 @@ function nadiIndex(id){
     return korisnici.findIndex(o=>o.id  === id)
 }
   // 4/4 Delete od CRUD
-async function obrisi(sifra) {
-    const index = nadiIndex(sifra)
+async function obrisi(id) {
+    const index = nadiIndex(id)
     if (index > -1) {
         korisnici.splice(index, 1)
         return {success: true, message: "korisnik obrisan"}

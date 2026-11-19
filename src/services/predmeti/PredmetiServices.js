@@ -1,6 +1,7 @@
 import { DATA_SOURCE } from "../../constants";
 import PredmetiServicesMemorija from './PredmetiServicesMemorija';
 import PredmetiServicesLocalStorage from "./PredmetiServicesLocalStorage";
+import PredmetiFirebaseServices from "./PredmetiFirebaseServices";
 
 let Servis = null;
 
@@ -8,6 +9,9 @@ switch (DATA_SOURCE) {
   case 'memorija': 
     Servis = PredmetiServicesMemorija;
     break;
+  case 'firebase':
+    Servis = PredmetiFirebaseServices
+    break
   
   case 'localStorage': 
     Servis = PredmetiServicesLocalStorage;

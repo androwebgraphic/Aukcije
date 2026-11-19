@@ -16,18 +16,27 @@ import KorisniciService from '../services/korisnici/KorisniciService';
  * se presipavanje u tom smjeru ne prikazuje.
  */
 import { korisnici as korisniciMemorije } from '../services/korisnici/KorisniciData';
+import {
+  DEMO_ADMIN,
+  DEMO_KORISNIK,
+  DEMO_LOZINKA,
+  opisDemoRacuna,
+  osigurajDemoRacune,
+} from '../utils/demoRacuni';
 
-import { APP_NAME, TESTNA_LOZINKA, DATA_SOURCE } from '../constants';
+import { APP_NAME, PrefixStorage, TESTNA_LOZINKA, DATA_SOURCE } from '../constants';
 
 /*
- * Ključevi su provjereni prema *ServicesLocalStorage datotekama
- * (STORAGE_KEY u svakoj od njih). Ako ih tamo promijeniš, promijeni i ovdje.
+ * Ključevi moraju biti isti kao u *ServicesLocalStorage datotekama — one sve
+ * koriste PrefixStorage (e4.kategorije, e4.oznake, ...). Prije su ovdje bili
+ * goli nazivi ('kategorije'), pa je presipavanje pisalo u ključeve koje servisi
+ * nikad ne čitaju.
  */
 const LOCALSTORAGE_KLJUCEVI = {
-  kategorije: 'kategorije',
-  oznake: 'oznake',
-  korisnici: 'korisnici',
-  predmeti: 'predmeti',
+  kategorije: PrefixStorage.KATEGORIJE,
+  oznake: PrefixStorage.OZNAKE,
+  korisnici: PrefixStorage.KORISNICI,
+  predmeti: PrefixStorage.PREDMETI,
 };
 
 // Kategorije i oznake moraju biti zapisane prije predmeta (reference na id-eve).
@@ -66,6 +75,21 @@ const dohvatiListu = async (servis) => {
   const odgovor = await servis.get();
   const podaci = Array.isArray(odgovor) ? odgovor : odgovor?.data;
   return Array.isArray(podaci) ? podaci : [];
+};
+
+/**
+ * Broj zapisa u pojedinom servisu. Za razliku od dohvatiListu, ovdje se greška
+ * (npr. Firestore pravila ili mreža) propagira umjesto da se pretvori u 0.
+ */
+const prebrojZapisa = async (servis) => {
+  const odgovor = await servis.get();
+
+  if (odgovor && odgovor.success === false) {
+    throw new Error(odgovor.message || 'Dohvat podataka nije uspio.');
+  }
+
+  const podaci = Array.isArray(odgovor) ? odgovor : odgovor?.data;
+  return Array.isArray(podaci) ? podaci.length : 0;
 };
 
 const kljucNaziva = (vrijednost) => String(vrijednost ?? '').trim().toLowerCase();
@@ -334,7 +358,8 @@ function GumbRadnje({
 export default function GeneriranjePodataka() {
   const jeMemorija = DATA_SOURCE === 'memorija';
   const jeLocalStorage = DATA_SOURCE === 'localStorage';
-  const poznatiIzvor = jeMemorija || jeLocalStorage;
+  const jeFirebase = DATA_SOURCE === 'firebase';
+  const poznatiIzvor = jeMemorija || jeLocalStorage || jeFirebase;
 
   const [brojKategorije, setBrojKategorije] = useState(13);
   const [brojPredmeta, setBrojPredmeta] = useState(20);
@@ -412,6 +437,24 @@ export default function GeneriranjePodataka() {
     setPoruka({ tip: 'info', tekst: `Stanje localStoragea — ${opisPregleda(pregled)}` });
   };
 
+  const handleProvjeriFirestore = () =>
+    izvrsi(
+      'provjeri-izvor',
+      async () => {
+        const [kategorije, oznake, korisnici, predmeti] = await Promise.all([
+          prebrojZapisa(KategorijeServices),
+          prebrojZapisa(OznakeServices),
+          prebrojZapisa(KorisniciService),
+          prebrojZapisa(PredmetiServices),
+        ]);
+
+        return { kategorije, oznake, korisnici, predmeti };
+      },
+      (brojevi) =>
+        `Firestore: ${brojevi.kategorije} kategorija · ${brojevi.oznake} oznaka · ` +
+        `${brojevi.korisnici} korisnika · ${brojevi.predmeti} predmeta.`
+    );
+
   const handleGenerirajKategorije = (dogadaj) => {
     dogadaj.preventDefault();
     izvrsi(
@@ -443,8 +486,22 @@ export default function GeneriranjePodataka() {
     dogadaj.preventDefault();
     izvrsi(
       'generiraj-korisnike',
-      () => generirajKorisnike(brojKorisnika),
-      (korisnici) => `Uspješno generirano ${korisnici.length} korisnika.`
+      async () => {
+        // Demo računi se osiguravaju prvi, da admin/korisnik uvijek postoje.
+        const demo = await osigurajDemoRacune();
+        const kreirani = await generirajKorisnike(brojKorisnika);
+        return { demo, kreirani };
+      },
+      ({ demo, kreirani }) =>
+        `Uspješno generirano ${kreirani.length} korisnika. ${opisDemoRacuna(demo)}`
+    );
+  };
+
+  const handleGenerirajDemoRacune = () => {
+    izvrsi(
+      'generiraj-demo',
+      () => osigurajDemoRacune(),
+      (rezultat) => opisDemoRacuna(rezultat)
     );
   };
 
@@ -505,7 +562,13 @@ export default function GeneriranjePodataka() {
     );
   };
 
-  const bojaIzvora = jeMemorija ? 'secondary' : jeLocalStorage ? 'success' : 'dark';
+  const bojaIzvora = jeMemorija
+    ? 'secondary'
+    : jeLocalStorage
+      ? 'success'
+      : jeFirebase
+        ? 'primary'
+        : 'dark';
 
   return (
     <div className="mt-4">
@@ -517,8 +580,9 @@ export default function GeneriranjePodataka() {
       </h1>
       <p className="text-muted">
         Koristite ovaj alat za generiranje testnih podataka s lažnim (fake) podacima na hrvatskom
-        jeziku. Sve radnje rade i na memorijskom i na localStorage izvoru — koristi se servis koji
-        odgovara postavci <code>DATA_SOURCE</code>.
+        jeziku. Sve radnje idu kroz servis koji odgovara postavci <code>DATA_SOURCE</code> u{' '}
+        <code>constants</code> — <code>memorija</code>, <code>localStorage</code> ili{' '}
+        <code>firebase</code>.
       </p>
 
       {!poznatiIzvor && (
@@ -526,7 +590,7 @@ export default function GeneriranjePodataka() {
           <strong>Nepoznat izvor podataka:</strong> <code>DATA_SOURCE</code> je postavljen na{' '}
           <code>{String(DATA_SOURCE)}</code>, pa servisi vraćaju prazan objekt (PrazanServis). Svi
           gumbi ispod bit će bez učinka dok u <code>constants</code> ne postavite{' '}
-          <code>'memorija'</code> ili <code>'localStorage'</code>.
+          <code>'memorija'</code>, <code>'localStorage'</code> ili <code>'firebase'</code>.
         </Alert>
       )}
 
@@ -630,6 +694,29 @@ export default function GeneriranjePodataka() {
         </Col>
       </Row>
 
+      <Row className="mt-3">
+        <Col md={8}>
+          <p className="text-muted mb-2">
+            Demo računi <code>{DEMO_ADMIN?.email}</code> (<code>admin</code>) i{' '}
+            <code>{DEMO_KORISNIK?.email}</code> (<code>korisnik</code>), lozinka{' '}
+            <code>{DEMO_LOZINKA}</code>, u memoriji i localStorageu postoje unaprijed — u Firestoreu
+            ih nitko ne stvara. Ovaj gumb ih kreira u aktivnom izvoru, a ako već postoje s drugom
+            lozinkom ili ulogom, popravlja ih.
+          </p>
+        </Col>
+        <Col md={4}>
+          <GumbRadnje
+            radnja={radnja}
+            kljuc="generiraj-demo"
+            tekst="Generiraj demo račune"
+            tekstUTijeku="Kreiranje..."
+            varijanta="outline-primary"
+            onClick={handleGenerirajDemoRacune}
+            className="w-100 mb-2"
+          />
+        </Col>
+      </Row>
+
       <Alert className="mt-3" style={{ backgroundColor: 'orange' }}>
         <strong>Upozorenje:</strong> Ove akcije će dodati nove podatke u postojeće. Najprije
         generirajte kategorije i oznake, a zatim predmete.
@@ -718,6 +805,34 @@ export default function GeneriranjePodataka() {
                 tekstUTijeku="Provjera..."
                 varijanta="outline-secondary"
                 onClick={handleProvjeriSpremiste}
+                className="w-100 mb-2"
+              />
+            </Col>
+          </Row>
+        </>
+      )}
+
+      {jeFirebase && (
+        <>
+          <hr className="my-4" />
+
+          <h3>Firestore</h3>
+          <p className="text-muted">
+            Podaci se zapisuju izravno u Firestore kolekcije <code>e4.*</code>. Ovdje možete
+            provjeriti koliko zapisa servisi stvarno vraćaju. Ako dobijete grešku ili same nule,
+            provjerite <code>.env</code> (<code>VITE_FIREBASE_*</code>) i Firestore pravila za te
+            kolekcije.
+          </p>
+
+          <Row className="mt-3">
+            <Col md={3}>
+              <GumbRadnje
+                radnja={radnja}
+                kljuc="provjeri-izvor"
+                tekst="Provjeri izvor"
+                tekstUTijeku="Provjera..."
+                varijanta="outline-primary"
+                onClick={handleProvjeriFirestore}
                 className="w-100 mb-2"
               />
             </Col>

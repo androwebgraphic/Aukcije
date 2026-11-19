@@ -1,4 +1,4 @@
-import { predmeti as pocetniPredmeti } from './predmetiData'; // Pretpostavka putanje do vaše datoteke s početnim podacima
+import { predmeti as pocetniPredmeti } from './PredmetiData'; // Pretpostavka putanje do vaše datoteke s početnim podacima
 
 // Ovdje držimo podatke u radnoj memoriji (RAM-u) aplikacije
 let memorijaPredmeta = [...pocetniPredmeti];

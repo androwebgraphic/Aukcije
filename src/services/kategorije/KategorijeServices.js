@@ -46,4 +46,3 @@ export default {
   promijeni: (id, kategorija) => AktivniServis.promijeni(id, kategorija),
   obrisi: (id) => AktivniServis.obrisi(id)
 }
-// export {KategorijeServicesMemorija}

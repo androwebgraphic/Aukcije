@@ -10,6 +10,7 @@ import Heading from "../../components/UI/Heading";
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { ShemaPredmetPromijena } from "../../schemas/SchemaPredmetPromijena";
+import { normalizirajKategorijuId } from "../../utils/kategorije";
 import useAuth from "../../hooks/useAuth";
 import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
 
@@ -273,7 +274,7 @@ export default function PredmetiPromjena() {
       pocetnaCijena: predmet.pocetnaCijena ? Number(predmet.pocetnaCijena) : null,
       dodano: predmet.dodano,
       zavrsava: predmet.zavrsava,
-      kategorija: odabranaKategorija ? Number(odabranaKategorija) : null,
+      kategorija: normalizirajKategorijuId(odabranaKategorija),
       oznake: odabraneOznake,
       slike: slike,
       slika: slike.length > 0 ? slike[0] : null

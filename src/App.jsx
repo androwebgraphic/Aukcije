@@ -3,12 +3,13 @@ import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 
 import "./App.css";
-import { Container } from "react-bootstrap";
+import { Container,Spinner } from "react-bootstrap";
 import { RouteNames } from "./constants.js";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import NadzornaPloca from "./pages/NadzornaPloca.jsx";
 import ZasticenaRuta from "./components/ZasticenaRuta.jsx";
+import LoadingSpinner from './components/LoadingSpinner'
 
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Registracija = lazy(() => import("./pages/registracija/Registracija.jsx"));
@@ -33,16 +34,19 @@ const OznakeLista = lazy(() => import("./pages/oznake/OznakeLista.jsx"));
 const OznakaNova = lazy(() => import("./pages/oznake/OznakaNova.jsx"));
 const OznakePromjena = lazy(() => import("./pages/oznake/OznakePromjena.jsx"));
 
+
 const Uvjeti = lazy(() => import("./pages/Uvjeti.jsx"));
 
 function App() {
 	return (
-		<>
+    <>
+      <LoadingSpinner />
 			<Container>
 				<Header />
 
 				<Suspense fallback={<div className="text-center py-5 text-white">Učitavanje…</div>}>
-				<Routes>
+          <Routes>
+            {/* <LoadingSpinner /> */}
 					<Route path={RouteNames.HOME} element={<Home />} />
 					<Route path={RouteNames.LOGIRANJE} element={<Logiranje />} />
 					<Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />

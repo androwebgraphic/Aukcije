@@ -136,16 +136,21 @@ export default function PredmetOmiljeni() {
     }
   }
 
+  // Firestore auto-id-evi su stringovi — usporedba ide kao string (vidi PredmetiLista).
   function prikaziNazivKategorije(kategorijaVal) {
     if (!kategorijaVal) return "Nepoznato";
     if (typeof kategorijaVal === "object" && kategorijaVal.naziv) return kategorijaVal.naziv;
-    const kat = kategorije.find((s) => s.id === parseInt(kategorijaVal));
+    const kat = kategorije.find((s) => String(s.id) === String(kategorijaVal));
     return kat ? kat.naziv : "Nepoznato";
   }
 
   function dohvatiIkonaKategorije(kategorijaVal) {
-    const katId = typeof kategorijaVal === "object" ? kategorijaVal.id : Number(kategorijaVal);
-    const kat = kategorije.find((k) => k.id === katId);
+    const katId =
+      typeof kategorijaVal === "object" && kategorijaVal !== null
+        ? kategorijaVal.id
+        : kategorijaVal;
+    if (katId === null || katId === undefined) return "";
+    const kat = kategorije.find((k) => String(k.id) === String(katId));
     return kat ? kat.ikona : "";
   }
 

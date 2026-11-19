@@ -294,7 +294,8 @@ export default function KorisniciLista() {
                         </thead>
                         <tbody>
                             {naStranici.map((korisnik) => (
-                                <tr key={korisnik.id}>
+                              <tr key={korisnik.id}>
+                         
                                     <td className="text-break">
                                         {korisnik.email}
                                         <Button

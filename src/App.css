@@ -405,7 +405,18 @@ footer button.scroll-to-top-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 0.4rem 1.1rem rgba(0, 0, 0, 0.38);
 }
-
+.loading-spinner-overlay {
+  /* fixed, a ne absolute: absolute se veže na dokument, pa se pri skrolanju
+     overlay crta izvan vidnog polja (spinner se "ne vidi"). inset: 0 pokriva
+     točno vidljivi dio i ne pravi horizontalni scrollbar kao 100vw. */
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /* Gumb prati desni rub sadržaja, a ne rub cijelog ekrana, pa ostaje
    vidljiv i na širokim desktop ekranima gdje je bijela margina velika. */
 @media screen and (min-width: 576px) {

@@ -2,6 +2,7 @@ import { DATA_SOURCE } from "../../constants.js";
 import KorisniciServiceMemorija from "./KorisniciServiceMemorija.js";
 import KorisniciServiceLocalStorage from "./KorisniciServiceLocalStorage.js";
 import KorisniciServiceFirebase from "./KorisniciServiceFirebase.js";
+import { saUcitavanjem } from "../../utils/loadingBus";
 
 // 1. Odabir servisa prema DATA_SOURCE u constants.js
 let Servis = null
@@ -39,8 +40,8 @@ const PrazanServis = {
 const AktivniServis = Servis || PrazanServis
 
 export default {
-  get: () => AktivniServis.get(),
-  getById: (id) => AktivniServis.getById(id),
+  get: saUcitavanjem(() => AktivniServis.get()),
+  getById: saUcitavanjem((id) => AktivniServis.getById(id)),
   dodaj: (korisnik) => AktivniServis.dodaj(korisnik),
   dodajBezHash: (korisnik) => AktivniServis.dodajBezHash
     ? AktivniServis.dodajBezHash(korisnik)

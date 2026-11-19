@@ -7,12 +7,19 @@ export const ShemaPredmetPromijena = z.object({
     .min(3, "Naziv predmeta mora imati najmanje 3 znaka")
     .max(30, "Naziv predmeta ne smije imati više od 30 znakova"),
 
-  kategorija: z.coerce.number({
-    error: (issue) =>
-      issue.input === null || issue.input === undefined || issue.input === ""
-        ? "Kategorija je obavezna"
-        : "Kategorija mora biti broj"
-  }).min(1, "Morate odabrati kategoriju"),
+  // Kategorija je broj (memorija/localStorage) ili string (Firestore auto-id).
+  kategorija: z.union(
+    [
+      z.coerce.number().min(1, "Morate odabrati kategoriju"),
+      z.string().trim().min(1, "Morate odabrati kategoriju")
+    ],
+    {
+      error: (issue) =>
+        issue.input === null || issue.input === undefined || issue.input === ""
+          ? "Kategorija je obavezna"
+          : "Kategorija mora biti broj ili id kategorije"
+    }
+  ),
 
   opis: z.string()
     .trim()

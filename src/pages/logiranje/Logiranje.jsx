@@ -126,9 +126,8 @@ export default function Login() {
       {/* noValidate: validaciju radi isključivo Zod (hrvatske poruke).
           Bez toga browser sam blokira submit i prikaže svoju, englesku poruku. */}
       <Form onSubmit={handleSubmit} ref={formaRef} noValidate>
-        <Card className="shadow-sm">
-          <Card.Body>
-            <Card.Title className="mb-4">Podaci za prijavu</Card.Title>
+        <div className="login-form">
+            <h3 className="mb-4">Podaci za prijavu</h3>
 
             {imaGresku && (
               <div className="alert alert-danger" role="alert">
@@ -137,7 +136,7 @@ export default function Login() {
             )}
 
             <Row>
-              <Col xs={12}>
+              <Col xs={12} sm={6}>
                 <Form.Group controlId="email" className="mb-3">
                   <Form.Label className="fw-bold">Email</Form.Label>
                   <Form.Control
@@ -153,10 +152,8 @@ export default function Login() {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-            </Row>
-
-            <Row>
-              <Col xs={12}>
+       
+              <Col xs={12} sm={6}>
                 <Form.Group controlId="lozinka" className="mb-3">
                   <Form.Label className="fw-bold">Lozinka</Form.Label>
                   <Form.Control
@@ -177,12 +174,11 @@ export default function Login() {
             <hr />
 
             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-              <Button type="submit" variant="success" className="px-4">
+              <Button type="submit" variant="success" size="sm" className="px-4">
                 Logiraj se
               </Button>
             </div>
-          </Card.Body>
-        </Card>
+        </div>
       </Form>
     </>
   );

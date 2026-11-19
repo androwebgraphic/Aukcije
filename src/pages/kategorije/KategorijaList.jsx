@@ -10,6 +10,7 @@ import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
 import Heading from "../../components/UI/Heading"
 import { motion } from "framer-motion"
 import IkonaKategorije from "../../components/UI/IkonaKategorije"
+import useLoading from "../../hooks/usLoading"
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -39,13 +40,14 @@ export default function KategorijaList() {
   const [kategorije, setKategorije] = useState([])
   const [predmeti, setPredmeti] = useState([])
   const navigate = useNavigate()
-
+const {showLoading, hideLoading} = useLoading()
   useEffect(() => { 
     ucitajKategorije()
     ucitajPredmete()
   }, [])
   
   async function ucitajKategorije() {
+    showLoading()
     try {
       const res = await KategorijeServices.get()
       console.log("Učitane kategorije (res.data):", res.data)
@@ -54,10 +56,13 @@ export default function KategorijaList() {
       setKategorije(dohvaceneKategorije)
     } catch (err) {
       console.error("Greška pri učitavanju kategorija:", err)
+    } finally {
+      hideLoading()
     }
   }
 
   async function ucitajPredmete() {
+    showLoading()
     try {
       const res = await PredmetiServices.get()
       const dohvaceniPredmeti = Array.isArray(res.data) ? res.data : (res.data.content || res.data.predmeti || []);
@@ -65,6 +70,8 @@ export default function KategorijaList() {
       console.log("Učitani predmeti:", dohvaceniPredmeti)
     } catch (error) {
       console.error("Greška pri učitavanju predmeta:", error)
+    } finally {
+      hideLoading()
     }
   }
 
@@ -124,14 +131,14 @@ const deklinirajOglas = (broj) => {
             const jedinstveniKey = c.id ? `${c.id}-${index}` : index;
 
             return (
-              <Col key={jedinstveniKey} className="h-100" xs={12} sm={6}>
+              <Col key={jedinstveniKey} xs={12} sm={6} className="d-flex">
                 <motion.div
                   initial={{ opacity: 0, x: -100 }} 
                   animate={{ opacity: 1, x: 0 }}     
                   transition={{ duration: 0.7, ease: "easeOut", delay: 0.4 }}
-                  className="h-100"
+                  className="d-flex w-100"
                 >
-                  <Card className="h-100 shadow-sm border-0">
+                  <Card className="h-100 w-100 shadow-sm border-0">
                     <Card.Body className="d-flex flex-column">
                       
                       {/* Zaglavlje kartice: Ikona i Naziv */}

@@ -2,6 +2,7 @@ import { DATA_SOURCE } from "../../constants";
 import OznakeServicesMemorija  from './OznakeServicesMemorija'
 import OznakeServicesLocalStorage from "./OznakeServicesLocalStorage";
 import OznakeServicesFirebase from "./OznakeServicesFirebase";
+import { saUcitavanjem } from "../../utils/loadingBus";
 
 
 let Servis = null
@@ -44,8 +45,8 @@ const AktivniServis = Servis || PrazanServis
 
 export default {
 
-  get: () => AktivniServis.get(),
-  getByID: (id)=> AktivniServis.getByID(id),
+  get: saUcitavanjem(() => AktivniServis.get()),
+  getByID: saUcitavanjem((id)=> AktivniServis.getByID(id)),
   dodaj: (predmet) => AktivniServis.dodaj(predmet), 
   promijeni: (id, predmet )=> AktivniServis.promijeni(id,predmet),
   obrisi: (id) => AktivniServis.obrisi(id)

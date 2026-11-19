@@ -65,12 +65,12 @@ export default function KorisnikoNovi() {
                   </Row>
 
                   <Row className="mt-4">
-                    <Col sm={6} md={6}>
+                    <Col xs={12} sm={6}>
                         <Button type="submit" variant="success" size="sm">
                             Registriraj se
                         </Button>
                     </Col>
-                    <Col sm={6} md={6}>
+                    <Col xs={12} sm={6}>
                         <Button variant="danger" size="sm" as={Link} to={RouteNames.KORISNICI}>
                             Odustani
                         </Button>

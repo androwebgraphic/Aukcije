@@ -2,6 +2,7 @@ import { DATA_SOURCE } from "../../constants";
 import PredmetiServicesMemorija from './PredmetiServicesMemorija';
 import PredmetiServicesLocalStorage from "./PredmetiServicesLocalStorage";
 import PredmetiFirebaseServices from "./PredmetiFirebaseServices";
+import { saUcitavanjem } from "../../utils/loadingBus";
 
 let Servis = null;
 
@@ -37,15 +38,15 @@ const PrazanServis = {
 const AktivniServis = Servis || PrazanServis;
 
 export default {
-  get: () => AktivniServis.get ? AktivniServis.get() : Promise.resolve({ data: [] }),
-  getByID: (id) => AktivniServis.getByID ? AktivniServis.getByID(id) : Promise.resolve({ data: null }),
+  get: saUcitavanjem(() => AktivniServis.get ? AktivniServis.get() : Promise.resolve({ data: [] })),
+  getByID: saUcitavanjem((id) => AktivniServis.getByID ? AktivniServis.getByID(id) : Promise.resolve({ data: null })),
   dodaj: (predmet) => AktivniServis.dodaj ? AktivniServis.dodaj(predmet) : Promise.resolve(), 
   promijeni: (id, predmet) => AktivniServis.promijeni ? AktivniServis.promijeni(id, predmet) : Promise.resolve(),
   obrisi: (id) => AktivniServis.obrisi ? AktivniServis.obrisi(id) : Promise.resolve(),
-  dohvatiStranicu: (stranica, velicinaStranice, uvjetiPretrazivanja) => {
+  dohvatiStranicu: saUcitavanjem((stranica, velicinaStranice, uvjetiPretrazivanja) => {
     if (AktivniServis && typeof AktivniServis.dohvatiStranicu === 'function') {
       return AktivniServis.dohvatiStranicu(stranica, velicinaStranice, uvjetiPretrazivanja);
     }
     return Promise.resolve({ data: [], ukupnoStranica: 0, ukupnoStavki: 0 });
-  }
+  })
 };

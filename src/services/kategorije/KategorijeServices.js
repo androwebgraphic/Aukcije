@@ -2,6 +2,7 @@ import { DATA_SOURCE } from "../../constants";
 import KategorijeServicesMemorija  from './KategorijeServicesMemorija'
 import KategorijeServicesLocalStorage from "./KategorijeServicesLocalStorage";
 import KategorijeServicesFirebase from "./KategorijeServicesFirebase";
+import { saUcitavanjem } from "../../utils/loadingBus";
 
 
 
@@ -42,8 +43,8 @@ const AktivniServis = Servis || PrazanServis
 
 export default {
 
-  get: () => AktivniServis.get(),
-  getByID: (id)=> AktivniServis.getByID(id),
+  get: saUcitavanjem(() => AktivniServis.get()),
+  getByID: saUcitavanjem((id)=> AktivniServis.getByID(id)),
   dodaj: (kategorija) => AktivniServis.dodaj(kategorija), 
   promijeni: (id, kategorija) => AktivniServis.promijeni(id, kategorija),
   obrisi: (id) => AktivniServis.obrisi(id)

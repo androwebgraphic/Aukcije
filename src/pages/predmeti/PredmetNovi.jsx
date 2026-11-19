@@ -9,6 +9,8 @@ import Heading from "../../components/UI/Heading";
 import { Cropper } from "react-cropper";
 import 'cropperjs/dist/cropper.css';
 import { ShemaPredmet } from "../../schemas/SchemaPredmet";
+import { normalizirajKategorijuId } from "../../utils/kategorije";
+import { izvuciIdIzOdgovora, normalizirajOznaku } from "../../utils/oznake";
 import useAuth from "../../hooks/useAuth";
 import { FaPlus } from "react-icons/fa";
 
@@ -17,52 +19,6 @@ import { FaPlus } from "react-icons/fa";
 // Cilj: oznaka je UVIJEK objekt { id, naziv } pa se ime nikad ne mora
 // rekonstruirati iz ID-ja (i nikad se ne prikazuje sam ID).
 // ---------------------------------------------------------------------------
-const KLJUCEVI_NAZIVA = ["naziv", "Naziv", "name", "Name", "oznaka", "Oznaka", "tekst", "Tekst", "title", "Title", "label", "Label"];
-const KLJUCEVI_ID = ["id", "ID", "Id", "oznakaId", "OznakaId"];
-
-function izvuciNaziv(oznaka) {
-  for (const kljuc of KLJUCEVI_NAZIVA) {
-    const vrijednost = oznaka[kljuc];
-    if (vrijednost !== null && vrijednost !== undefined && String(vrijednost).trim() !== "") {
-      return String(vrijednost).trim();
-    }
-  }
-  // Rezervna varijanta: ako objekt ima svega par polja (tipično ID + naziv pod
-  // neočekivanim imenom), uzmi prvo tekstualno polje koje nije ID.
-  const polja = Object.entries(oznaka);
-  if (polja.length > 3) return null;
-  for (const [kljuc, vrijednost] of polja) {
-    if (KLJUCEVI_ID.includes(kljuc)) continue;
-    if (vrijednost !== null && vrijednost !== undefined && typeof vrijednost !== "object" && String(vrijednost).trim() !== "") {
-      return String(vrijednost).trim();
-    }
-  }
-  return null;
-}
-
-function normalizirajOznaku(oznaka) {
-  if (oznaka === null || oznaka === undefined) return null;
-
-  if (typeof oznaka === "object") {
-    const id = Number(oznaka.id ?? oznaka.ID ?? oznaka.Id ?? oznaka.oznakaId ?? oznaka.OznakaId);
-    if (!Number.isFinite(id) || id <= 0) return null;
-    return { id, naziv: izvuciNaziv(oznaka) || `Oznaka ${id}` };
-  }
-
-  const id = Number(oznaka);
-  if (!Number.isFinite(id) || id <= 0) return null;
-  return { id, naziv: `Oznaka ${id}` };
-}
-
-function izvuciIdIzOdgovora(podaci) {
-  if (podaci === null || podaci === undefined || podaci === "") return null;
-  const kandidat = typeof podaci === "object"
-    ? (podaci.id ?? podaci.ID ?? podaci.Id ?? podaci.oznakaId ?? podaci.OznakaId)
-    : podaci;
-  if (kandidat === null || kandidat === undefined || kandidat === "") return null;
-  const id = Number(kandidat);
-  return Number.isFinite(id) && id > 0 ? id : null;
-}
 
 export default function PredmetNovi() {
   const { authUser } = useAuth();
@@ -194,7 +150,7 @@ export default function PredmetNovi() {
     }
 
     try {
-      const odgovor = await OznakeServices.dodaj({ naziv: nazivOznake, Naziv: nazivOznake });
+      const odgovor = await OznakeServices.dodaj({ naziv: nazivOznake });
       const podaci = odgovor?.data !== undefined ? odgovor.data : odgovor;
 
       let noviId = izvuciIdIzOdgovora(podaci);
@@ -257,7 +213,7 @@ export default function PredmetNovi() {
       ...predmet,
       godinaNastanka: predmet.godinaNastanka ? Number(predmet.godinaNastanka) : null,
       pocetnaCijena: predmet.pocetnaCijena ? Number(predmet.pocetnaCijena) : null,
-      kategorija: odabranaKategorija ? Number(odabranaKategorija) : null
+      kategorija: normalizirajKategorijuId(odabranaKategorija)
     };
 
     const rezultat = ShemaPredmet.safeParse(podaciZaValidaciju);
@@ -286,7 +242,7 @@ export default function PredmetNovi() {
         dodano: predmet.dodano ? new Date(predmet.dodano).toISOString() : null,
         zavrsava: predmet.zavrsava ? new Date(predmet.zavrsava).toISOString() : null,
         kategorija: podaciZaValidaciju.kategorija,
-        oznake: odabraneOznake.map(o => Number(o.id)).filter(id => Number.isFinite(id)),
+        oznake: odabraneOznake.map(o => (o && typeof o === "object" ? o.id : o)).filter(id => id !== null && id !== undefined && id !== ""),
         slike: isjecenaSlikaUrl,
         // vlasnik predmeta - po tome se zna tko ga smije mijenjati/brisati
         korisnikId: authUser?.id ?? null

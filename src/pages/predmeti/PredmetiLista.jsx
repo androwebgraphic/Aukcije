@@ -325,28 +325,29 @@ export default function PredmetiList() {
     }
   }
 
+  // Firestore auto-id-evi su stringovi, a memorija/localStorage koriste brojeve.
+  // Zato se sve usporedbe rade kao stringovi — inače se kategorija iz Firestorea
+  // nikad ne poveže s nazivom pa piše "Nepoznato" i filtrira 0 predmeta.
   function prikaziNazivKategorije(kategorijaVal) {
     if (!kategorijaVal) return "Nepoznato";
     if (typeof kategorijaVal === "object" && kategorijaVal.naziv) {
       return kategorijaVal.naziv;
     }
-    const kategorija = kategorije.find((s) => s.id === parseInt(kategorijaVal));
+    const kategorija = kategorije.find((s) => String(s.id) === String(kategorijaVal));
     return kategorija ? kategorija.naziv : "Nepoznato";
   }
 
   function dohvatiIdKategorije(kategorijaVal) {
-    if (kategorijaVal === null || kategorijaVal === undefined) return null;
+    if (kategorijaVal === null || kategorijaVal === undefined || kategorijaVal === "") return null;
     if (typeof kategorijaVal === "object") {
-      return Number(
+      const id =
         kategorijaVal.id ??
-        kategorijaVal.sifra ??
         kategorijaVal.kategorijaId ??
         kategorijaVal.kategorija_id ??
-        null,
-      );
+        null;
+      return id === null || id === undefined ? null : String(id);
     }
-    const parsed = Number(kategorijaVal);
-    return isNaN(parsed) ? null : parsed;
+    return String(kategorijaVal);
   }
 
   function prikaziNazivOznake(oznakaItem) {
@@ -363,7 +364,7 @@ export default function PredmetiList() {
   }
 
   const aktivnaKategorijaNaziv = params.id
-    ? prikaziNazivKategorije(parseInt(params.id))
+    ? prikaziNazivKategorije(params.id)
     : kategorijaFilter;
 
   const filtriraniPredmeti = predmeti
@@ -372,9 +373,9 @@ export default function PredmetiList() {
 
       let zadovoljavaKategoriju = true;
       if (params.id) {
-        const katIdIzUrl = parseInt(params.id);
+        const katIdIzUrl = String(params.id);
         const predmetKatId = dohvatiIdKategorije(c.kategorija);
-        zadovoljavaKategoriju = predmetKatId === katIdIzUrl;
+        zadovoljavaKategoriju = predmetKatId !== null && predmetKatId === katIdIzUrl;
       } else if (kategorijaFilter) {
         const nazivKat = prikaziNazivKategorije(c.kategorija);
         zadovoljavaKategoriju =
@@ -429,7 +430,8 @@ export default function PredmetiList() {
 
   function dohvatiIkonaKategorije(kategorijaVal) {
     const katId = dohvatiIdKategorije(kategorijaVal);
-    const kat = kategorije.find((k) => k.id === katId);
+    if (katId === null) return "";
+    const kat = kategorije.find((k) => String(k.id) === String(katId));
     return kat ? kat.ikona : "";
   }
 

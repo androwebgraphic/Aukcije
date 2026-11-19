@@ -7,6 +7,7 @@ import { Container } from "react-bootstrap";
 import { RouteNames } from "./constants.js";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
+import NadzornaPloca from "./pages/NadzornaPloca.jsx";
 
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Registracija = lazy(() => import("./pages/registracija/Registracija.jsx"));
@@ -80,7 +81,8 @@ function App() {
 					<Route
 						path={RouteNames.GENERIRANJE_PODATAKA}
 						element={<GeneriranjePodataka />}
-					/>
+            />
+            <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
 
 					<Route path={RouteNames.OZNAKE} element={<OznakeLista />} />
 					<Route path={RouteNames.OZNAKA_NOVA} element={<OznakaNova />} />

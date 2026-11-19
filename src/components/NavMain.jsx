@@ -54,6 +54,10 @@ function NavMain() {
               <NavDropdown.Item onClick={() => { navigate(RouteNames.GENERIRANJE_PODATAKA); setExpanded(false); }}>
                 Generiraj podatke
               </NavDropdown.Item>
+
+                <NavDropdown.Item onClick={() => { navigate(RouteNames.NADZORNA_PLOCA); setExpanded(false); }}>
+                Nadzorna ploča
+              </NavDropdown.Item>
             </NavDropdown>
 
             {/* Zaseban dropdown za Predmete i njihove kategorije da se izbjegne ugniježđivanje */}

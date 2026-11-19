@@ -38,7 +38,10 @@ export const RouteNames = {
 
 	OZNAKE_PROMJENA: "/oznake/:id",
 	OZNAKA_NOVA: "/dodajoznaku",
-	OZNAKE: "/oznake",
+  OZNAKE: "/oznake",
+  
+  //nadzorna ploca
+  NADZORNA_PLOCA:"nadzorna-ploca"
 };
 
 //memorija, localStorage, firebase

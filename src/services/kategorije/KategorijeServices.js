@@ -13,6 +13,8 @@ switch (DATA_SOURCE ){
     Servis = KategorijeServicesMemorija
 
     break
+  case 'firebase':
+    break
   
   case 'localStorage' :
     

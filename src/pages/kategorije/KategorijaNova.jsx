@@ -55,6 +55,9 @@ export default function KategorijaNova() {
     setErrors({});
     dodaj({ naziv, opis });
   }
+
+
+  
   return (
     <>
       <Heading as='h2' color='azure'>Dodavanje nove kategorije</Heading>

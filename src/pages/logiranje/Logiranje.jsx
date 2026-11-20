@@ -174,7 +174,7 @@ export default function Login() {
             <hr />
 
             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-              <Button type="submit" variant="success" size="sm" className="px-4">
+              <Button type="submit" variant="outline-success" size="sm" className="px-4">
                 Logiraj se
               </Button>
             </div>

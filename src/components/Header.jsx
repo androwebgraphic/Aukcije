@@ -1,7 +1,7 @@
 
 
 import NavMain from "./NavMain";
-import aukcijelogo from '../img/Aukcije logo.png'
+// import aukcijelogo from '../img/Aukcije logo.png'
 import { Link } from "react-router-dom";
 
 
@@ -15,9 +15,9 @@ function Header() {
             
                <div className="h">
           <Link to="/" aria-label="Aukcije – početna stranica">
-            <img className="logo" src={aukcijelogo} alt="Aukcije logo" />
+            {/* <img className="logo" src={aukcijelogo} alt="Aukcije logo" /> */}
                  
-                   </Link>             {/* <h1>Aukcije</h1> */}
+                   </Link>            
                         
                             <NavMain></NavMain>
                </div>

@@ -88,7 +88,7 @@ header {
   margin-right: 0.9rem;
   margin-left: 0.9rem;
   border-radius: 50%;
-  width: 3rem;
+  width: 1rem;
   height: auto;
   filter: opacity(0.9);
   background-color: var(--primary-txt);
@@ -465,7 +465,7 @@ button[type="submit"]{
     margin-bottom: 1rem;
     padding: 0;
     border-radius: 50%;
-    width: 4rem;
+    width: 2.5rem;
     height: auto;
     /* float: left; */
     background-color: var(--primary-txt);

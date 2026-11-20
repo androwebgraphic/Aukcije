@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { NavDropdown, Badge } from 'react-bootstrap';
 import KategorijeServices from '../services/kategorije/KategorijeServices';
 import useAuth from '../hooks/useAuth';
+import aukcijelogo from '../img/Aukcije logo.png'
 
 function NavMain() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function NavMain() {
     <>
       <Navbar expand="lg" data-bs-theme="dark" expanded={expanded} onToggle={(isOpen) => setExpanded(isOpen)}>
         <Navbar.Brand>
-          <Link style={{ textDecoration: "none" }} to="/">{APP_NAME}</Link>
+          <Link style={{ textDecoration: "none" }} to="/"> <img className="logo" src={aukcijelogo} alt="Aukcije logo" /></Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 

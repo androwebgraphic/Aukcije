@@ -77,14 +77,14 @@ export default function KorisnikoNovi() {
                     </Col>
                   </Row>
 
-                  <Row className="mt-4">
-                    <Col xs={12} sm={6}>
-                        <Button type="submit" variant="success" size="sm">
+                  <Row className="mt-4 mb-3">
+                    <Col xs={6} sm={6}>
+                        <Button type="submit" variant="outline-success" size="sm">
                             Registriraj se
                         </Button>
                     </Col>
-                    <Col xs={12} sm={6}>
-                        <Button variant="danger" size="sm" as={Link} to={RouteNames.KORISNICI}>
+                    <Col xs={6} sm={6} className="" size="sm">
+                        <Button variant="outline-danger" size="sm" as={Link} to={RouteNames.KORISNICI}>
                             Odustani
                         </Button>
                     </Col>

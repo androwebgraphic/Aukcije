@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { APP_NAME, RouteNames } from '../constants';
 import { Link, useNavigate } from 'react-router-dom';
-import { NavDropdown, Badge } from 'react-bootstrap';
+import { NavDropdown, Badge,Col,Row} from 'react-bootstrap';
 import KategorijeServices from '../services/kategorije/KategorijeServices';
 import useAuth from '../hooks/useAuth';
 import aukcijelogo from '../img/Aukcije logo.png'
@@ -31,9 +31,21 @@ function NavMain() {
     <>
       <Navbar expand="lg" data-bs-theme="dark" expanded={expanded} onToggle={(isOpen) => setExpanded(isOpen)}>
         <Navbar.Brand>
-          <Link style={{ textDecoration: "none" }} to="/"> <img className="logo" src={aukcijelogo} alt="Aukcije logo" /></Link>
+         <img className="logo" src={aukcijelogo} alt="Aukcije logo" />
+          <Link style={{ textDecoration: "none" }} to="/">{APP_NAME}    </Link>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          aria-expanded={expanded}
+          label={expanded ? 'Zatvori navigaciju' : 'Otvori navigaciju'}
+          className="navbar-toggler-anim"
+        >
+          <span className="navbar-toggler-icon" aria-hidden="true">
+            <span className="toggler-bar" />
+            <span className="toggler-bar" />
+            <span className="toggler-bar" />
+          </span>
+        </Navbar.Toggle>
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto align-items-sm-center" aria-label="Glavna navigacija">
@@ -56,7 +68,10 @@ function NavMain() {
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={() => { navigate(RouteNames.GENERIRANJE_PODATAKA); setExpanded(false); }}>
                   Generiraj podatke
-                </NavDropdown.Item>
+                </NavDropdown.Item >
+                <Nav.Link style={{marginLeft:"5rem"}} onClick={() => { navigate(RouteNames.NADZORNA_PLOCA); setExpanded(false); }}>
+                Nadzorna ploča
+              </Nav.Link>
               </NavDropdown>
             )}
 
@@ -86,21 +101,25 @@ function NavMain() {
               ))}
             </NavDropdown>
 
-            {isAdmin && (
-              <Nav.Link onClick={() => { navigate(RouteNames.NADZORNA_PLOCA); setExpanded(false); }}>
-                Nadzorna ploča
-              </Nav.Link>
-            )}
+          
 
             {isLoggedIn ? (
               <>
-                <Nav.Link disabled aria-label="Prijavljeni korisnik">
-                  <Badge bg="success">{authUser?.email}</Badge>
-                  {isAdmin && <Badge bg="dark" className="ms-2">admin</Badge>}
-                </Nav.Link>
-                <Nav.Link onClick={() => { logout(); setExpanded(false); }}>
-                  Odjava
-                </Nav.Link>
+             
+                <Row>
+                  <Col xs={3}>
+                    <Nav.Link disabled aria-label="Prijavljeni korisnik" style={{marginLeft:"5rem"}}>
+                      <Badge bg="success" >{authUser?.name}</Badge>
+                      {isAdmin && <Badge bg="success" className="ms-2" >admin</Badge> ||  <Badge bg="warning" className="ms-2 ">korisnik</Badge>}
+                    
+                    </Nav.Link>
+                  </Col>
+                  <Col xs={3}>
+                    <Nav.Link onClick={() => { logout(); setExpanded(false); }} style={{marginLeft:"5rem"}}>
+                      Odjava
+                    </Nav.Link>
+                  </Col>
+                </Row>
               </>
             ) : (
               <>
@@ -109,13 +128,20 @@ function NavMain() {
                 </Nav.Link>
                 <Nav.Link onClick={() => { navigate(RouteNames.LOGIRANJE); setExpanded(false); }}>
                   Logiranje
-                </Nav.Link>
-              </>
+                    </Nav.Link>
+             
+                </>
+                
             )}
           </Nav>
+          
         </Navbar.Collapse>
+
+
+
       </Navbar>
     </>
+    
   );
 }
 

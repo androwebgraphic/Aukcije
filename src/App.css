@@ -252,12 +252,41 @@ label {
   color: var(--main-color);
 }
 
-.upute {
+.rounded-4 {
+
+  background-color: #b940c9;
+}
+.modal-header{
+
+  background-color: #3561da;
+}
+.modal-title {
+
+  color: #ffc107;
+}
+.modal-content .upute{
   background-color: orange;
   padding: 1rem;
   border-radius: 0.7rem;
+  margin-bottom:.7rem;
+}
+.modal-content h2{
+
+  font-size:1.2rem;
+  font-weight: bold;
 }
 
+.modal-content ul li, ol li{
+
+  font-size: .75rem;
+}
+
+
+.bg{
+
+  background-color: #b940c9;
+  padding: 1rem;
+}
 p.warn {
   color: var(--main-color);
 }
@@ -351,7 +380,7 @@ p.storage span {
 
 .date {
   font-style: italic;
-  color: #64748b;
+  color: #c5c6c8;
   margin-bottom: 1.5rem;
 }
 

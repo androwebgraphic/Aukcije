@@ -49,10 +49,10 @@ export const RouteNames = {
 
 //memorija, localStorage, firebase
 export const DATA_SOURCE = "firebase";
-  // Računi za testiranje / prijavu.
-  // VAŽNO: lozinke moraju odgovarati DEMO_LOZINKA u
-  // src/services/korisnici/KorisniciData.js jer kartice "Klikni za
-  // Admina/Korisnika" na prijavi upisuju upravo taj podatak.
+  Računi za testiranje / prijavu.
+  VAŽNO: lozinke moraju odgovarati DEMO_LOZINKA u
+  src/services/korisnici/KorisniciData.js jer kartice "Klikni za
+  Admina/Korisnika" na prijavi upisuju upravo taj podatak.
 export const ADMIN_EMAIL = "admin@aukcije.hr";
 export const ADMIN_LOZINKA = "Aukcije1234!";
 export const KORISNIK_EMAIL = "korisnik@aukcije.hr";

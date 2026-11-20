@@ -5,8 +5,8 @@ export default function Uvjeti() {
 return(
   <>
 
-
-    <h1>UVJETI KORIŠTENJA APLIKACIJE „AUKCIJE”</h1>
+<div className="bg">
+    <h1 style={{color:"white"}}>UVJETI KORIŠTENJA APLIKACIJE „AUKCIJE”</h1>
     <p className="date">Posljednja izmjena: 1. listopada 2026.</p>
 
     <p>Dobrodošli u aplikaciju <strong>Aukcije</strong> (u daljnjem tekstu: „Aplikacija”). Molimo vas da pažljivo pročitate ove Uvjete korištenja (u daljnjem tekstu: „Uvjeti”) prije početka korištenja Aplikacije.</p>
@@ -98,11 +98,8 @@ return(
       <li><strong>E-mail:</strong>andreassklizovic@gmail.com</li>
       <li><strong>Adresa:</strong> I.Gundulića 12, 31540 Donji Miholjac</li>
     </ul>
+</div>
 
-      <Row >
-        <Col className="btn mb-3" xs={6} md={6} ><Button variant="success" size="sm" type="submit" id='accept' >Prihvaćam</Button></Col>
-        <Col className="btn mb-3"xs={6 } md={6}><Button variant="danger" size="sm" type="submit" id='deny'>Odbijam</Button></Col>
-      </Row>
 
   </>
   )

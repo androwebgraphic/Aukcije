@@ -162,7 +162,7 @@ li {
 /* Navigacijski linkovi */
 .navbar-nav .nav-link {
   color: var(--primary-txt) !important;
-  text-align: right;
+  text-align: center;
   padding: 0.5rem .2rem;
   transition: color 0.2s ease-in-out;
 }
@@ -224,7 +224,7 @@ a.dropdown-item:hover{
 
 .navbar-nav .nav-link {
   color: var(--primary-txt) !important;
-  text-align: left;
+  text-align: center;
   padding: 0.5rem 1rem;
   transition: color 0.2s ease-in-out;
 }

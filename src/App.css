@@ -62,7 +62,15 @@ ul, ol {
 li {
   margin-bottom: 0.5rem;
 }
-
+.logo {
+  margin-right: 0.9rem;
+  margin-left: 0.9rem;
+  border-radius: 50%;
+  width: 1rem;
+  height: auto;
+  filter: opacity(0.9);
+  background-color: var(--primary-txt);
+}
 /* Zaglavlje i Navigacija */
 
 
@@ -82,15 +90,7 @@ li {
   letter-spacing: 0.4rem;
 }
 
-.logo {
-  margin-right: 0.9rem;
-  margin-left: 0.9rem;
-  border-radius: 50%;
-  width: 1rem;
-  height: auto;
-  filter: opacity(0.9);
-  background-color: var(--primary-txt);
-}
+
 
 /* Hamburger ikona za mobilne uređaje: tri crte koje se animirano
    pretvaraju u X kad se izbornik otvori (i natrag kad se zatvori). */
@@ -206,7 +206,7 @@ a.dropdown-item:hover{
   max-width: 100% !important;
   display: flex;
   justify-content: space-around;
-  align-items: left;
+  align-items: center;
 }
 
 /* Raširi same linkove izbornika da ravnomjerno popune prostor ako je potrebno */

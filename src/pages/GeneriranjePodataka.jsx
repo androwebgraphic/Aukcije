@@ -24,7 +24,7 @@ import {
   osigurajDemoRacune,
 } from '../utils/demoRacuni';
 
-import { APP_NAME, PrefixStorage, TESTNA_LOZINKA, DATA_SOURCE } from '../constants';
+import { APP_NAME, PrefixStorage, DATA_SOURCE } from '../constants';
 
 /*
  * Ključevi moraju biti isti kao u *ServicesLocalStorage datotekama — one sve
@@ -235,7 +235,7 @@ const generirajKorisnike = async (broj) => {
 
     const odgovor = await KorisniciService.dodaj({
       email,
-      lozinka: TESTNA_LOZINKA,
+      lozinka: DEMO_LOZINKA,
       uloga: 'korisnik',
     });
 

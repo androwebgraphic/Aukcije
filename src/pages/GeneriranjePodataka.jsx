@@ -575,13 +575,13 @@ export default function GeneriranjePodataka() {
   };
 
   const handleMemorijaULocalStorage = async () => {
-    if (
-      !(await potvrdi(
-        'Jeste li sigurni da želite presipati sve podatke iz memorije u localStorage?'
-      ))
-    ) {
-      return;
-    }
+    // if (
+    //   !(await potvrdi(
+    //     'Jeste li sigurni da želite presipati sve podatke iz memorije u localStorage?'
+    //   ))
+    // ) {
+    //   return;
+    // }
 
     return izvrsi(
       'presipavanje',

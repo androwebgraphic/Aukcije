@@ -9,7 +9,6 @@ import PredmetiServices from "../services/predmeti/PredmetiServices";
 import KorisniciService from "../services/korisnici/KorisniciService";
 import OznakeServices from "../services/oznake/OznakeServices";
 import { LordIcon } from "@lordicon/react";
-import NadzornaPloca from "./NadzornaPloca";
 // Inicijalizacija LordIcon elementa s Lottie engineom
 // defineElement(lottie.loadAnimation);
 

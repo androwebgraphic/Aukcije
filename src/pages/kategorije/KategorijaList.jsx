@@ -10,7 +10,7 @@ import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
 import Heading from "../../components/UI/Heading"
 import { motion } from "framer-motion"
 import IkonaKategorije from "../../components/UI/IkonaKategorije"
-import useLoading from "../../hooks/usLoading"
+import useLoading from "../../hooks/useLoading"
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -40,7 +40,8 @@ export default function KategorijaList() {
   const [kategorije, setKategorije] = useState([])
   const [predmeti, setPredmeti] = useState([])
   const navigate = useNavigate()
-const {showLoading, hideLoading} = useLoading()
+  const { showLoading, hideLoading } = useLoading()
+  
   useEffect(() => { 
     ucitajKategorije()
     ucitajPredmete()
@@ -50,7 +51,6 @@ const {showLoading, hideLoading} = useLoading()
     showLoading()
     try {
       const res = await KategorijeServices.get()
-      console.log("Učitane kategorije (res.data):", res.data)
       // Ako API vraća objekt s podacima unutra (npr. .content), prilagodi ovdje
       const dohvaceneKategorije = Array.isArray(res.data) ? res.data : (res.data.content || res.data.kategorije || []);
       setKategorije(dohvaceneKategorije)
@@ -67,7 +67,6 @@ const {showLoading, hideLoading} = useLoading()
       const res = await PredmetiServices.get()
       const dohvaceniPredmeti = Array.isArray(res.data) ? res.data : (res.data.content || res.data.predmeti || []);
       setPredmeti(dohvaceniPredmeti)
-      console.log("Učitani predmeti:", dohvaceniPredmeti)
     } catch (error) {
       console.error("Greška pri učitavanju predmeta:", error)
     } finally {

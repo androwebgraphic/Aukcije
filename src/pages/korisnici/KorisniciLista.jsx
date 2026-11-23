@@ -14,6 +14,11 @@ import { Link, useNavigate } from "react-router-dom"
 import { FaEdit, FaFilePdf, FaKey, FaPlus, FaSearch, FaTrash } from "react-icons/fa"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import { APP_NAME, RouteNames } from "../../constants"
+import useLoading from "../../hooks/useLoading"
+import useModal from "../../hooks/useModal"
+
+
+  
 
 function BedzUloge({ uloga }) {
     const jeAdmin = String(uloga).toLowerCase() === "admin"
@@ -76,7 +81,8 @@ export default function KorisniciLista() {
 
     const [stranica, setStranica] = useState(1)
     const [velicinaStranice, setVelicinaStranice] = useState(10)
-
+  const { showModal } = useModal()
+    const { showLoading, hideLoading } = useLoading()
     useEffect(() => {
         document.title = "Korisnici, " + APP_NAME
     }, [])
@@ -86,20 +92,25 @@ export default function KorisniciLista() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    async function ucitajKorisnike() {
+  async function ucitajKorisnike() {
+
+
         setUcitavanje(true)
-        try {
+    try {
+          showLoading()
             const odgovor = await KorisniciService.get()
             if (!odgovor.success) {
                 alert("Nije implementiran servis")
                 setKorisnici([])
                 return
             }
-            setKorisnici(odgovor.data || [])
+      setKorisnici(odgovor.data || [])
+      hideLoading()
         } catch {
             alert("Greška pri dohvaćanju korisnika")
         } finally {
-            setUcitavanje(false)
+          setUcitavanje(false)
+     
         }
     }
 

@@ -12,7 +12,7 @@ import { RouteNames } from "../../constants";
 import KategorijeServices from '../../services/kategorije/KategorijeServices';
 import Heading from "../../components/UI/Heading";
 import { FaPlus } from "react-icons/fa";
-
+import useModal from "../../hooks/useModal"
 
 
 export default function KategorijaNova() {
@@ -28,9 +28,11 @@ export default function KategorijaNova() {
   const [errors, setErrors] = useState({});
 
   async function dodaj(kategorija) {
+    showLoading()
     await KategorijeServices.dodaj(kategorija).then(() => {
       navigate(RouteNames.KATEGORIJE);
     });
+    hideLoading()
   }
 
   function handleSubmit(e) {

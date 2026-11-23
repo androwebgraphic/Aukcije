@@ -101,25 +101,24 @@ function NavMain() {
               ))}
             </NavDropdown>
 
-          
+          <hr />
 
             {isLoggedIn ? (
               <>
-             
-                <Row>
-                  <Col xs={3}>
-                    <Nav.Link disabled aria-label="Prijavljeni korisnik" style={{marginLeft:"5rem"}}>
+          
+            <NavDropdown title="Korisnik">
+                    <NavDropdown.Item disabled aria-label="Prijavljeni korisnik" >
                       <Badge bg="success" >{authUser?.name}</Badge>
                       {isAdmin && <Badge bg="success" className="ms-2" >admin</Badge> ||  <Badge bg="warning" className="ms-2 ">korisnik</Badge>}
                     
-                    </Nav.Link>
-                  </Col>
-                  <Col xs={3}>
-                    <Nav.Link onClick={() => { logout(); setExpanded(false); }} style={{marginLeft:"5rem"}}>
+                    </NavDropdown.Item>
+              
+            
+                    <NavDropdown.Item onClick={() => { logout(); setExpanded(false); }} style={{marginLeft:"1rem"}}>
                       Odjava
-                    </Nav.Link>
-                  </Col>
-                </Row>
+                    </NavDropdown.Item>
+           </NavDropdown>
+          
               </>
             ) : (
               <>

@@ -248,8 +248,6 @@ export default function PredmetNovi() {
         korisnikId: authUser?.id ?? null
       };
 
-      console.log("Šaljem payload na server:", payload);
-
       await PredmetiServices.dodaj(payload);
       navigate(RouteNames.PREDMETI);
     } catch (error) {

@@ -1,51 +1,56 @@
 import { DATA_SOURCE } from "../../constants";
 import KategorijeServicesMemorija  from './KategorijeServicesMemorija'
 import KategorijeServicesLocalStorage from "./KategorijeServicesLocalStorage";
-import KategorijeServicesFirebase from "./KategorijeServicesFirebase";
 import { saUcitavanjem } from "../../utils/loadingBus";
 
-
-
-let Servis = null
-
-switch (DATA_SOURCE ){
-  
-  case 'memorija': 
-    
-    Servis = KategorijeServicesMemorija
-
-    break
-  case 'firebase':
-    Servis = KategorijeServicesFirebase
-    break
-  
-  case 'localStorage' :
-    
-    Servis = KategorijeServicesLocalStorage
-
-    break
-  
-  default:
-    
-    Servis = null
-}
-
 const PrazanServis = {
-
   get: async () => ({ data: [] }),
-  dodaj: async (kategorija) => { console.log('Smjer nije implementiran') },
-  getByID: async (id) => ({ data: {} }),
-  promijeni: async (id, kategorije) => { console.error('Servis nije  implmentiran') },
-  obrisi: async (id) => {console.error('Servis nije  implementiran')}
+  dodaj: async () => { console.log('Smjer nije implementiran'); },
+  getByID: async () => ({ data: {} }),
+  promijeni: async () => { console.error('Servis nije implementiran'); },
+  obrisi: async () => { console.error('Servis nije implementiran'); }
+};
+
+// Firebase se učitava tek kad je stvarno odabran (vidi PredmetiServices).
+let servisPromise = null;
+
+function dohvatiServis() {
+  if (!servisPromise) {
+    switch (DATA_SOURCE) {
+      case 'memorija':
+        servisPromise = Promise.resolve(KategorijeServicesMemorija);
+        break;
+      case 'firebase':
+        servisPromise = import("./KategorijeServicesFirebase")
+          .then((modul) => modul.default)
+          .catch((error) => {
+            console.error("Firebase servis kategorija nije dostupan:", error);
+            return PrazanServis;
+          });
+        break;
+      case 'localStorage':
+        servisPromise = Promise.resolve(KategorijeServicesLocalStorage);
+        break;
+      default:
+        servisPromise = Promise.resolve(PrazanServis);
+    }
+  }
+
+  return servisPromise;
 }
 
-const AktivniServis = Servis || PrazanServis
+function pozovi(metoda) {
+  return async (...argumenti) => {
+    const servis = await dohvatiServis();
+    const funkcija = servis?.[metoda] ?? PrazanServis[metoda];
+    return typeof funkcija === 'function' ? funkcija(...argumenti) : undefined;
+  };
+}
 
 export default {
-
-  get: saUcitavanjem(() => AktivniServis.get()),
-  getByID: saUcitavanjem((id)=> AktivniServis.getByID(id)),
-  dodaj: (kategorija) => AktivniServis.dodaj(kategorija), 
-  promijeni: (id, kategorija) => AktivniServis.promijeni(id, kategorija),
-  obrisi: (id) => AktivniServis.obrisi(id)
-}
+  get: saUcitavanjem(pozovi('get')),
+  getByID: saUcitavanjem(pozovi('getByID')),
+  dodaj: pozovi('dodaj'),
+  promijeni: pozovi('promijeni'),
+  obrisi: pozovi('obrisi')
+};

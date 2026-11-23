@@ -7,11 +7,12 @@ import { Container,Spinner } from "react-bootstrap";
 import { RouteNames } from "./constants.js";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import NadzornaPloca from "./pages/NadzornaPloca.jsx";
 import ZasticenaRuta from "./components/ZasticenaRuta.jsx";
 import LoadingSpinner from './components/LoadingSpinner'
 
 const Home = lazy(() => import("./pages/Home.jsx"));
+// Highcharts (u Nadzornoj ploči) je ~293 kB; učitava se samo na toj ruti.
+const NadzornaPloca = lazy(() => import("./pages/NadzornaPloca.jsx"));
 const Registracija = lazy(() => import("./pages/registracija/Registracija.jsx"));
 const Logiranje = lazy(() => import("./pages/logiranje/Logiranje.jsx"));
 

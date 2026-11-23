@@ -31,6 +31,8 @@ import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import Odbrojavanje from "../../components/Odbrojavanje";
 import useAuth from "../../hooks/useAuth";
 import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
+import useLoading from "../../hooks/useLoading"
+
 
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
@@ -55,6 +57,7 @@ function OpisPredmeta({ tekst }) {
   const tekstRef = useRef(null);
   const sadrzaj = (tekst || "").trim() || "Bez opisa.";
 
+const { showLoading, hideLoading } = useLoading()
   // Provjeri stvarno prelijevanje teksta (ne broj znakova), pa se "…"
   // prikazuje bez obzira na to koliko riječi opis ima ili koliko je kartica široka.
   useEffect(() => {
@@ -172,7 +175,7 @@ export default function PredmetiList() {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
-
+const { showLoading, hideLoading } = useLoading()
 //omiljeni predmeti
   const [omiljeniIds, setOmiljeniIds] = useState(() => {
   return JSON.parse(localStorage.getItem("omiljeniPredmeti")) || [];
@@ -197,13 +200,18 @@ export default function PredmetiList() {
 
   useEffect(() => {
     async function ucitajSve() {
+
       try {
+        showLoading()
         await Promise.all([ucitajKategorije(), ucitajOznake()]);
         await ucitajPredmete();
+   hideLoading()
       } catch (error) {
         console.error("Greška pri inicijalnom učitavanju:", error);
       }
+            
     }
+
     ucitajSve();
   }, []);
 

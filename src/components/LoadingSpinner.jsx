@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import useLoading from '../hooks/usLoading';
+import useLoading from '../hooks/useLoading';
 
 // Kratki dohvati (npr. iz Firestore cachea) traju svega nekoliko ms — spinner
 // bi samo bljesnuo i nitko ga ne bi vidio. Zato se prikazuje tek kad

@@ -1,30 +1,9 @@
 import { DATA_SOURCE } from "../../constants.js";
 import KorisniciServiceMemorija from "./KorisniciServiceMemorija.js";
 import KorisniciServiceLocalStorage from "./KorisniciServiceLocalStorage.js";
-import KorisniciServiceFirebase from "./KorisniciServiceFirebase.js";
 import { saUcitavanjem } from "../../utils/loadingBus";
 
-// 1. Odabir servisa prema DATA_SOURCE u constants.js
-let Servis = null
-
-switch (DATA_SOURCE) {
-  case 'memorija':
-    Servis = KorisniciServiceMemorija
-    break
-
-  case 'localStorage':
-    Servis = KorisniciServiceLocalStorage
-    break
-
-  case 'firebase':
-    Servis = KorisniciServiceFirebase
-    break
-
-  default:
-    Servis = null
-}
-
-// 2. Definiranje praznog servisa (kad DATA_SOURCE nije prepoznat)
+// 1. Prazan servis (kad DATA_SOURCE nije prepoznat)
 const PrazanServis = {
   get: async () => ({ success: false, data: [] }),
   getById: async () => ({ success: false, data: null }),
@@ -34,20 +13,53 @@ const PrazanServis = {
   promijeniLozinku: async () => ({ success: false, data: null }),
   obrisi: async () => ({ success: false, data: null }),
   prijava: async () => ({ success: false, data: null })
+};
+
+// 2. Firebase se učitava tek kad je stvarno odabran. U localStorage/memorija
+// načinu rada njegov SDK (~434 kB) tako ne ulazi u početni bundle.
+let servisPromise = null;
+
+function dohvatiServis() {
+  if (!servisPromise) {
+    switch (DATA_SOURCE) {
+      case 'memorija':
+        servisPromise = Promise.resolve(KorisniciServiceMemorija);
+        break;
+      case 'localStorage':
+        servisPromise = Promise.resolve(KorisniciServiceLocalStorage);
+        break;
+      case 'firebase':
+        servisPromise = import("./KorisniciServiceFirebase.js")
+          .then((modul) => modul.default)
+          .catch((error) => {
+            console.error("Firebase servis korisnika nije dostupan:", error);
+            return PrazanServis;
+          });
+        break;
+      default:
+        servisPromise = Promise.resolve(PrazanServis);
+    }
+  }
+
+  return servisPromise;
+}
+
+function pozovi(metoda) {
+  return async (...argumenti) => {
+    const servis = await dohvatiServis();
+    const funkcija = servis?.[metoda] ?? PrazanServis[metoda];
+    return typeof funkcija === 'function' ? funkcija(...argumenti) : undefined;
+  };
 }
 
 // 3. Jedan export na kraju
-const AktivniServis = Servis || PrazanServis
-
 export default {
-  get: saUcitavanjem(() => AktivniServis.get()),
-  getById: saUcitavanjem((id) => AktivniServis.getById(id)),
-  dodaj: (korisnik) => AktivniServis.dodaj(korisnik),
-  dodajBezHash: (korisnik) => AktivniServis.dodajBezHash
-    ? AktivniServis.dodajBezHash(korisnik)
-    : Promise.resolve({ success: false, data: null }),
-  promijeni: (id, korisnik) => AktivniServis.promijeni(id, korisnik),
-  promijeniLozinku: (id, novaLozinka) => AktivniServis.promijeniLozinku(id, novaLozinka),
-  obrisi: (id) => AktivniServis.obrisi(id),
-  prijava: (email, lozinka) => AktivniServis.prijava(email, lozinka)
-}
+  get: saUcitavanjem(pozovi('get')),
+  getById: saUcitavanjem(pozovi('getById')),
+  dodaj: pozovi('dodaj'),
+  dodajBezHash: pozovi('dodajBezHash'),
+  promijeni: pozovi('promijeni'),
+  promijeniLozinku: pozovi('promijeniLozinku'),
+  obrisi: pozovi('obrisi'),
+  prijava: pozovi('prijava')
+};

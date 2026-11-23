@@ -5,17 +5,8 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // lottie-web is isolated in its own lazy chunk (~540 kB); it is needed only
-    // on pages with Lottie animations, so a slightly higher limit is acceptable.
     chunkSizeWarningLimit: 600,
     rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (/node_modules[\\/](lottie-web|@lottiefiles|@lordicon)[\\/]/.test(id)) {
-            return "lottie";
-          }
-        },
-      },
       onwarn(warning, warn) {
         // React libraries (react-bootstrap, framer-motion, ...) ship "use client"
         // directives. They are irrelevant in this client-only Vite app.

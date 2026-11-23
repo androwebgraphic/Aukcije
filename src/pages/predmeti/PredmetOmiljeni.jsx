@@ -18,6 +18,7 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import Odbrojavanje from "../../components/Odbrojavanje";
+import useLoading from "../../hooks/useLoading"
 
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -64,17 +65,19 @@ export default function PredmetOmiljeni() {
   const [showModal, setShowModal] = useState(false);
   const [odabraniPredmet, setOdabraniPredmet] = useState(null);
   const [iznosPonude, setIznosPonude] = useState(0);
-
+  const { showLoading, hideLoading } = useLoading()
+  
   useEffect(() => {
     async function ucitajOmiljene() {
-      setLoading(true);
+  
       try {
+   showLoading()
         const spremljeniOmiljeni = JSON.parse(localStorage.getItem("omiljeniPredmeti")) || [];
         const [katOdgovor, predmetiOdgovor] = await Promise.all([
           KategorijeServices.get(),
           PredmetiServices.dohvatiStranicu(1, 1000)
         ]);
-
+hideLoading()
         setKategorije(katOdgovor.data || katOdgovor || []);
         const sviPredmeti = predmetiOdgovor.data || predmetiOdgovor || [];
 

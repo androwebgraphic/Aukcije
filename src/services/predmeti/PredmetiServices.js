@@ -1,52 +1,63 @@
 import { DATA_SOURCE } from "../../constants";
 import PredmetiServicesMemorija from './PredmetiServicesMemorija';
 import PredmetiServicesLocalStorage from "./PredmetiServicesLocalStorage";
-import PredmetiFirebaseServices from "./PredmetiFirebaseServices";
 import { saUcitavanjem } from "../../utils/loadingBus";
-
-let Servis = null;
-
-switch (DATA_SOURCE) {
-  case 'memorija': 
-    Servis = PredmetiServicesMemorija;
-    break;
-  case 'firebase':
-    Servis = PredmetiFirebaseServices
-    break
-  
-  case 'localStorage': 
-    Servis = PredmetiServicesLocalStorage;
-    break;
-  
-  default:
-    Servis = null;
-}
 
 const PrazanServis = {
   get: async () => ({ data: [] }),
-  dodaj: async (predmet) => { console.log('Servis nije implementiran'); },
-  getByID: async (id) => ({ data: null }),
-  promijeni: async (id, predmet) => { console.error('Servis nije implementiran'); },
-  obrisi: async (id) => { console.error('Servis nije implementiran'); },
-  dohvatiStranicu: async (stranica, velicinaStranice, uvjetiPretrazivanja) => ({ 
-    data: [], 
-    ukupnoStranica: 0, 
-    ukupnoStavki: 0 
+  dodaj: async () => { console.log('Servis nije implementiran'); },
+  getByID: async () => ({ data: null }),
+  promijeni: async () => { console.error('Servis nije implementiran'); },
+  obrisi: async () => { console.error('Servis nije implementiran'); },
+  dohvatiStranicu: async () => ({
+    data: [],
+    ukupnoStranica: 0,
+    ukupnoStavki: 0
   })
 };
 
-const AktivniServis = Servis || PrazanServis;
+// Firebase se učitava tek kad je stvarno odabran. U localStorage/memorija
+// načinu rada njegov SDK (~434 kB) tako ne ulazi u početni bundle.
+let servisPromise = null;
+
+function dohvatiServis() {
+  if (!servisPromise) {
+    switch (DATA_SOURCE) {
+      case 'memorija':
+        servisPromise = Promise.resolve(PredmetiServicesMemorija);
+        break;
+      case 'firebase':
+        servisPromise = import("./PredmetiFirebaseServices")
+          .then((modul) => modul.default)
+          .catch((error) => {
+            console.error("Firebase servis predmeta nije dostupan:", error);
+            return PrazanServis;
+          });
+        break;
+      case 'localStorage':
+        servisPromise = Promise.resolve(PredmetiServicesLocalStorage);
+        break;
+      default:
+        servisPromise = Promise.resolve(PrazanServis);
+    }
+  }
+
+  return servisPromise;
+}
+
+function pozovi(metoda) {
+  return async (...argumenti) => {
+    const servis = await dohvatiServis();
+    const funkcija = servis?.[metoda] ?? PrazanServis[metoda];
+    return typeof funkcija === 'function' ? funkcija(...argumenti) : undefined;
+  };
+}
 
 export default {
-  get: saUcitavanjem(() => AktivniServis.get ? AktivniServis.get() : Promise.resolve({ data: [] })),
-  getByID: saUcitavanjem((id) => AktivniServis.getByID ? AktivniServis.getByID(id) : Promise.resolve({ data: null })),
-  dodaj: (predmet) => AktivniServis.dodaj ? AktivniServis.dodaj(predmet) : Promise.resolve(), 
-  promijeni: (id, predmet) => AktivniServis.promijeni ? AktivniServis.promijeni(id, predmet) : Promise.resolve(),
-  obrisi: (id) => AktivniServis.obrisi ? AktivniServis.obrisi(id) : Promise.resolve(),
-  dohvatiStranicu: saUcitavanjem((stranica, velicinaStranice, uvjetiPretrazivanja) => {
-    if (AktivniServis && typeof AktivniServis.dohvatiStranicu === 'function') {
-      return AktivniServis.dohvatiStranicu(stranica, velicinaStranice, uvjetiPretrazivanja);
-    }
-    return Promise.resolve({ data: [], ukupnoStranica: 0, ukupnoStavki: 0 });
-  })
+  get: saUcitavanjem(pozovi('get')),
+  getByID: saUcitavanjem(pozovi('getByID')),
+  dodaj: pozovi('dodaj'),
+  promijeni: pozovi('promijeni'),
+  obrisi: pozovi('obrisi'),
+  dohvatiStranicu: saUcitavanjem(pozovi('dohvatiStranicu'))
 };

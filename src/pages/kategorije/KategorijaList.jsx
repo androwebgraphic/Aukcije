@@ -34,7 +34,7 @@ export default function KategorijaList() {
   const [kategorije, setKategorije] = useState([])
   const [predmeti, setPredmeti] = useState([])
   const navigate = useNavigate()
-  const { showLoading, hideLoading } = useLoading()
+  const { showLoading, hideLoading, postaviNaslov } = useLoading()
     const { showModal } = useModal()
   
   useEffect(() => { 
@@ -42,10 +42,12 @@ export default function KategorijaList() {
     ucitajKategorije()
     ucitajPredmete()
     hideLoading()
+    postaviNaslov('Lista kategorija')
   }, [])
   
   async function ucitajKategorije() {
     showLoading()
+     
     try {
       const res = await KategorijeServices.get()
       // Ako API vraća objekt s podacima unutra (npr. .content), prilagodi ovdje

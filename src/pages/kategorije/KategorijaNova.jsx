@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState ,useEffect} from "react";
 import {
   Button,
   Col,
@@ -13,6 +13,7 @@ import KategorijeServices from '../../services/kategorije/KategorijeServices';
 import Heading from "../../components/UI/Heading";
 import { FaPlus } from "react-icons/fa";
 import useModal from "../../hooks/useModal"
+import { APP_NAME } from "../../constants";
 
 
 export default function KategorijaNova() {
@@ -22,7 +23,9 @@ export default function KategorijaNova() {
   const nazivRef = useRef();
   const opisRef = useRef();
 
-  
+      useEffect(() => {
+          document.title = "Kategorije-dodaj, " + APP_NAME
+      }, [])
 
   // Stanje za greške
   const [errors, setErrors] = useState({});
@@ -101,7 +104,7 @@ export default function KategorijaNova() {
 
         <hr />
         <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
-          <Button type="submit" variant="success">
+          <Button type="submit" variant="outline-success">
             <FaPlus className="me-2" aria-hidden="true" />
             Dodaj
           </Button>

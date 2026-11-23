@@ -7,6 +7,7 @@ import { RouteNames } from "../../constants"
 import Heading from "../../components/UI/Heading"
 import useModal from "../../hooks/useModal"
 import useNespremljenePromjene from "../../hooks/useNespremljenePromjene"
+import useLoading from "../../hooks/useLoading"
 
 const ShemaPromjenaKorisnika = z.object({
   email: z
@@ -36,9 +37,10 @@ export default function KorisniciPromijena() {
   const { potvrdi } = useModal()
   const [imaPromjena, setImaPromjena] = useState(false)
   useNespremljenePromjene(imaPromjena)
-
+  const { showLoading, hideLoading, postaviNaslov } = useLoading()
   useEffect(() => {
     ucitajKorisnika()
+postaviNaslov('Korisnici-promijena')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id])
 

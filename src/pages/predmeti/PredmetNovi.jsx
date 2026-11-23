@@ -13,6 +13,7 @@ import { normalizirajKategorijuId } from "../../utils/kategorije";
 import { izvuciIdIzOdgovora, normalizirajOznaku } from "../../utils/oznake";
 import useAuth from "../../hooks/useAuth";
 import { FaPlus } from "react-icons/fa";
+import useLoading from "../../hooks/useLoading";
 
 // ---------------------------------------------------------------------------
 // Pomoćne funkcije za normalizaciju oznaka.
@@ -54,8 +55,9 @@ export default function PredmetNovi() {
   const [isjecenaSlikaUrl, setIsjecenaSlikaUrl] = useState(null);
   const cropperRef = useRef(null);
   const autoCompleteRef = useRef(null);
-
+const { showLoading, hideLoading, postaviNaslov} = useLoading()
   useEffect(() => {
+    postaviNaslov('Predmet-dodaj')
     ucitajPodatke();
     function handleClickOutside(event) {
       if (autoCompleteRef.current && !autoCompleteRef.current.contains(event.target)) {
@@ -477,7 +479,7 @@ export default function PredmetNovi() {
         </Row>
 
         <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-4 forma-akcije">
-          <Button type="submit" variant="success">
+          <Button type="submit" variant="outline-success">
             <FaPlus className="me-2" aria-hidden="true" />
             Dodaj
           </Button>

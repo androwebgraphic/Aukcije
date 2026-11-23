@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Card } from "react-bootstrap";
 import Heading from "../../components/UI/Heading";
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
@@ -15,6 +15,7 @@ import { ShemaLogin } from "../../schemas/SchemaKorisnik";
 // Demo podaci se čitaju iz istog izvora iz kojeg se pune localStorage, pa se
 // kartice "Klikni za Admina/Korisnika" ne mogu razići s lozinkom u podacima.
 import { korisnici as demoKorisnici, DEMO_LOZINKA } from "../../services/korisnici/KorisniciData";
+import useLoading from "../../hooks/useLoading"
 
 const demoAdmin = demoKorisnici.find((korisnik) => korisnik.uloga === "admin");
 const demoKorisnik = demoKorisnici.find((korisnik) => korisnik.uloga === "korisnik");
@@ -39,6 +40,8 @@ export default function Login() {
   const imaGresku = Object.keys(errors).length > 0;
   const prvaGreska = Object.values(errors)[0];
 
+  const { showLoading, hideLoading, postaviNaslov } = useLoading()
+  useEffect(() => {(postaviNaslov('Prijava'))})
   async function handleSubmit(e) {
     e.preventDefault();
 

@@ -35,13 +35,15 @@ import {
 
 import { APP_NAME, PrefixStorage, DATA_SOURCE } from '../constants';
 import useModal from '../hooks/useModal';
-
+import useLoading from ".././hooks/useLoading"
 /*
  * Ključevi moraju biti isti kao u *ServicesLocalStorage datotekama — one sve
  * koriste PrefixStorage (e4.kategorije, e4.oznake, ...). Prije su ovdje bili
  * goli nazivi ('kategorije'), pa je presipavanje pisalo u ključeve koje servisi
  * nikad ne čitaju.
  */
+
+ 
 const LOCALSTORAGE_KLJUCEVI = {
   kategorije: PrefixStorage.KATEGORIJE,
   oznake: PrefixStorage.OZNAKE,
@@ -82,6 +84,7 @@ const faker = new Faker({ locale: [hr, en] });
 
 /** Servisi vraćaju { data: [...] } (korisnici i { success }), ali neki mogu i goli array. */
 const dohvatiListu = async (servis) => {
+   
   const odgovor = await servis.get();
   const podaci = Array.isArray(odgovor) ? odgovor : odgovor?.data;
   return Array.isArray(podaci) ? podaci : [];
@@ -399,6 +402,8 @@ function GumbRadnje({
 }
 
 export default function GeneriranjePodataka() {
+  const { showLoading, hideLoading, postaviNaslov } = useLoading()
+  useEffect(() => {(postaviNaslov('Generiranje Podataka'))})
   const jeMemorija = DATA_SOURCE === 'memorija';
   const jeLocalStorage = DATA_SOURCE === 'localStorage';
   const jeFirebase = DATA_SOURCE === 'firebase';

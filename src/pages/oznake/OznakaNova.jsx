@@ -1,13 +1,19 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { RouteNames } from "../../constants";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import Heading from "../../components/UI/Heading";
 import { FaPlus } from "react-icons/fa";
+import useLoading from "../../hooks/useLoading";
 
+ 
 export default function OznakaNova() {
   const navigate = useNavigate();
-
+    const { showLoading, hideLoading, postaviNaslov } = useLoading()
+   useEffect(() => {
+       postaviNaslov('Oznake-dodajoznaku')
+    }, [])
   async function dodaj(oznaka) {
     try {
       await OznakeServices.dodaj(oznaka);
@@ -47,7 +53,7 @@ export default function OznakaNova() {
         </Row>
 
         <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
-          <Button type="submit" variant="success">
+          <Button type="submit" variant="outline-success">
             <FaPlus className="me-2" aria-hidden="true" />
             Dodaj
           </Button>

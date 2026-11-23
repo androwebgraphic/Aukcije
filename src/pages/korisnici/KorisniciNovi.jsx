@@ -1,18 +1,21 @@
 import { Form, Button, Row, Col, Alert } from "react-bootstrap"
 import { FaPlus } from "react-icons/fa"
-import { RouteNames } from "../../constants"
+import { RouteNames,APP_NAME } from "../../constants"
 import { useNavigate } from "react-router-dom"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import SchemaKorisnik from "../../schemas/SchemaKorisnik"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Heading from "../../components/UI/Heading"
+import useLoading from "../../hooks/useLoading"
 
 export default function KorisniciNovi() {
 
   const navigate = useNavigate()
   const [errors, setErrors] = useState({})
   const [poruka, setPoruka] = useState(null)
-
+    useEffect(() => {
+        document.title = "Korisnici-dodaj, " + APP_NAME
+    }, [])
   async function dodaj(korisnik) {
     try {
       const rezultat = await KorisniciService.dodaj(korisnik)
@@ -84,7 +87,7 @@ export default function KorisniciNovi() {
       <Form onSubmit={handleSubmit} noValidate>
 
         <Row>
-          <Col xs={12}>
+          <Col xs={6}>
             <Form.Group controlId="email" className="mb-3">
               <Form.Label className="fw-bold">Email</Form.Label>
               <Form.Control
@@ -99,10 +102,10 @@ export default function KorisniciNovi() {
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
-        </Row>
+    
 
-        <Row>
-          <Col xs={12}>
+      
+          <Col xs={6}>
             <Form.Group controlId="lozinka" className="mb-3">
               <Form.Label className="fw-bold">Lozinka</Form.Label>
               <Form.Control
@@ -124,7 +127,7 @@ export default function KorisniciNovi() {
         </Row>
 
         <Row>
-          <Col xs={12}>
+          <Col xs={6}>
             <Form.Group controlId="uloga" className="mb-3">
               <Form.Label className="fw-bold">Uloga</Form.Label>
               <Form.Select
@@ -146,7 +149,7 @@ export default function KorisniciNovi() {
         <hr />
 
         <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4 forma-akcije">
-          <Button type="submit" variant="success">
+          <Button type="submit" variant="outline-success">
             <FaPlus className="me-2" aria-hidden="true" />
             Dodaj novog korisnika
           </Button>

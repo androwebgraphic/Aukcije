@@ -16,6 +16,7 @@ import KorisniciService from "../../services/korisnici/KorisniciService"
 import { APP_NAME, RouteNames } from "../../constants"
 import useLoading from "../../hooks/useLoading"
 import useModal from "../../hooks/useModal"
+import Heading from "../../components/UI/Heading"
 
 
   
@@ -82,14 +83,14 @@ export default function KorisniciLista() {
     const [stranica, setStranica] = useState(1)
     const [velicinaStranice, setVelicinaStranice] = useState(10)
   const { showModal } = useModal()
-    const { showLoading, hideLoading } = useLoading()
+    const { showLoading, hideLoading, postaviNaslov } = useLoading()
     useEffect(() => {
-        document.title = "Korisnici, " + APP_NAME
+        document.title = "Korisnici-Lista, " + APP_NAME
     }, [])
 
     useEffect(() => {
-        ucitajKorisnike()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+      ucitajKorisnike()
+     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
   async function ucitajKorisnike() {
@@ -207,8 +208,10 @@ export default function KorisniciLista() {
     return (
         <>
         <Row className="g-2 align-items-center my-3">
-               <Row>
-                 <Col xs={6}>
+          <Row>
+            <Heading as="h2">Lista korisnika  ({korisnici.length} korisnika)</Heading>
+            <Col xs={6}>
+      
                           <Button as={Link} to={RouteNames.KORISNIK_NOVI} variant="success">
                               <FaPlus className="me-2" aria-hidden="true" />
                               Novi korisnik

@@ -14,11 +14,12 @@ export default function OznakeList() {
   const [oznake, setOznake] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  const { showLoading, hideLoading } = useLoading();
+  const { showLoading, hideLoading,postaviNaslov } = useLoading();
   const { showModal } = useModal();
-
+ 
   useEffect(() => {
     ucitajOznake();
+    postaviNaslov('Oznake-Lista')
   }, []);
 
   async function ucitajOznake() {

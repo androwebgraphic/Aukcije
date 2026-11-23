@@ -31,9 +31,8 @@ import IkonaKategorije from "../../components/UI/IkonaKategorije";
 import Odbrojavanje from "../../components/Odbrojavanje";
 import useAuth from "../../hooks/useAuth";
 import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
-import useLoading from "../../hooks/useLoading"
 import useModal from "../../hooks/useModal"
-
+import useLoading from "../../hooks/useLoading";
 
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
@@ -58,10 +57,12 @@ function OpisPredmeta({ tekst }) {
   const tekstRef = useRef(null);
   const sadrzaj = (tekst || "").trim() || "Bez opisa.";
 
-const { showLoading, hideLoading } = useLoading()
+const { showLoading, hideLoading, postaviNaslov} = useLoading()
   // Provjeri stvarno prelijevanje teksta (ne broj znakova), pa se "…"
   // prikazuje bez obzira na to koliko riječi opis ima ili koliko je kartica široka.
+
   useEffect(() => {
+    postaviNaslov('Predmeti-Lista')
     const element = tekstRef.current;
     if (!element || prosireno) return;
 

@@ -15,6 +15,7 @@ import useAuth from "../../hooks/useAuth";
 import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
 import useModal from "../../hooks/useModal";
 import useNespremljenePromjene from "../../hooks/useNespremljenePromjene";
+import useLoading from "../../hooks/useLoading";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function PredmetiPromjena() {
   const { potvrdi } = useModal();
   const [imaPromjena, setImaPromjena] = useState(false);
   useNespremljenePromjene(imaPromjena);
-
+const { showLoading, hideLoading, postaviNaslov} = useLoading()
   const [predmet, setPredmet] = useState({
     naziv: "",
     opis: "",
@@ -53,6 +54,7 @@ export default function PredmetiPromjena() {
   const autoCompleteRef = useRef(null);
 
   useEffect(() => {
+    postaviNaslov('Predmet-promijena')
     ucitajPodatke();
     function handleClickOutside(event) {
       if (autoCompleteRef.current && !autoCompleteRef.current.contains(event.target)) {

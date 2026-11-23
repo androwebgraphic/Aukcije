@@ -108,7 +108,7 @@ function NavMain() {
           
             <NavDropdown title="Korisnik">
                     <NavDropdown.Item disabled aria-label="Prijavljeni korisnik" >
-                      <Badge bg="success" >{authUser?.name}</Badge>
+                      <Badge bg="success" >{authUser?.email}</Badge>
                       {isAdmin && <Badge bg="success" className="ms-2" >admin</Badge> ||  <Badge bg="warning" className="ms-2 ">korisnik</Badge>}
                     
                     </NavDropdown.Item>

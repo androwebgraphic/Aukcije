@@ -14,6 +14,7 @@ import { RouteNames } from "../../constants";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import useModal from "../../hooks/useModal";
 import useNespremljenePromjene from "../../hooks/useNespremljenePromjene";
+import useLoading from "../../hooks/useLoading";
 
 export default function KategorijePromijena() {
   const navigate = useNavigate();
@@ -30,9 +31,10 @@ export default function KategorijePromijena() {
   const nazivRef = useRef();
   const opisRef = useRef();
   const datumRef = useRef();
-
+  const { showLoading, hideLoading, postaviNaslov } = useLoading()
   useEffect(() => {
     ucitajKategoriju();
+    postaviNaslov('Kategorije-promijena')
   }, [params.id]);
 
   async function ucitajKategoriju() {

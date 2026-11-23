@@ -7,6 +7,7 @@ import OznakeServices from "../../services/oznake/OznakeServices";
 import useModal from "../../hooks/useModal";
 import useNespremljenePromjene from "../../hooks/useNespremljenePromjene";
 import { oznake } from "../../services/oznake/OznakeData";
+import useLoading from "../../hooks/useLoading";
 
 export default function OznakePromijena() {
   const { id } = useParams();
@@ -20,9 +21,10 @@ export default function OznakePromijena() {
   const [sveOznake, setSveOznake] = useState([]);
   const [odabranaOznaka, setOdabranaOznaka] = useState("");
   const [greska, setGreska] = useState("");
-
+  const { showLoading, hideLoading,postaviNaslov } = useLoading();
   useEffect(() => {
     ucitajPodatke();
+    postaviNaslov('Oznake-promijena')
   }, [id]);
 
   async function ucitajPodatke() {

@@ -74,7 +74,7 @@ export default function KorisnikoNovi() {
                 throw new Error(odgovor?.message || "Registracija nije uspjela.");
             }
             setShow(false)
-            navigate(RouteNames.KORISNICI); // Preusmjeravanje nakon uspješnog slanja
+            navigate(RouteNames.LOGIRANJE); // Preusmjeravanje nakon uspješnog slanja
         } catch (error) {
             console.error("Greška prilikom registracije korisnika:", error);
             setShow(false)

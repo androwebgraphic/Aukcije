@@ -74,7 +74,7 @@ export default function Login() {
 
       // Login više ne preusmjerava sam (vidi AuthContext) - to radimo ovdje,
       // i to na rutu koja stvarno postoji.
-      navigate(RouteNames.HOME);
+      navigate(RouteNames.PREDMETI);
     } catch (error) {
       console.error("Greška pri prijavi:", error);
       setErrors({ opcenito: "Prijava nije uspjela. Pokušajte ponovno." });

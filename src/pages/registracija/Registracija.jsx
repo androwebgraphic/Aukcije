@@ -5,16 +5,20 @@ import { RouteNames } from "../../constants"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import { ShemaRegistracija } from "../../schemas/SchemaKorisnik"
 import Heading from "../../components/UI/Heading";
-
+import {useEffect} from "react"
 import Uvjeti from "../../pages/Uvjeti"
 import { useState } from "react";
-
+import useLoading from "../../hooks/useLoading";
 /**
  * Provjera postoji li već korisnik s tom e-mail adresom.
  * Usporedba ignorira velika/mala slova i praznine na početku/kraju.
  * Baca grešku ako popis korisnika nije moguće dohvatiti — u tom slučaju
  * registraciju ne puštamo naslijepo.
  */
+
+
+
+
 async function postojiKorisnikSEmailom(email) {
     const trazeni = String(email ?? "").trim().toLowerCase();
     if (!trazeni) return false;
@@ -31,6 +35,8 @@ async function postojiKorisnikSEmailom(email) {
     return lista.some(
         (korisnik) => String(korisnik?.email ?? "").trim().toLowerCase() === trazeni
     );
+  
+  const { showLoading, hideLoading, postaviNaslov} = useLoading()
 }
 
 // Zod greške pretvaramo u { nazivPolja: prvaPoruka } kako bi svako polje
@@ -45,14 +51,27 @@ function greskePoPoljima(error) {
 }
 
 export default function KorisnikoNovi() {
+      
+
+
+
     const navigate = useNavigate();
     const [show, setShow] = useState(false)
     const [korisnikZaUnos, setKorisnikZaUnos] = useState({})
     const [greska, setGreska] = useState("")
     const [errors, setErrors] = useState({})
-    const [saljem, setSaljem] = useState(false)
+  const [saljem, setSaljem] = useState(false)
+    const { showLoading, hideLoading, postaviNaslov } = useLoading()
+        
+  useEffect(() => {
+  
+    postaviNaslov('Registarcija')
+}) 
+
 
     async function dodaj() {
+      
+
         if (saljem) return;
 
         setSaljem(true)

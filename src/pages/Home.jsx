@@ -11,6 +11,7 @@ import OznakeServices from "../services/oznake/OznakeServices";
 import { LordIcon } from "@lordicon/react";
 // Inicijalizacija LordIcon elementa s Lottie engineom
 // defineElement(lottie.loadAnimation);
+import useLoading from "../hooks/useLoading";
 
 export default function Home() {
   const [brojKategorija, setBrojKategorija] = useState(0);
@@ -22,8 +23,9 @@ export default function Home() {
   const [animatedPredmeti, setAnimatedPredmeti] = useState(0);
   const [animatedKorisnici, setAnimatedKorisnici] = useState(0);
   const [animatedOznake, setAnimatedOznake] = useState(0);
-
+const { showLoading, hideLoading, postaviNaslov} = useLoading()
   useEffect(() => {
+    postaviNaslov('Početna')
     const fetchData = async () => {
       try {
         const kategorijeRezultat = await KategorijeServices.get();

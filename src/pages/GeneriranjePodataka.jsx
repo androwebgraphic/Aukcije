@@ -8,6 +8,15 @@ import OznakeServices from '../services/oznake/OznakeServices';
 import KorisniciService from '../services/korisnici/KorisniciService';
 
 /*
+ * Presipavanje uvijek čita iz memorije, neovisno o DATA_SOURCE. Dispečeri
+ * (npr. PredmetiServices) u firebase načinu vraćaju Firestore, pa se ovdje
+ * memorijski servisi uvoze izravno.
+ */
+import KategorijeServicesMemorija from '../services/kategorije/KategorijeServicesMemorija';
+import OznakeServicesMemorija from '../services/oznake/OznakeServicesMemorija';
+import PredmetiServicesMemorija from '../services/predmeti/PredmetiServicesMemorija';
+
+/*
  * KorisniciData je izvor istine za prijenos u localStorage:
  * KorisniciServiceMemorija svoje korisnike drži upravo u ovom arrayu
  * (dodaj() radi push) i hashira lozinke, dok get() namjerno NE vraća
@@ -25,6 +34,7 @@ import {
 } from '../utils/demoRacuni';
 
 import { APP_NAME, PrefixStorage, DATA_SOURCE } from '../constants';
+import useModal from '../hooks/useModal';
 
 /*
  * Ključevi moraju biti isti kao u *ServicesLocalStorage datotekama — one sve
@@ -323,6 +333,39 @@ const obrisiKolekciju = async (kljuc) => {
 const dohvatiKorisnikeZaPrijenos = () =>
   korisniciMemorije.map((korisnik) => ({ ...korisnik, id: String(korisnik.id) }));
 
+/** Trenutno stanje memorije: kategorije, oznake, predmeti i korisnici (s hashovima). */
+const dohvatiMemoriju = async () => {
+  const [kategorije, oznake, predmeti] = await Promise.all([
+    KategorijeServicesMemorija.get(),
+    OznakeServicesMemorija.get(),
+    PredmetiServicesMemorija.get(),
+  ]);
+
+  return {
+    kategorije: kategorije?.data ?? [],
+    oznake: oznake?.data ?? [],
+    predmeti: predmeti?.data ?? [],
+    korisnici: dohvatiKorisnikeZaPrijenos(),
+  };
+};
+
+/** Id iz broja, stringa ili objekta (npr. kategorija: { id: 1 }). */
+const dohvatiId = (vrijednost) => {
+  if (vrijednost === null || vrijednost === undefined || vrijednost === '') return null;
+  if (typeof vrijednost === 'object') {
+    return (
+      vrijednost.id ?? vrijednost.kategorijaId ?? vrijednost.kategorija_id ?? vrijednost.sifra ?? null
+    );
+  }
+  return vrijednost;
+};
+
+/** Stari id -> novi Firestore id; null ako referenca nije pronađena. */
+const preslikaj = (mapa, vrijednost) => {
+  const id = dohvatiId(vrijednost);
+  return id === null ? null : (mapa.get(String(id)) ?? null);
+};
+
 function GumbRadnje({
   radnja,
   kljuc,
@@ -371,6 +414,8 @@ export default function GeneriranjePodataka() {
   const [radnja, setRadnja] = useState(null);
 
   const zauzet = radnja !== null;
+
+  const { potvrdi } = useModal();
 
   useEffect(() => {
     document.title = `Generiranje podataka · ${APP_NAME}`;
@@ -505,17 +550,17 @@ export default function GeneriranjePodataka() {
     );
   };
 
-  const handleObrisi = (kljuc) => {
+  const handleObrisi = async (kljuc) => {
     const konfiguracija = KONFIGURACIJA_BRISANJA[kljuc];
     const pitanje =
       `Jeste li sigurni da želite obrisati ${konfiguracija.akuzativ}?` +
-      (konfiguracija.napomena ? `\n\n${konfiguracija.napomena}` : '');
+      (konfiguracija.napomena ? ` ${konfiguracija.napomena}` : '');
 
-    if (!window.confirm(pitanje)) {
+    if (!(await potvrdi(pitanje))) {
       return;
     }
 
-    izvrsi(
+    return izvrsi(
       `obrisi-${kljuc}`,
       () => obrisiKolekciju(kljuc),
       ({ obrisano, preskoceno }) =>
@@ -524,23 +569,23 @@ export default function GeneriranjePodataka() {
     );
   };
 
-  const handleMemorijaULocalStorage = () => {
-    if (!window.confirm('Jeste li sigurni da želite presipati sve podatke iz memorije u localStorage?')) {
+  const handleMemorijaULocalStorage = async () => {
+    if (
+      !(await potvrdi(
+        'Jeste li sigurni da želite presipati sve podatke iz memorije u localStorage?'
+      ))
+    ) {
       return;
     }
 
     return izvrsi(
       'presipavanje',
       async () => {
-        const [predmeti, kategorije, oznake, korisnici] = await Promise.all([
-          dohvatiListu(PredmetiServices),
-          dohvatiListu(KategorijeServices),
-          dohvatiListu(OznakeServices),
-          Promise.resolve(dohvatiKorisnikeZaPrijenos()),
-        ]);
-
-        const sve = { predmeti, kategorije, oznake, korisnici };
-        const ukupno = predmeti.length + kategorije.length + oznake.length + korisnici.length;
+        // Uvijek iz memorije: dohvatiListu(servis) bi u firebase načinu vratio
+        // Firestore, a ne memoriju.
+        const sve = await dohvatiMemoriju();
+        const ukupno =
+          sve.predmeti.length + sve.kategorije.length + sve.oznake.length + sve.korisnici.length;
 
         if (ukupno === 0) {
           throw new Error(
@@ -559,6 +604,136 @@ export default function GeneriranjePodataka() {
         `Presipano u localStorage: ${sve.kategorije.length} kategorija, ${sve.oznake.length} oznaka, ` +
         `${sve.korisnici.length} korisnika, ${sve.predmeti.length} predmeta. ` +
         `Za korištenje postavite DATA_SOURCE = 'localStorage' i osvježite stranicu.`
+    );
+  };
+
+  const handleMemorijaUFirebase = async () => {
+    const pitanje =
+      'Pretočiti sve podatke iz memorije u Firestore? ' +
+      'Postojeći zapisi se neće obrisati — ako su isti podaci već u Firestoreu, ' +
+      'ponovnim pretakanjem nastaju duplikati.';
+
+    if (!(await potvrdi(pitanje))) {
+      return;
+    }
+
+    return izvrsi(
+      'presipavanje-firebase',
+      async () => {
+        const { kategorije, oznake, predmeti, korisnici } = await dohvatiMemoriju();
+        const ukupno =
+          kategorije.length + oznake.length + predmeti.length + korisnici.length;
+
+        if (ukupno === 0) {
+          throw new Error('Memorija je prazna — nema se što pretočiti u Firestore.');
+        }
+
+        const [kategorijeFB, oznakeFB, predmetiFB, korisniciFB] = await Promise.all([
+          import('../services/kategorije/KategorijeServicesFirebase'),
+          import('../services/oznake/OznakeServicesFirebase'),
+          import('../services/predmeti/PredmetiFirebaseServices'),
+          import('../services/korisnici/KorisniciServiceFirebase'),
+        ]);
+
+        const servisKategorija = kategorijeFB.default;
+        const servisOznaka = oznakeFB.default;
+        const servisPredmeta = predmetiFB.default;
+        const servisKorisnika = korisniciFB.default;
+
+        // 1) Korisnici. Memorija čuva bcrypt hashove, a dodajBezHash ih ne
+        //    hashira ponovno — prijava s istom lozinkom zato i dalje radi.
+        const mapaKorisnika = new Map();
+        for (const korisnik of korisnici) {
+          const { id, ...ostalo } = korisnik;
+          const odgovor = await servisKorisnika.dodajBezHash(ostalo);
+
+          if (!odgovor?.success) {
+            throw new Error(
+              `Korisnika ${korisnik.email} nije moguće pretočiti: ${odgovor?.message ?? 'nepoznata greška'}`
+            );
+          }
+
+          mapaKorisnika.set(String(id), odgovor.data?.id ?? null);
+        }
+
+        // 2) Kategorije — prije predmeta jer ih predmeti referenciraju.
+        const mapaKategorija = new Map();
+        for (const kategorija of kategorije) {
+          const { id, ...ostalo } = kategorija;
+          const odgovor = await servisKategorija.dodaj(ostalo);
+
+          if (!odgovor?.success) {
+            throw new Error(
+              `Kategoriju "${kategorija.naziv}" nije moguće pretočiti: ${odgovor?.message ?? 'nepoznata greška'}`
+            );
+          }
+
+          mapaKategorija.set(String(id), odgovor.id ?? null);
+        }
+
+        // 3) Oznake — također prije predmeta.
+        const mapaOznaka = new Map();
+        for (const oznaka of oznake) {
+          const { id, ...ostalo } = oznaka;
+          const odgovor = await servisOznaka.dodaj(ostalo);
+
+          if (!odgovor?.success) {
+            throw new Error(
+              `Oznaku "${oznaka.naziv}" nije moguće pretočiti: ${odgovor?.message ?? 'nepoznata greška'}`
+            );
+          }
+
+          mapaOznaka.set(String(id), odgovor.data?.id ?? null);
+        }
+
+        // 4) Predmeti — stare id-eve zamjenjujemo novim Firestore id-evima.
+        let brojPredmeta = 0;
+        for (const predmet of predmeti) {
+          const { id, ...ostalo } = predmet;
+
+          const noviPredmet = {
+            ...ostalo,
+            kategorija: preslikaj(mapaKategorija, predmet.kategorija),
+            oznake: Array.isArray(predmet.oznake)
+              ? predmet.oznake
+                  .map((oznaka) => preslikaj(mapaOznaka, oznaka))
+                  .filter((vrijednost) => vrijednost !== null)
+              : [],
+            ponude: Array.isArray(predmet.ponude)
+              ? predmet.ponude.map((ponuda) => ({
+                  ...ponuda,
+                  korisnik: preslikaj(mapaKorisnika, ponuda?.korisnik),
+                }))
+              : [],
+            omiljeni: Array.isArray(predmet.omiljeni)
+              ? predmet.omiljeni
+                  .map((korisnik) => preslikaj(mapaKorisnika, korisnik))
+                  .filter((vrijednost) => vrijednost !== null)
+              : [],
+          };
+
+          const odgovor = await servisPredmeta.dodaj(noviPredmet);
+
+          if (!odgovor?.success) {
+            throw new Error(
+              `Predmet "${predmet.naziv}" nije moguće pretočiti: ${odgovor?.message ?? 'nepoznata greška'}`
+            );
+          }
+
+          brojPredmeta += 1;
+        }
+
+        return {
+          kategorije: kategorije.length,
+          oznake: oznake.length,
+          korisnici: korisnici.length,
+          predmeti: brojPredmeta,
+        };
+      },
+      (brojevi) =>
+        `Pretočeno u Firestore: ${brojevi.kategorije} kategorija, ${brojevi.oznake} oznaka, ` +
+        `${brojevi.korisnici} korisnika, ${brojevi.predmeti} predmeta. ` +
+        "Za korištenje postavite DATA_SOURCE = 'firebase' i osvježite stranicu."
     );
   };
 
@@ -774,30 +949,42 @@ export default function GeneriranjePodataka() {
         </Col>
       </Row>
 
-      {jeMemorija && (
+      {(jeMemorija || jeFirebase) && (
         <>
           <hr className="my-4" />
 
           <h3>Presipavanje podataka</h3>
           <p className="text-muted">
-            Kopira trenutno stanje iz memorije u <code>localStorage</code> (uključujući sve što ste
-            upravo generirali). Nakon presipavanja postavite <code>DATA_SOURCE = 'localStorage'</code>{' '}
-            u <code>constants</code> i osvježite stranicu.
+            Kopira podatke iz <strong>memorije</strong> (početni podaci iz <code>*Data.js</code> plus
+            sve što je u ovom pokretanju generirano) u <code>localStorage</code> ili u Firestore.
+            Firestore zapisi se ne brišu — ako su isti podaci već tamo, ponovno presipavanje stvara
+            duplikate.
           </p>
 
           <Row className="mt-3">
-            <Col md={3}>
+            <Col md={4}>
               <GumbRadnje
                 radnja={radnja}
                 kljuc="presipavanje"
-                tekst="Presipaj"
+                tekst="Iz memorije u localStorage"
                 tekstUTijeku="Presipavanje..."
                 varijanta="danger"
                 onClick={handleMemorijaULocalStorage}
                 className="w-100 mb-2"
               />
             </Col>
-            <Col md={3}>
+            <Col md={4}>
+              <GumbRadnje
+                radnja={radnja}
+                kljuc="presipavanje-firebase"
+                tekst="Iz memorije u Firebase"
+                tekstUTijeku="Pretakanje..."
+                varijanta="danger"
+                onClick={handleMemorijaUFirebase}
+                className="w-100 mb-2"
+              />
+            </Col>
+            <Col md={4}>
               <GumbRadnje
                 radnja={radnja}
                 kljuc="provjeri-spremiste"

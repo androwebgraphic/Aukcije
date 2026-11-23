@@ -5,6 +5,8 @@ import { z } from "zod"
 import KorisniciService from "../../services/korisnici/KorisniciService"
 import { RouteNames } from "../../constants"
 import Heading from "../../components/UI/Heading"
+import useModal from "../../hooks/useModal"
+import useNespremljenePromjene from "../../hooks/useNespremljenePromjene"
 
 const ShemaPromjenaKorisnika = z.object({
   email: z
@@ -31,6 +33,10 @@ export default function KorisniciPromijena() {
   const [greska, setGreska] = useState("")
   const [ucitavanje, setUcitavanje] = useState(true)
 
+  const { potvrdi } = useModal()
+  const [imaPromjena, setImaPromjena] = useState(false)
+  useNespremljenePromjene(imaPromjena)
+
   useEffect(() => {
     ucitajKorisnika()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,6 +58,7 @@ export default function KorisniciPromijena() {
       setKorisnik(podaci)
       setEmail(podaci.email || "")
       setUloga(podaci.uloga || "")
+      setImaPromjena(false)
     } catch (error) {
       console.error("Greška pri dohvaćanju korisnika:", error)
       alert("Greška pri dohvaćanju korisnika")
@@ -82,6 +89,8 @@ export default function KorisniciPromijena() {
     }
 
     setErrors({})
+
+    if (!(await potvrdi("Sigurno spremiti promjene?"))) return
 
     try {
       const odgovor = await KorisniciService.promijeni(params.id, rezultat.data)
@@ -139,6 +148,7 @@ export default function KorisniciPromijena() {
                 onChange={(e) => {
                   setEmail(e.target.value)
                   ocistiGresku("email")
+                  setImaPromjena(true)
                 }}
               />
               <Form.Control.Feedback type="invalid">
@@ -157,6 +167,7 @@ export default function KorisniciPromijena() {
                 onChange={(e) => {
                   setUloga(e.target.value)
                   ocistiGresku("uloga")
+                  setImaPromjena(true)
                 }}
               >
                 <option value="">Odaberite ulogu...</option>
@@ -179,7 +190,10 @@ export default function KorisniciPromijena() {
           <Button
             type="button"
             variant="outline-danger"
-            onClick={() => navigate(RouteNames.KORISNICI)}
+            onClick={async () => {
+              if (imaPromjena && !(await potvrdi("Odbaciti nespremljene promjene?"))) return
+              navigate(RouteNames.KORISNICI)
+            }}
           >
             Odustani
           </Button>

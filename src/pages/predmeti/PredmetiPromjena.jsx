@@ -13,12 +13,18 @@ import { ShemaPredmetPromijena } from "../../schemas/SchemaPredmetPromijena";
 import { normalizirajKategorijuId } from "../../utils/kategorije";
 import useAuth from "../../hooks/useAuth";
 import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
+import useModal from "../../hooks/useModal";
+import useNespremljenePromjene from "../../hooks/useNespremljenePromjene";
 
 export default function PredmetiPromjena() {
   const navigate = useNavigate();
   const params = useParams();
   const { authUser } = useAuth();
   const [zabranjeno, setZabranjeno] = useState(false);
+
+  const { potvrdi } = useModal();
+  const [imaPromjena, setImaPromjena] = useState(false);
+  useNespremljenePromjene(imaPromjena);
 
   const [predmet, setPredmet] = useState({
     naziv: "",
@@ -158,11 +164,13 @@ export default function PredmetiPromjena() {
     } catch (error) { 
       console.error("Greška u ucitajPodatke:", error); 
     }
+    setImaPromjena(false);
   }
 
   function handleChange(e) {
     const { name, value } = e.target;
     setPredmet(prev => ({ ...prev, [name]: value }));
+    setImaPromjena(true);
   }
 
   const ocistiGresku = (nazivPolja) => {
@@ -191,6 +199,7 @@ export default function PredmetiPromjena() {
     setOdabraneOznake([...odabraneOznake, oznaka]);
     setPretragaOznaka("");
     setPrikaziAutoComplete(false);
+    setImaPromjena(true);
   }
 
   async function kreirajI_DodajOznaku() {
@@ -221,6 +230,7 @@ export default function PredmetiPromjena() {
 
       setPretragaOznaka("");
       setPrikaziAutoComplete(false);
+      setImaPromjena(true);
     } catch (error) {
       console.error("Greška pri kreiranju nove oznake:", error);
     }
@@ -251,12 +261,14 @@ export default function PredmetiPromjena() {
         const dataUrl = canvas.toDataURL('image/png');
         setSlike(prev => [...prev, dataUrl]); 
         setAktivnaSlikaZaCrop(null); 
+        setImaPromjena(true);
       }
     }
   }
 
   function obrisiSliku(indexZaBrisanje) {
     setSlike(prev => prev.filter((_, index) => index !== indexZaBrisanje));
+    setImaPromjena(true);
   }
 
   async function handleSubmit(e) {
@@ -297,8 +309,11 @@ export default function PredmetiPromjena() {
 
     const azuriraniPredmet = { ...podaciZaValidaciju, ...rezultat.data };
 
+    if (!(await potvrdi("Sigurno spremiti promjene?"))) return;
+
     try {
       await PredmetiServices.promijeni(params.id, azuriraniPredmet);
+      setImaPromjena(false);
       navigate(RouteNames.PREDMETI);
     } catch (error) {
       console.error("Greška prilikom spremanja:", error);
@@ -356,6 +371,7 @@ export default function PredmetiPromjena() {
                 onChange={(e) => {
                   setOdabranaKategorija(e.target.value);
                   ocistiGresku("kategorija");
+                  setImaPromjena(true);
                 }}
                 isInvalid={!!errors.kategorija}
               >
@@ -384,7 +400,10 @@ export default function PredmetiPromjena() {
                       type="button"
                       className="btn-close btn-close-white btn-sm"
                       aria-label={`Ukloni oznaku ${oznaka.naziv}`}
-                      onClick={() => setOdabraneOznake(odabraneOznake.filter((_, i) => i !== index))}
+                      onClick={() => {
+                        setOdabraneOznake(odabraneOznake.filter((_, i) => i !== index));
+                        setImaPromjena(true);
+                      }}
                     ></button>
                   </span>
                 ))}
@@ -600,7 +619,10 @@ export default function PredmetiPromjena() {
           <Button
             type="button"
             variant="outline-danger"
-            onClick={() => navigate(RouteNames.PREDMETI)}>
+            onClick={async () => {
+              if (imaPromjena && !(await potvrdi("Odbaciti nespremljene promjene?"))) return;
+              navigate(RouteNames.PREDMETI);
+            }}>
             Odustani
           </Button>
         </div>

@@ -6,23 +6,18 @@ import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants"
 import { FaArrowTurnUp } from "react-icons/fa6"
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa"
-
 import Heading from "../../components/UI/Heading"
 import { motion } from "framer-motion"
 import IkonaKategorije from "../../components/UI/IkonaKategorije"
 import useLoading from "../../hooks/useLoading"
-
+import useModal from "../../hooks/useModal"
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-
   if (!text) return null; 
-
   if (text.length <= maxLength) {
     return <span>{text}</span>;
   }
-
   const displayedText = isExpanded ? text : `${text.substring(0, maxLength)}`;
-
   return (
     <span>
       {displayedText}
@@ -35,16 +30,18 @@ function ExpandableText({ text, maxLength = 100 }) {
     </span>
   );
 }
-
 export default function KategorijaList() {
   const [kategorije, setKategorije] = useState([])
   const [predmeti, setPredmeti] = useState([])
   const navigate = useNavigate()
   const { showLoading, hideLoading } = useLoading()
+    const { showModal } = useModal()
   
   useEffect(() => { 
+    showLoading()
     ucitajKategorije()
     ucitajPredmete()
+    hideLoading()
   }, [])
   
   async function ucitajKategorije() {
@@ -60,7 +57,6 @@ export default function KategorijaList() {
       hideLoading()
     }
   }
-
   async function ucitajPredmete() {
     showLoading()
     try {
@@ -73,19 +69,24 @@ export default function KategorijaList() {
       hideLoading()
     }
   }
-
   async function obrisi(id) {
-    if (!confirm('Želite obrisati?')) {
-      return
-    }
-    await KategorijeServices.obrisi(id)
-    ucitajKategorije()
+    showModal('Sigurno OBRISATI?', async () => {
+      showLoading()
+      try {
+        await KategorijeServices.obrisi(id)
+        await ucitajKategorije()
+      } catch (err) {
+        console.error("Greška pri brisanju kategorije:", err)
+        alert("Kategoriju nije moguće obrisati. Provjerite postoji li još predmeta u njoj.")
+      } finally {
+        hideLoading()
+      }
+    })
   }
 const deklinirajOglas = (broj) => {
   const kolicina = Number(broj) || 0; // Osigurava da je uvijek broj
   const mod100 = kolicina % 100;
   const mod10 = kolicina % 10;
-
   if (mod10 === 1 && mod100 !== 11) {
     return `${kolicina} oglas`;
   }
@@ -93,14 +94,12 @@ const deklinirajOglas = (broj) => {
 };
   return (
     <>
-
         <motion.div 
           initial={{ opacity: 0, x: -100 }} 
           animate={{ opacity: 1, x: 0 }}     
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
         >
           <Heading as='h2'> Lista Kategorija <small>({kategorije.length})</small> </Heading>
-
           <Link to={RouteNames.KATEGORIJA_NOVA}>
             <Button variant="success" className="mb-3">
               <FaPlus className="me-2" aria-hidden="true" />
@@ -108,12 +107,10 @@ const deklinirajOglas = (broj) => {
             </Button>
           </Link>
         </motion.div>
-
         {/* Ako nema kategorija, prikazujemo poruku da korisnik zna da je lista prazna */}
         {kategorije.length === 0 && (
           <p className="text-muted">Trenutno nema učitanih kategorija ili se podaci još učitavaju...</p>
         )}
-
         {/* Grid sa Bootstrap Card elementima */}
         <Row xs={1} sm={1} md={2} lg={3} className="g-2">
           {kategorije && kategorije.map((c, index) => {
@@ -123,12 +120,9 @@ const deklinirajOglas = (broj) => {
                 p.kategorijeId ?? 
                 p.kategorijaId ?? 
                 p.kategorija_id;
-
               return String(katId ?? "").trim() === String(c.id ?? "").trim();
             }).length : 0;
-
             const jedinstveniKey = c.id ? `${c.id}-${index}` : index;
-
             return (
               <Col key={jedinstveniKey} xs={12} sm={6} className="d-flex">
                 <motion.div
@@ -153,20 +147,11 @@ const deklinirajOglas = (broj) => {
   {c.naziv} ({deklinirajOglas(brojPredmeta)})
 </Card.Title>                      </div>
                       </div>
-
                       {/* Opis kategorije */}
                       <Card.Text className="text-secondary flex-grow-1">
                         <strong>Opis:</strong>  <ExpandableText text={c.opis} maxLength={60} />
                       </Card.Text>
-
-                     {/* Broj predmeta badge */}
-                   {/* <div className="mb-3">
-                        <Badge bg="secondary" className="text-light px-2 py-2">
-                          Broj predmeta: {brojPredmeta}
-                        </Badge>
-                      </div>  */}
-
-                      {/* Akcijski gumbi – isti stil kao na listi korisnika */}
+                    
                       <div className="d-flex gap-2 pt-2 border-top">
                         <Button
                           variant="outline-warning"
@@ -190,7 +175,6 @@ const deklinirajOglas = (broj) => {
                         </Button>
                       </div>
          
-
                     </Card.Body>
                   </Card>
                 </motion.div>
@@ -198,7 +182,6 @@ const deklinirajOglas = (broj) => {
             );
           })}
         </Row>
-
     </>
   )
 }

@@ -12,10 +12,16 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Heading from "../../components/UI/Heading";
 import { RouteNames } from "../../constants";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
+import useModal from "../../hooks/useModal";
+import useNespremljenePromjene from "../../hooks/useNespremljenePromjene";
 
 export default function KategorijePromijena() {
   const navigate = useNavigate();
   const params = useParams();
+
+  const { potvrdi } = useModal();
+  const [imaPromjena, setImaPromjena] = useState(false);
+  useNespremljenePromjene(imaPromjena);
 
   const [kategorija, setKategorija] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -40,6 +46,7 @@ export default function KategorijePromijena() {
       }
 
       setKategorija(s);
+      setImaPromjena(false);
     } catch (error) {
       console.error("Greška pri učitavanju kategorije:", error);
     } finally {
@@ -56,7 +63,7 @@ export default function KategorijePromijena() {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     const naziv = nazivRef.current.value.trim();
@@ -76,6 +83,7 @@ export default function KategorijePromijena() {
     }
 
     setErrors({});
+    if (!(await potvrdi("Sigurno spremiti promjene?"))) return;
     promijeni({ naziv, opis });
   }
   if (loading || !kategorija) {
@@ -102,7 +110,10 @@ export default function KategorijePromijena() {
                 ref={nazivRef}
                 defaultValue={kategorija.naziv || ""}
                 isInvalid={!!errors.naziv}
-                onChange={() => setErrors({ ...errors, naziv: null })}
+                onChange={() => {
+                  setErrors({ ...errors, naziv: null });
+                  setImaPromjena(true);
+                }}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.naziv}
@@ -119,7 +130,10 @@ export default function KategorijePromijena() {
                 rows={3}
                 defaultValue={kategorija.opis || ""}
                 isInvalid={!!errors.opis}
-                onChange={() => setErrors({ ...errors, opis: null })}
+                onChange={() => {
+                  setErrors({ ...errors, opis: null });
+                  setImaPromjena(true);
+                }}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.opis}
@@ -139,7 +153,10 @@ export default function KategorijePromijena() {
           <Button
             type="button"
             variant="outline-danger"
-            onClick={() => navigate(RouteNames.KATEGORIJE)}>
+            onClick={async () => {
+              if (imaPromjena && !(await potvrdi("Odbaciti nespremljene promjene?"))) return;
+              navigate(RouteNames.KATEGORIJE);
+            }}>
             Odustani
           </Button>
         </div>

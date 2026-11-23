@@ -4,11 +4,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import Heading from "../../components/UI/Heading";
 import OznakeServices from "../../services/oznake/OznakeServices";
+import useModal from "../../hooks/useModal";
+import useNespremljenePromjene from "../../hooks/useNespremljenePromjene";
 import { oznake } from "../../services/oznake/OznakeData";
 
 export default function OznakePromijena() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { potvrdi } = useModal();
+  const [imaPromjena, setImaPromjena] = useState(false);
+  useNespremljenePromjene(imaPromjena);
 
   const [naziv, setNaziv] = useState("");
   const [sveOznake, setSveOznake] = useState([]);
@@ -36,6 +42,7 @@ export default function OznakePromijena() {
       const oznakaPodaci = resPojedinacna?.data !== undefined ? resPojedinacna.data : resPojedinacna;
       if (oznakaPodaci) {
         setNaziv(oznakaPodaci.naziv || "");
+        setImaPromjena(false);
         if (oznakaPodaci.oznaka !== undefined && oznakaPodaci.oznaka !== null) {
           setOdabranaOznaka(String(oznakaPodaci.oznaka));
         }
@@ -48,6 +55,7 @@ export default function OznakePromijena() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!(await potvrdi("Sigurno spremiti promjene?"))) return;
     try {
       const podaci = {
         naziv: naziv,
@@ -79,7 +87,10 @@ export default function OznakePromijena() {
               <Form.Control
                 type="text"
                 value={naziv}
-                onChange={(e) => setNaziv(e.target.value)}
+                onChange={(e) => {
+                  setNaziv(e.target.value);
+                  setImaPromjena(true);
+                }}
                 required
               />
             </Form.Group>
@@ -112,7 +123,10 @@ export default function OznakePromijena() {
           <Button
             type="button"
             variant="outline-danger"
-            onClick={() => navigate(RouteNames.OZNAKE)}>
+            onClick={async () => {
+              if (imaPromjena && !(await potvrdi("Odbaciti nespremljene promjene?"))) return;
+              navigate(RouteNames.OZNAKE);
+            }}>
             Odustani
           </Button>
         </div>

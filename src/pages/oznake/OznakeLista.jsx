@@ -7,11 +7,15 @@ import Heading from "../../components/UI/Heading";
 import { motion } from "framer-motion";
 import OznakeServices from "../../services/oznake/OznakeServices";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
+import useLoading from "../../hooks/useLoading";
+import useModal from "../../hooks/useModal";
 
 export default function OznakeList() {
   const [oznake, setOznake] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
+  const { showModal } = useModal();
 
   useEffect(() => {
     ucitajOznake();
@@ -27,15 +31,18 @@ export default function OznakeList() {
   }
 
   async function obrisi(id) {
-    if (!confirm("Želite li obrisati ovu oznaku?")) {
-      return;
-    }
-    try {
-      await OznakeServices.obrisi(id);
-      ucitajOznake();
-    } catch (error) {
-      console.error("Greška prilikom brisanja oznake:", error);
-    }
+    showModal("Želite li obrisati ovu oznaku?", async () => {
+      showLoading();
+      try {
+        await OznakeServices.obrisi(id);
+        await ucitajOznake();
+      } catch (error) {
+        console.error("Greška prilikom brisanja oznake:", error);
+        alert("Brisanje oznake nije uspjelo. Provjerite konzolu za detalje.");
+      } finally {
+        hideLoading();
+      }
+    });
   }
 
   // Filtriranje oznaka prema upisanom tekstu

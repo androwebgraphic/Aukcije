@@ -1,26 +1,32 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  brojAktivnihUcitavanja,
-  pocniUcitavanje,
-  pretplatiSeNaUcitavanje,
-  zavrsiUcitavanje,
-} from '../utils/loadingBus';
+import { APP_NAME} from '../constants';
 
 export const LoadingContext = createContext();
 
 export function LoadingProvider({ children }) {
-  // Broj aktivnih dohvata dolazi iz loadingBusa (servisi ga sami javljaju),
-  // pa se spinner prikazuje na svakoj stranici, a ne samo tamo gdje je
-  // stranica ručno zvala showLoading().
-  const [brojAktivnih, setBrojAktivnih] = useState(() => brojAktivnihUcitavanja());
+  const [loading, setLoading] = useState(false);
+  const [naslov, setNaslov] = useState('')
 
-  useEffect(() => pretplatiSeNaUcitavanje(setBrojAktivnih), []);
+  function showLoading() {
+    setLoading(true);
+  }
+
+  function hideLoading() {
+    setLoading(false);
+  }
+
+  function postaviNaslov(naslov){
+    setNaslov(naslov)
+    document.title = naslov + ', ' + APP_NAME
+  }
 
   const value = {
-    loading: brojAktivnih > 0,
-    showLoading: pocniUcitavanje,
-    hideLoading: zavrsiUcitavanje,
+    loading,
+    showLoading,
+    hideLoading,
+    naslov,
+    postaviNaslov
   };
 
   return (

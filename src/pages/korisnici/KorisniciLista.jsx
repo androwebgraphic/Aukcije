@@ -115,14 +115,22 @@ export default function KorisniciLista() {
     }
 
     async function brisanje(korisnik) {
-        if (!confirm(`Sigurno obrisati korisnika ${korisnik.email}?`)) return
-
-        const rezultat = await KorisniciService.obrisi(korisnik.id)
-        if (rezultat.success) {
-            ucitajKorisnike()
-        } else {
-            alert(rezultat.message || "Greška pri brisanju")
-        }
+        showModal(`Sigurno obrisati korisnika ${korisnik.email}?`, async () => {
+            showLoading()
+            try {
+                const rezultat = await KorisniciService.obrisi(korisnik.id)
+                if (rezultat.success) {
+                    await ucitajKorisnike()
+                } else {
+                    alert(rezultat.message || "Greška pri brisanju")
+                }
+            } catch (error) {
+                console.error("Greška pri brisanju korisnika:", error)
+                alert("Brisanje korisnika nije uspjelo. Provjerite konzolu za detalje.")
+            } finally {
+                hideLoading()
+            }
+        })
     }
 
     async function preuzmiPdf(korisniciZaPdf, naslov) {

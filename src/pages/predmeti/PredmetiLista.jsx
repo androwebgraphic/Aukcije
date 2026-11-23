@@ -32,6 +32,7 @@ import Odbrojavanje from "../../components/Odbrojavanje";
 import useAuth from "../../hooks/useAuth";
 import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
 import useLoading from "../../hooks/useLoading"
+import useModal from "../../hooks/useModal"
 
 
 function formatirajDatum(datumVrijednost) {
@@ -176,6 +177,7 @@ export default function PredmetiList() {
   const [searchParams] = useSearchParams();
   const kategorijaFilter = searchParams.get("kategorija");
 const { showLoading, hideLoading } = useLoading()
+const { showModal: otvoriPotvrdu } = useModal()
 //omiljeni predmeti
   const [omiljeniIds, setOmiljeniIds] = useState(() => {
   return JSON.parse(localStorage.getItem("omiljeniPredmeti")) || [];
@@ -250,17 +252,18 @@ const { showLoading, hideLoading } = useLoading()
       return;
     }
 
-    if (!confirm(`Želite li obrisati predmet "${predmetItem.naziv || ''}"?`)) {
-      return;
-    }
-
-    try {
-      await PredmetiServices.obrisi(identifikator);
-      ucitajPredmete();
-    } catch (error) {
-      console.error("Greška prilikom brisanja:", error);
-      alert("Brisanje predmeta nije uspjelo. Provjerite konzolu za detalje.");
-    }
+    otvoriPotvrdu(`Želite li obrisati predmet "${predmetItem.naziv || ''}"?`, async () => {
+      showLoading();
+      try {
+        await PredmetiServices.obrisi(identifikator);
+        await ucitajPredmete();
+      } catch (error) {
+        console.error("Greška prilikom brisanja:", error);
+        alert("Brisanje predmeta nije uspjelo. Provjerite konzolu za detalje.");
+      } finally {
+        hideLoading();
+      }
+    });
   }
 
   function otvoriModalZaPonudu(predmet) {

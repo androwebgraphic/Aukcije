@@ -1,4 +1,3 @@
-
 import { Modal, Button } from 'react-bootstrap';
 import { BiQuestionMark } from 'react-icons/bi';
 import useModal from '../hooks/useModal';
@@ -26,8 +25,9 @@ export default function PotvrdaModal() {
           <div 
             className='d-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-25 text-warning' 
             style={{ width: '42px', height: '42px' }}
+            aria-hidden='true'
           >
-            <BiQuestionMark size={26} />
+            <BiQuestionMark size={26} aria-hidden='true' />
           </div>
           <Modal.Title className='fs-5 fw-bold mb-0'>
             Potvrda radnje

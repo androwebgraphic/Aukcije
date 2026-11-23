@@ -36,6 +36,11 @@ import {
 import { APP_NAME, PrefixStorage, DATA_SOURCE } from '../constants';
 import useModal from '../hooks/useModal';
 import useLoading from ".././hooks/useLoading"
+import KorisniciServiceFirebase from '../services/korisnici/KorisniciServiceFirebase';
+import KategorijeServicesFirebase from '../services/kategorije/KategorijeServicesFirebase';
+import OznakeServicesFirebase from '../services/oznake/OznakeServicesFirebase';
+import PredmetiFirebaseServices from '../services/predmeti/PredmetiFirebaseServices';
+import KorisniciServiceMemorija from '../services/korisnici/KorisniciServiceMemorija';
 /*
  * Ključevi moraju biti isti kao u *ServicesLocalStorage datotekama — one sve
  * koriste PrefixStorage (e4.kategorije, e4.oznake, ...). Prije su ovdje bili
@@ -342,6 +347,7 @@ const dohvatiMemoriju = async () => {
     KategorijeServicesMemorija.get(),
     OznakeServicesMemorija.get(),
     PredmetiServicesMemorija.get(),
+    KorisniciServiceMemorija.get()
   ]);
 
   return {
@@ -613,19 +619,31 @@ export default function GeneriranjePodataka() {
   };
 
   const handleMemorijaUFirebase = async () => {
-    const pitanje =
-      'Pretočiti sve podatke iz memorije u Firestore? ' +
-      'Postojeći zapisi se neće obrisati — ako su isti podaci već u Firestoreu, ' +
-      'ponovnim pretakanjem nastaju duplikati.';
+    // const pitanje =
+    //   'Pretočiti sve podatke iz memorije u Firestore? ' +
+    //   'Postojeći zapisi se neće obrisati — ako su isti podaci već u Firestoreu, ' +
+    //   'ponovnim pretakanjem nastaju duplikati.';
 
-    if (!(await potvrdi(pitanje))) {
-      return;
-    }
+    // if (!(await potvrdi(pitanje))) {
+    //   return;
+    // }
 
     return izvrsi(
       'presipavanje-firebase',
       async () => {
-        const { kategorije, oznake, predmeti, korisnici } = await dohvatiMemoriju();
+
+  const { kategorije, oznake, predmeti, korisnici } = await dohvatiMemoriju();
+
+        //  const operateriPromises = korisnici.map(e => {
+        //         const { id, ...ostatak } = e;
+        //         console.log(ostatak)
+        //         return KorisniciServiceFirebase.dodajBezHash(ostatak);
+        //     });
+        //     await Promise.all(operateriPromises);
+
+        //     console.log('Dodao operatere')
+
+      
         const ukupno =
           kategorije.length + oznake.length + predmeti.length + korisnici.length;
 
@@ -633,24 +651,15 @@ export default function GeneriranjePodataka() {
           throw new Error('Memorija je prazna — nema se što pretočiti u Firestore.');
         }
 
-        const [kategorijeFB, oznakeFB, predmetiFB, korisniciFB] = await Promise.all([
-          import('../services/kategorije/KategorijeServicesFirebase'),
-          import('../services/oznake/OznakeServicesFirebase'),
-          import('../services/predmeti/PredmetiFirebaseServices'),
-          import('../services/korisnici/KorisniciServiceFirebase'),
-        ]);
 
-        const servisKategorija = kategorijeFB.default;
-        const servisOznaka = oznakeFB.default;
-        const servisPredmeta = predmetiFB.default;
-        const servisKorisnika = korisniciFB.default;
+
 
         // 1) Korisnici. Memorija čuva bcrypt hashove, a dodajBezHash ih ne
         //    hashira ponovno — prijava s istom lozinkom zato i dalje radi.
         const mapaKorisnika = new Map();
         for (const korisnik of korisnici) {
           const { id, ...ostalo } = korisnik;
-          const odgovor = await servisKorisnika.dodajBezHash(ostalo);
+          const odgovor = await KorisniciServiceFirebase.dodajBezHash(ostalo);
 
           if (!odgovor?.success) {
             throw new Error(
@@ -665,7 +674,7 @@ export default function GeneriranjePodataka() {
         const mapaKategorija = new Map();
         for (const kategorija of kategorije) {
           const { id, ...ostalo } = kategorija;
-          const odgovor = await servisKategorija.dodaj(ostalo);
+          const odgovor = await KategorijeServicesFirebase.dodaj(ostalo);
 
           if (!odgovor?.success) {
             throw new Error(
@@ -680,7 +689,7 @@ export default function GeneriranjePodataka() {
         const mapaOznaka = new Map();
         for (const oznaka of oznake) {
           const { id, ...ostalo } = oznaka;
-          const odgovor = await servisOznaka.dodaj(ostalo);
+          const odgovor = await OznakeServicesFirebase.dodaj(ostalo);
 
           if (!odgovor?.success) {
             throw new Error(
@@ -717,7 +726,7 @@ export default function GeneriranjePodataka() {
               : [],
           };
 
-          const odgovor = await servisPredmeta.dodaj(noviPredmet);
+          const odgovor = await PredmetiFirebaseServices.dodaj(noviPredmet);
 
           if (!odgovor?.success) {
             throw new Error(

@@ -31,6 +31,22 @@ export const ShemaKorisnik = z.object({
 
 export default ShemaKorisnik;
 
+// Shema za registraciju: ista pravila kao ShemaKorisnik + ime, koje forma
+// registracije traži (promjena korisnika imena nema, pa se ShemaKorisnik ne
+// mijenja). Trim ide prije provjere dužine, inače bi "  A  " prošao kao 6 znakova.
+const imePolje = z
+  .string()
+  .trim()
+  .pipe(
+    z.string()
+      .min(2, "Ime mora imati najmanje 2 znaka!")
+      .max(50, "Ime može imati najviše 50 znakova!")
+  );
+
+export const ShemaRegistracija = ShemaKorisnik.extend({
+  ime: imePolje
+});
+
 // Shema za login (samo email i lozinka)
 export const ShemaLogin = z.object({
   email: emailPolje,

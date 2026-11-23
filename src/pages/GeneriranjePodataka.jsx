@@ -17,7 +17,7 @@ import OznakeServicesMemorija from '../services/oznake/OznakeServicesMemorija';
 import PredmetiServicesMemorija from '../services/predmeti/PredmetiServicesMemorija';
 
 /*
- * KorisniciData je izvor istine za prijenos u localStorage:
+ * KorisniciData je izvor za prijenos u localStorage:
  * KorisniciServiceMemorija svoje korisnike drži upravo u ovom arrayu
  * (dodaj() radi push) i hashira lozinke, dok get() namjerno NE vraća
  * lozinke. Bez ovoga bi presipani korisnici ostali bez hashova i prijava

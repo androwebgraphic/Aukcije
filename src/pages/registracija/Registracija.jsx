@@ -1,19 +1,72 @@
-import { Button, Col, Form, Row, Modal } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row, Modal } from "react-bootstrap";
 import { BiQuestionMark } from 'react-icons/bi';
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants"
 import KorisniciService from "../../services/korisnici/KorisniciService"
+import { ShemaRegistracija } from "../../schemas/SchemaKorisnik"
 import Heading from "../../components/UI/Heading";
 
 import Uvjeti from "../../pages/Uvjeti"
 import { useState } from "react";
+
+/**
+ * Provjera postoji li već korisnik s tom e-mail adresom.
+ * Usporedba ignorira velika/mala slova i praznine na početku/kraju.
+ * Baca grešku ako popis korisnika nije moguće dohvatiti — u tom slučaju
+ * registraciju ne puštamo naslijepo.
+ */
+async function postojiKorisnikSEmailom(email) {
+    const trazeni = String(email ?? "").trim().toLowerCase();
+    if (!trazeni) return false;
+
+    const odgovor = await KorisniciService.get();
+
+    if (odgovor && odgovor.success === false) {
+        throw new Error(odgovor.message || "Popis korisnika nije dostupan.");
+    }
+
+    const lista = Array.isArray(odgovor) ? odgovor : odgovor?.data;
+    if (!Array.isArray(lista)) return false;
+
+    return lista.some(
+        (korisnik) => String(korisnik?.email ?? "").trim().toLowerCase() === trazeni
+    );
+}
+
+// Zod greške pretvaramo u { nazivPolja: prvaPoruka } kako bi svako polje
+// prikazalo svoju poruku (email, lozinka), umjesto jedne zajedničke.
+function greskePoPoljima(error) {
+    const polja = {};
+    for (const issue of error.issues) {
+        const polje = String(issue.path?.[0] ?? "opcenito");
+        if (!polja[polje]) polja[polje] = issue.message;
+    }
+    return polja;
+}
+
 export default function KorisnikoNovi() {
     const navigate = useNavigate();
     const [show, setShow] = useState(false)
     const [korisnikZaUnos, setKorisnikZaUnos] = useState({})
+    const [greska, setGreska] = useState("")
+    const [errors, setErrors] = useState({})
+    const [saljem, setSaljem] = useState(false)
 
     async function dodaj() {
+        if (saljem) return;
+
+        setSaljem(true)
+        setGreska("")
+
         try {
+            // Ponovna provjera prije upisa: korisnik je mogao biti registriran
+            // u drugoj kartici dok je ovaj modal s uvjetima bio otvoren.
+            if (await postojiKorisnikSEmailom(korisnikZaUnos.email)) {
+                setShow(false)
+                setGreska(`Korisnik s e-mail adresom ${korisnikZaUnos.email} već postoji. Prijavite se ili upotrijebite drugu adresu.`)
+                return
+            }
+
             const odgovor = await KorisniciService.dodaj(korisnikZaUnos);
             // Servis ne baca grešku, vraća { success: false, message }, pa se
             // rezultat mora provjeriti prije preusmjeravanja.
@@ -24,6 +77,10 @@ export default function KorisnikoNovi() {
             navigate(RouteNames.KORISNICI); // Preusmjeravanje nakon uspješnog slanja
         } catch (error) {
             console.error("Greška prilikom registracije korisnika:", error);
+            setShow(false)
+            setGreska(error?.message || "Registracija nije uspjela. Pokušajte ponovno.")
+        } finally {
+            setSaljem(false)
         }
     }
 
@@ -32,19 +89,53 @@ export default function KorisnikoNovi() {
         setShow(true)
     }
 
+    function ocistiGresku(polje) {
+        if (errors[polje]) {
+            const noveGreske = { ...errors }
+            delete noveGreske[polje]
+            setErrors(noveGreske)
+        }
+    }
 
-    function handleSubmit(e) {
+
+    async function handleSubmit(e) {
         e.preventDefault();
         const podatci = new FormData(e.target);
+        const ime = String(podatci.get('ime') || '').trim();
+        const email = String(podatci.get('email') || '').trim();
+        const lozinka = String(podatci.get('lozinka') || '');
 
         // Trenutni datum i vrijeme u ISO formatu
         const dateAdded = new Date().toISOString();
 
+        setGreska("")
+        setErrors({})
+
+        // Zod validacija svih polja (ime, format e-maila, pravila lozinke)
+        // prije provjere u bazi.
+        const rezultat = ShemaRegistracija.safeParse({ ime, email, lozinka, uloga: 'korisnik' })
+
+        if (!rezultat.success) {
+            setErrors(greskePoPoljima(rezultat.error))
+            return
+        }
+
+        try {
+            if (await postojiKorisnikSEmailom(rezultat.data.email)) {
+                setGreska(`Korisnik s e-mail adresom ${rezultat.data.email} već postoji. Prijavite se ili upotrijebite drugu adresu.`)
+                return
+            }
+        } catch (error) {
+            console.error("Greška pri provjeri e-mail adrese:", error);
+            setGreska("Nije moguće provjeriti postoji li korisnik s tom e-mail adresom. Pokušajte ponovno.")
+            return
+        }
+
         // Slanje podataka s uključenim automatskim datumom
        prikaziModal({
-            ime: podatci.get('ime') || '',
-            email: podatci.get('email') || '',
-            lozinka: podatci.get('lozinka') || '',
+            ime: rezultat.data.ime,
+            email: rezultat.data.email,
+            lozinka: rezultat.data.lozinka,
             uloga: 'korisnik',
             dodano: dateAdded, // Ovdje šaljemo automatski generirani datum (prilagodi naziv 'dodano' ako backend traži npr. 'datum')
         })
@@ -56,20 +147,44 @@ export default function KorisnikoNovi() {
       <>
         <Heading as='h2' color='azure'>Registracija</Heading>
 
-     
+        {greska && (
+          <Alert variant="danger" dismissible onClose={() => setGreska("")}>
+            {greska}
+          </Alert>
+        )}
             <Row>
               <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col sm={12} md={6}>
                       <Form.Group controlId="ime">
                           <Form.Label>Ime</Form.Label>
-                          <Form.Control type="text" name="ime" required placeholder="Upiši ime ili korisničko ime"/>
+                          <Form.Control
+                            type="text"
+                            name="ime"
+                            required
+                            placeholder="Upiši ime ili korisničko ime"
+                            isInvalid={!!errors.ime}
+                            onFocus={() => ocistiGresku('ime')}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.ime}
+                          </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col sm={12} md={6}>
                       <Form.Group controlId="email">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" name="email" required placeholder="Upiši adresu e-pošte"/>
+                        <Form.Control
+                          type="email"
+                          name="email"
+                          required
+                          placeholder="Upiši adresu e-pošte"
+                          isInvalid={!!errors.email}
+                          onFocus={() => ocistiGresku('email')}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.email}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
               
@@ -78,7 +193,20 @@ export default function KorisnikoNovi() {
                     <Col sm={12} md={6}>
                       <Form.Group controlId="lozinka" className="mt-2">
                           <Form.Label>Lozinka</Form.Label>
-                          <Form.Control type="password" name="lozinka" required placeholder="Upiši lozinku" />
+                          <Form.Control
+                            type="password"
+                            name="lozinka"
+                            required
+                            placeholder="Upiši lozinku"
+                            isInvalid={!!errors.lozinka}
+                            onFocus={() => ocistiGresku('lozinka')}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.lozinka}
+                          </Form.Control.Feedback>
+                          <Form.Text className="text-muted">
+                            Najmanje 8 znakova, veliko i malo slovo, broj i interpunkcijski znak.
+                          </Form.Text>
                       </Form.Group>
                     </Col>
                   </Row>
@@ -139,8 +267,8 @@ export default function KorisnikoNovi() {
 
 
 
-        <Button onClick={dodaj}>
-            Pristajem
+        <Button onClick={dodaj} disabled={saljem}>
+            {saljem ? 'Šaljem…' : 'Pristajem'}
         </Button>
 
 

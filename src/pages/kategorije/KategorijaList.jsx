@@ -39,7 +39,13 @@ export default function KategorijaList() {
   const { showLoading, hideLoading, postaviNaslov } = useLoading()
     const { showModal } = useModal()
     const { authUser } = useAuth()
-    const brojOmiljenih = dohvatiOmiljene(authUser).length
+    const omiljeniIds = dohvatiOmiljene(authUser)
+    // Brojimo samo omiljene koji postoje u aktivnom izvoru podataka —
+    // memorija i Firebase imaju različite id-eve predmeta, pa stari id-evi
+    // iz drugog izvora ne smiju utjecati na broj.
+    const brojOmiljenih = (Array.isArray(predmeti) ? predmeti : []).filter((p) =>
+      omiljeniIds.includes(String(p.id || p.sifra))
+    ).length
   
   useEffect(() => { 
     showLoading()

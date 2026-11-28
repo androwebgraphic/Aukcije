@@ -43,7 +43,7 @@ export const RouteNames = {
 };
 
 //memorija, localStorage, firebase
-export const DATA_SOURCE = "memorija";
+export const DATA_SOURCE = "firebase";
 // Računi za testiranje / prijavu.
 // VAŽNO: lozinke moraju odgovarati DEMO_LOZINKA u
 // src/services/korisnici/KorisniciData.js jer kartice "Klikni za

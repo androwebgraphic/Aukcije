@@ -11,6 +11,8 @@ import { motion } from "framer-motion"
 import IkonaKategorije from "../../components/UI/IkonaKategorije"
 import useLoading from "../../hooks/useLoading"
 import useModal from "../../hooks/useModal"
+import useAuth from "../../hooks/useAuth"
+import { dohvatiOmiljene } from "../../utils/omiljeni"
 function ExpandableText({ text, maxLength = 100 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   if (!text) return null; 
@@ -36,6 +38,8 @@ export default function KategorijaList() {
   const navigate = useNavigate()
   const { showLoading, hideLoading, postaviNaslov } = useLoading()
     const { showModal } = useModal()
+    const { authUser } = useAuth()
+    const brojOmiljenih = dohvatiOmiljene(authUser).length
   
   useEffect(() => { 
     showLoading()
@@ -94,6 +98,21 @@ const deklinirajOglas = (broj) => {
   }
   return `${kolicina} oglasa`;
 };
+
+const jeOmiljenaKategorija = (kategorija) =>
+  kategorija?.ikona === "omiljeni" ||
+  String(kategorija?.naziv ?? "").trim().toLowerCase() === "omiljeni";
+
+const deklinirajOmiljene = (broj) => {
+  const kolicina = Number(broj) || 0;
+  const mod100 = kolicina % 100;
+  const mod10 = kolicina % 10;
+  if (mod10 === 1 && mod100 !== 11) return `${kolicina} omiljeni predmet`;
+  if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) {
+    return `${kolicina} omiljena predmeta`;
+  }
+  return `${kolicina} omiljenih predmeta`;
+};
   return (
     <>
         <motion.div 
@@ -124,6 +143,7 @@ const deklinirajOglas = (broj) => {
                 p.kategorija_id;
               return String(katId ?? "").trim() === String(c.id ?? "").trim();
             }).length : 0;
+            const jeOmiljena = jeOmiljenaKategorija(c);
             const jedinstveniKey = c.id ? `${c.id}-${index}` : index;
             return (
               <Col key={jedinstveniKey} xs={12} sm={6} className="d-flex">
@@ -146,7 +166,7 @@ const deklinirajOglas = (broj) => {
                         </div>
                         <div>
 <Card.Title style={{ color: "#1a3580" }}>
-  {c.naziv} ({deklinirajOglas(brojPredmeta)})
+  {c.naziv} ({jeOmiljena ? deklinirajOmiljene(brojOmiljenih) : deklinirajOglas(brojPredmeta)})
 </Card.Title>                      </div>
                       </div>
                       {/* Opis kategorije */}

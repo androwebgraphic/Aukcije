@@ -23,6 +23,7 @@ const KategorijePromjena = lazy(() => import("./pages/kategorije/KategorijePromj
 const PredmetiLista = lazy(() => import("./pages/predmeti/PredmetiLista.jsx"));
 const PredmetNovi = lazy(() => import("./pages/predmeti/PredmetNovi.jsx"));
 const PredmetiPromjena = lazy(() => import("./pages/predmeti/PredmetiPromjena.jsx"));
+const PredmetOmiljeni = lazy(() => import("./pages/predmeti/PredmetOmiljeni.jsx"));
 
 const KorisniciLista = lazy(() => import("./pages/korisnici/KorisniciLista.jsx"));
 const KorisniciPromijena = lazy(() => import("./pages/korisnici/KorisniciPromijena.jsx"));
@@ -78,6 +79,10 @@ function App() {
 						element={<PredmetiLista />}
 					/>
 					<Route path={RouteNames.PREDMETI} element={<PredmetiLista />} />
+					<Route
+						path={RouteNames.PREDMETI_OMILJENI}
+						element={<ZasticenaRuta><PredmetOmiljeni /></ZasticenaRuta>}
+					/>
 
 					<Route
 						path={RouteNames.KORISNICI}

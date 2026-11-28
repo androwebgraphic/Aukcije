@@ -7,6 +7,7 @@ import { NavDropdown, Badge,Col,Row} from 'react-bootstrap';
 import KategorijeServices from '../services/kategorije/KategorijeServices';
 import useAuth from '../hooks/useAuth';
 import aukcijelogo from '../img/Aukcije logo.png'
+import { FaHeart } from 'react-icons/fa6';
 
 function NavMain() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function NavMain() {
   async function ucitajKategorije() {
     try {
       const response = await KategorijeServices.get();
-      setKategorije(response.data);
+      setKategorije(response.data || []);
     } catch (error) {
       console.error("Greška kod učitavanja kategorija:", error);
     }
@@ -26,6 +27,15 @@ function NavMain() {
   useEffect(() => {
     ucitajKategorije();
   }, []);
+
+  // „Omiljeni” nije stvarna kategorija predmeta (nema svojih predmeta),
+  // nego stranica s omiljenima — zato je ne prikazujemo u izborniku.
+  // Filtrira se u renderu (ne samo pri učitavanju) da nestane i nakon HMR-a.
+  const kategorijeZaPrikaz = kategorije.filter(
+    (k) =>
+      String(k?.naziv ?? "").trim().toLowerCase() !== "omiljeni" &&
+      k?.ikona !== "omiljeni"
+  );
 
   return (
     <>
@@ -87,9 +97,15 @@ function NavMain() {
                 </NavDropdown.Item>
               )}
 
-              {kategorije && kategorije.length > 0 && <NavDropdown.Divider />}
+              {isLoggedIn && (
+                <NavDropdown.Item as={Link} to={RouteNames.PREDMETI_OMILJENI} onClick={() => setExpanded(false)}>
+                  <FaHeart className="me-2" aria-hidden="true" /> Omiljeni
+                </NavDropdown.Item>
+              )}
 
-              {kategorije && kategorije.map((k) => (
+              {kategorijeZaPrikaz.length > 0 && <NavDropdown.Divider />}
+
+              {kategorijeZaPrikaz.map((k) => (
                 <NavDropdown.Item
                   key={k.id}
                   as={Link}

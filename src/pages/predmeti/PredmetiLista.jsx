@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import PredmetiServices from "../../services/predmeti/PredmetiServices";
 import KategorijeServices from "../../services/kategorije/KategorijeServices";
 import OznakeServices from "../../services/oznake/OznakeServices";
+
 import {
   Row,
   Col,
@@ -21,7 +22,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { RouteNames } from "../../constants";
-import { FaEdit, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
+import { FaEdit, FaHeart, FaPlus, FaRegHeart, FaSearch, FaTrash } from "react-icons/fa";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 import Heading from "../../components/UI/Heading";
@@ -33,6 +34,7 @@ import useAuth from "../../hooks/useAuth";
 import { smijeMijenjatiPredmet } from "../../utils/ovlasti";
 import useModal from "../../hooks/useModal"
 import useLoading from "../../hooks/useLoading";
+import { dohvatiOmiljene, spremiOmiljene } from "../../utils/omiljeni";
 
 function formatirajDatum(datumVrijednost) {
   if (!datumVrijednost) return "-";
@@ -156,7 +158,7 @@ function dohvatiIzvorSlike(slikaItem) {
 }
 
 export default function PredmetiList() {
-  const { isLoggedIn, authUser } = useAuth();
+  const { isLoggedIn, authUser, spremno } = useAuth();
   const [predmeti, setPredmeti] = useState([]);
   const [kategorije, setKategorije] = useState([]);
   const [oznake, setOznake] = useState([]);
@@ -180,9 +182,12 @@ export default function PredmetiList() {
 const { showLoading, hideLoading } = useLoading()
 const { showModal: otvoriPotvrdu } = useModal()
 //omiljeni predmeti
-  const [omiljeniIds, setOmiljeniIds] = useState(() => {
-  return JSON.parse(localStorage.getItem("omiljeniPredmeti")) || [];
-});
+  const [omiljeniIds, setOmiljeniIds] = useState([]);
+
+  useEffect(() => {
+  if (spremno) setOmiljeniIds(dohvatiOmiljene(authUser));
+  }, [spremno, authUser?.id]);
+  
   useEffect(() => {
     setStranica(1);
   }, [params.id, kategorijaFilter]);
@@ -464,19 +469,17 @@ const { showModal: otvoriPotvrdu } = useModal()
     setUvjetiPretrazivanja(e.target.value);
     setStranica(1);
   }
-
-  function toggleOmiljeni(predmetId) {
-  let noviOmiljeni;
-  if (omiljeniIds.includes(predmetId)) {
-    noviOmiljeni = omiljeniIds.filter((id) => id !== predmetId);
-  } else {
-    noviOmiljeni = [...omiljeniIds, predmetId];
-  }
-  setOmiljeniIds(noviOmiljeni);
-  localStorage.setItem("omiljeniPredmeti", JSON.stringify(noviOmiljeni));
+function toggleOmiljeni(predmetId) {
+  if (!isLoggedIn) { navigate(RouteNames.LOGIRANJE); return; }
+  const id = String(predmetId ?? "");
+  if (!id || id === "undefined") return;
+  const novi = omiljeniIds.includes(id)
+    ? omiljeniIds.filter((x) => x !== id)
+    : [...omiljeniIds, id];
+  setOmiljeniIds(novi);
+  spremiOmiljene(authUser, novi);
 }
 
-//const jeOmiljen = omiljeniIds.includes(pId);
   return (
     <>
       <motion.div
@@ -586,6 +589,9 @@ const { showModal: otvoriPotvrdu } = useModal()
         <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
           {predmetiNaStranici && predmetiNaStranici.length > 0 ? (
             predmetiNaStranici.map((c) => {
+              const pId = c.id || c.sifra;
+              const jeOmiljen = omiljeniIds.includes(String(pId));
+
               const listaOznaka = Array.isArray(c.oznake) ? c.oznake : [];
               const brojVidljivihOznaka = c.stanje ? 2 : 3;
 
@@ -606,6 +612,36 @@ const { showModal: otvoriPotvrdu } = useModal()
               return (
                 <Col key={c.id || c.sifra}>
                   <Card className="h-100 shadow-sm border-0 overflow-hidden position-relative">
+                    <button
+                      type="button"
+                      className="btn rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm border-0"
+                      style={{
+                        position: "absolute",
+                        top: ".5rem",
+                        right: ".5rem",
+                        zIndex: 10,
+                        width: "2.25rem",
+                        height: "2.25rem",
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleOmiljeni(pId);
+                      }}
+                      aria-pressed={jeOmiljen}
+                      aria-label={
+                        jeOmiljen
+                          ? `Ukloni ${c.naziv} iz omiljenih`
+                          : `Dodaj ${c.naziv} u omiljene`
+                      }
+                      title={jeOmiljen ? "Ukloni iz omiljenih" : "Dodaj u omiljene"}>
+                      {jeOmiljen ? (
+                        <FaHeart color="#dc3545" aria-hidden="true" />
+                      ) : (
+                        <FaRegHeart color="#6c757d" aria-hidden="true" />
+                      )}
+                    </button>
+
                     {listaSlika.length > 1 ? (
                       <Carousel
                         data-bs-theme="dark"

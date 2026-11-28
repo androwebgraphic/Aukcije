@@ -244,7 +244,7 @@ export default function PredmetOmiljeni() {
         </div>
       </motion.div>
 
-      <Row xs={1} sm={1} md={2} lg={3} className="g-3">
+      <Row xs={1} sm={1} md={2} lg={4} className="g-3">
         {loading ? (
           <Col xs={12}>
             <p className="text-muted text-center py-4">Učitavanje...</p>
@@ -266,8 +266,8 @@ export default function PredmetOmiljeni() {
             }
 
             return (
-              <Col key={pId}>
-                <Card
+              <Col key={pId} >
+                <Card 
                   className="h-100 shadow-sm border-0 overflow-hidden position-relative"
                   style={{ opacity: jeZavrseno ? 0.75 : 1 }}>
                   <button
